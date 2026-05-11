@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+   <children>
+      <SplitPane dividerPositions="0.7183734939759037" layoutY="1.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="602.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Label layoutX="6.0" layoutY="5.0" text="TravelAPP🌍 Viaja. Sueña. Comparte" />
+                  <Label layoutX="252.0" layoutY="23.0" text="INICIO DE SESIÓN" />
+                  <Label layoutX="178.0" layoutY="89.0" text="Nombre:" />
+                  <TextField layoutX="300.0" layoutY="85.0" />
+                  <Label layoutX="178.0" layoutY="133.0" text="email:" />
+                  <TextField layoutX="300.0" layoutY="129.0" />
+                  <Label layoutX="178.0" layoutY="180.0" text="Contraseña:" />
+                  <TextField layoutX="300.0" layoutY="176.0" />
+                  <Button layoutX="257.0" layoutY="243.0" mnemonicParsing="false" text="Iniciar Sesion" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Label layoutX="60.0" layoutY="5.0" text="¿Está Registrado?" />
+                  <Button layoutX="458.0" layoutY="1.0" mnemonicParsing="false" text="Registrarse" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

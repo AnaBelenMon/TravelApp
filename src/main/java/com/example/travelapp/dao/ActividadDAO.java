@@ -1,0 +1,323 @@
+package com.example.travelapp.dao;
+
+
+import com.example.travelapp.dataAccess.ConnectionBD;
+import com.example.travelapp.model.Actividad;
+import com.example.travelapp.model.CategoriaActividad;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ActividadDAO {
+    private final static String SQL_ALL = "SELECT * FROM actividad";
+    private final static String SQL_FIND_BY_IDACTIVIDAD = "SELECT * FROM actividad WHERE idActividad =? ";
+    private final static String SQL_FIND_BY_IDVIAJE = "SELECT * FROM actividad WHERE idviaje=? ";
+    private final static String SQL_FIND_BY_NAME = "SELECT * FROM actividad WHERE nombre=? ";
+    private final static String SQL_FIND_BY_CATEGORIA = "SELECT * FROM actividad WHERE categoria=? ";
+    private final static String SQL_FIND_BY_DATE = "SELECT * FROM actividad WHERE fecha=? ";
+    private final static String SQL_FIND_BY_PRICE = "SELECT * FROM actividad WHERE precio=? ";
+    private final static String SQL_FIND_BY_VALORACION = "SELECT * FROM actividad WHERE valoracion=? ";
+    private final static String SQL_FIND_BY_RESERVADA =  "SELECT * FROM actividad WHERE reservada=? ";
+    private final static String SQL_FIND_BY_PLACE = "SELECT * FROM actividad WHERE lugar=? ";
+
+    //private final static String SQL_FIND_BY_STATE = "SELECT * FROM actividad WHERE estado=? ";
+
+    private final static String SQL_INSERT = "INSERT INTO actividad(nombre) VALUES (?)";
+    private final static String SQL_UPDATE = "UPDATE actividad SET nombre=? WHERE id=?";
+    private final static String SQL_DELETE = "DELETE FROM actividad WHERE id=?";
+
+    public static List<Actividad> findAll() {
+        List<Actividad> actividades = new ArrayList<>();
+        Actividad actividad = null;
+
+        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)){
+            while (rs.next()) {
+                int idActividad = rs.getInt("idActividad");
+                int idViaje  = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(idActividad,idViaje,nombre,categoria,fecha,precio,notas,valoracion,duracionMinutos,reservada,lugar);
+                actividades.add(actividad);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return actividades;
+    }
+
+    public static Actividad findByIdActividad(int idActividad) throws SQLException {
+        Actividad actividad = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDACTIVIDAD)){
+            ps.setInt(1, idActividad);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int idActividad2 = rs.getInt("idActividad");
+                int idViaje  = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(idActividad2,idViaje,nombre,categoria,fecha,precio,notas,valoracion,duracionMinutos,reservada,lugar);
+            }
+        }
+        return actividad;
+    }
+
+    public static Actividad findByIdViaje(int idViaje) throws SQLException {
+        Actividad actividad = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)){
+            ps.setInt(1, idViaje);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int idActividad = rs.getInt("idActividad");
+                int idViaje2  = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(idActividad,idViaje2,nombre,categoria,fecha,precio,notas,valoracion,duracionMinutos,reservada,lugar);
+            }
+        }
+        return actividad;
+    }
+
+    public static List<Actividad> findByNombre(String nombre) throws SQLException {
+        List<Actividad> actividades = new ArrayList<>();
+        Actividad actividad = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_NAME)){
+            ps.setString(1, nombre);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idActividad = rs.getInt("idActividad");
+                int idViaje  = rs.getInt("idViaje");
+                String nombre2 = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int  valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(idActividad,idViaje,nombre2,categoria,fecha,precio,notas,valoracion,duracionMinutos,reservada,lugar);
+                actividades.add(actividad);
+            }
+        }
+        return actividades;
+    }
+
+    public static List<Actividad> findByCategoria(CategoriaActividad categoria) throws SQLException {
+        List<Actividad> actividades = new ArrayList<>();
+        Actividad actividad = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_CATEGORIA)){
+            ps.setString(1, String.valueOf(categoria));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idActividad = rs.getInt("idActividad");
+                int idViaje  = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria2 = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(idActividad,idViaje,nombre,categoria,fecha,precio,notas,valoracion,duracionMinutos,reservada,lugar);
+                actividades.add(actividad);
+            }
+        }
+        return actividades;
+    }
+
+    public static List<Actividad> findByFecha(String fecha) throws SQLException {
+        List<Actividad> actividades = new ArrayList<>();
+        Actividad actividad = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_DATE)){
+            ps.setString(1, fecha);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idActividad = rs.getInt("idActividad");
+                int idViaje  = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha2 = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(idActividad,idViaje, nombre,categoria,fecha2,precio,notas,valoracion,duracionMinutos,reservada,lugar);
+                actividades.add(actividad);
+            }
+        }
+        return actividades;
+    }
+
+    public static List<Actividad> findByPrice(String precio) throws SQLException {
+        List<Actividad> actividades = new ArrayList<>();
+        Actividad actividad = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PRICE)){
+            ps.setString(1, precio);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idActividad = rs.getInt("idActividad");
+                int idViaje  = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio2 = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(idActividad,idViaje,nombre,categoria,fecha,precio2,notas,valoracion,duracionMinutos,reservada,lugar);
+                actividades.add(actividad);
+            }
+        }
+        return actividades;
+    }
+
+    public static List<Actividad> findByValoracion(String valoracion) throws SQLException {
+        List<Actividad> actividades = new ArrayList<>();
+        Actividad actividad = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_VALORACION)){
+            ps.setString(1, valoracion);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idActividad = rs.getInt("idActividad");
+                int idViaje  = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion2 = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(idActividad,idViaje,nombre,categoria,fecha,precio,notas,valoracion2,duracionMinutos,reservada,lugar);
+                actividades.add(actividad);
+            }
+        }
+        return actividades;
+    }
+
+    public static List<Actividad> findByReservada(boolean reservada) throws SQLException {
+        List<Actividad> actividades = new ArrayList<>();
+        Actividad actividad = null;
+        try(PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_RESERVADA)){
+            ps.setBoolean(1, reservada);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idActividad = rs.getInt("idActividad");
+                int idViaje  = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada2 = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(idActividad,idViaje,nombre,categoria,fecha,precio,notas,valoracion,duracionMinutos,reservada2,lugar);
+                actividades.add(actividad);
+            }
+        }
+        return actividades;
+    }
+
+    public static List<Actividad> findByLugar(String lugar) throws SQLException {
+        List<Actividad> actividades = new ArrayList<>();
+        Actividad actividad = null;
+        try(PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PLACE)){
+            ps.setString(1, lugar);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idActividad = rs.getInt("idActividad");
+                int idViaje  = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar2 = rs.getString("lugar");
+                actividad = new Actividad(idActividad,idViaje,nombre,categoria,fecha,precio,notas,valoracion,duracionMinutos,reservada,lugar2);
+                actividades.add(actividad);
+            }
+        }
+        return actividades;
+    }
+
+    public static Actividad addActividad(Actividad actividad) throws SQLException {
+        if (actividad != null && findByNombre(actividad.getNombre()) == null) {
+            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)){
+                ps.setString(1, actividad.getNombre());
+                ps.setDouble(2, actividad.getPrecio());
+                ps.setString(3, actividad.getNotas());
+                ps.setInt(4, actividad.getValoracion());
+                ps.setInt(5, actividad.getDuracionMinutos());
+                ps.executeUpdate();
+            }
+        }else {
+            actividad = null;
+        }
+        return actividad;
+    }
+
+    public static boolean updateActividad(Actividad actividadNueva, Actividad actividadActual) throws SQLException {
+        boolean updated = false;
+        if((actividadActual!=null)&&(actividadNueva!=null)&&findByNombre(actividadActual.getNombre())!=null && findByNombre(actividadNueva.getNombre())==null){
+            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
+                ps.setString(1, actividadNueva.getNombre());
+                ps.setInt(2, actividadNueva.getIdActividad());
+                ps.setInt(3, actividadNueva.getIdViaje());
+                ps.executeUpdate();
+                updated = true;
+
+            }
+        }
+        return updated;
+    }
+
+    public static boolean deleteActividadById(int idActividad) throws SQLException {
+        boolean deleted = false;
+        if(findByIdActividad(idActividad)!=null){
+            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
+                ps.setInt(1, idActividad);
+                ps.executeUpdate();
+                deleted = true;
+            }
+        }
+        return deleted;
+    }
+
+}
