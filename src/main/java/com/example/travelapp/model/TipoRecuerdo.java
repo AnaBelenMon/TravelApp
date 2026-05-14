@@ -24,4 +24,9 @@ public enum TipoRecuerdo {
     public boolean esMultimedia() {
         return this != DOCUMENTO;
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

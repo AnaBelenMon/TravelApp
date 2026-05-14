@@ -13,7 +13,7 @@ public class Alojamiento {
     private LocalDate fechaCheckin;
     private LocalDate fechaCheckout;
 
-    public Alojamiento(int idAlojamiento, int idViaje, String nombre, String direccion, double precioTotal, LocalDate fechaCheckin, LocalDate fechaCheckout) {
+    public Alojamiento(int idViaje, String nombre, String direccion, double precioTotal, LocalDate fechaCheckin, LocalDate fechaCheckout) {
         if (nombre == null || nombre.isBlank())
             throw new IllegalArgumentException("El nombre no puede estar vacío");
 
@@ -28,7 +28,6 @@ public class Alojamiento {
 
         if (!fechaCheckout.isAfter(fechaCheckin))
             throw new IllegalArgumentException("La fecha de checkout debe ser posterior al checkin");
-        this.idAlojamiento = idAlojamiento;
         this.idViaje = idViaje;
         this.nombre = nombre;
         this.direccion = direccion;
@@ -134,6 +133,9 @@ public class Alojamiento {
     }
 
     public int getNumeroNoches() {
+        if (fechaCheckout.isBefore(fechaCheckin)) {
+            throw new IllegalArgumentException("El checkout debe ser posterior al checkin");
+        }
         return (int) ChronoUnit.DAYS.between(fechaCheckin, fechaCheckout);
     }
 

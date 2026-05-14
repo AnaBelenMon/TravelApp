@@ -11,8 +11,8 @@ public class Gasto {
     private double importe;
     private String notas;
 
-    public Gasto(int idGasto, int idViaje, CategoriaGasto categoriaGasto, LocalDate fecha, double importe, String notas) {
-        if (idGasto <= 0)
+    public Gasto(int idViaje, CategoriaGasto categoriaGasto, LocalDate fecha, double importe, String notas) {
+        if (idGasto < 0)
             throw new IllegalArgumentException("El id debe ser mayor que 0");
 
         if (categoriaGasto == null)
@@ -39,7 +39,7 @@ public class Gasto {
     }
 
     public void setIdGasto(int idGasto) {
-        if (idGasto <= 0)
+        if (idGasto < 0)
             throw new IllegalArgumentException("El id debe ser mayor que 0");
         this.idGasto = idGasto;
     }
@@ -123,5 +123,9 @@ public class Gasto {
                 ", importe=" + importe +
                 ", notas='" + notas + '\'' +
                 '}';
+    }
+
+    public String getImporteFormateado() {
+        return String.format("%.2f €", importe);
     }
 }

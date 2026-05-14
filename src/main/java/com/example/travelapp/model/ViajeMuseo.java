@@ -10,11 +10,25 @@ public class ViajeMuseo {
     private Emocion emocion;
 
     public ViajeMuseo(int idViaje, int idMuseo, LocalDate fechaVisita, Emocion emocion) {
+
+        if (idViaje <= 0)
+            throw new IllegalArgumentException("El id del viaje no es válido");
+
+        if (idMuseo <= 0)
+            throw new IllegalArgumentException("El id del museo no es válido");
+
+        if (fechaVisita == null)
+            throw new IllegalArgumentException("La fecha de visita no puede ser nula");
+
+        if (emocion == null)
+            throw new IllegalArgumentException("La emoción no puede ser nula");
+
         this.idViaje = idViaje;
         this.idMuseo = idMuseo;
         this.fechaVisita = fechaVisita;
         this.emocion = emocion;
     }
+
 
     public int getIdViaje() {
         return idViaje;
@@ -70,4 +84,13 @@ public class ViajeMuseo {
                 ", emocion='" + emocion + '\'' +
                 '}';
     }
+
+    public boolean esReciente() {
+        return fechaVisita.isAfter(LocalDate.now().minusDays(30));
+    }
+
+    public boolean esFutura() {
+        return fechaVisita.isAfter(LocalDate.now());
+    }
+
 }

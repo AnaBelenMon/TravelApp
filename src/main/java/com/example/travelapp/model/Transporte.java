@@ -12,7 +12,27 @@ public class Transporte {
     private TipoDocumento tipoDocumento;
     private String rutaDocumento;
 
-    public Transporte(int idTransporte, int idViaje, TipoTransporte tipo, LocalDate fecha, double precio, TipoDocumento tipoDocumento, String rutaDocumento) {
+    public Transporte(int idViaje, TipoTransporte tipo, LocalDate fecha,
+                      double precio, TipoDocumento tipoDocumento, String rutaDocumento) {
+
+        if (idTransporte < 0)
+            throw new IllegalArgumentException("El id no puede ser negativo");
+
+        if (tipo == null)
+            throw new IllegalArgumentException("El tipo de transporte no puede ser nulo");
+
+        if (fecha == null)
+            throw new IllegalArgumentException("La fecha no puede ser nula");
+
+        if (precio < 0)
+            throw new IllegalArgumentException("El precio no puede ser negativo");
+
+        if (tipoDocumento == null)
+            throw new IllegalArgumentException("El tipo de documento no puede ser nulo");
+
+        if (rutaDocumento == null || rutaDocumento.isBlank())
+            rutaDocumento = "";
+
         this.idTransporte = idTransporte;
         this.idViaje = idViaje;
         this.tipo = tipo;
@@ -96,6 +116,10 @@ public class Transporte {
 
     public boolean esMaritimo() {
         return tipo.esMaritimo();
+    }
+
+    public boolean esGratis() {
+        return precio == 0;
     }
 
     @Override

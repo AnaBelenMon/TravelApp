@@ -15,8 +15,7 @@ public class Recuerdo implements Emocionable {
     private boolean favorito;
     private String rutaMiniatura;
 
-    public Recuerdo(int idRecuerdo, int idViaje, String rutaArchivo, String descripcion, String ubicacion, LocalDate fecha, Emocion emocion, TipoRecuerdo tipo, boolean favorito, String rutaMiniatura) {
-        this.idRecuerdo = idRecuerdo;
+    public Recuerdo(int idViaje, String rutaArchivo, String descripcion, String ubicacion, LocalDate fecha, Emocion emocion, TipoRecuerdo tipo, boolean favorito, String rutaMiniatura) {
         this.idViaje = idViaje;
         this.rutaArchivo = rutaArchivo;
         this.descripcion = descripcion;
@@ -112,8 +111,8 @@ public class Recuerdo implements Emocionable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Recuerdo)) return false;
-        Recuerdo r = (Recuerdo) o;
-        return idRecuerdo == r.idRecuerdo;
+        Recuerdo recuerdo = (Recuerdo) o;
+        return idRecuerdo == recuerdo.idRecuerdo;
     }
 
     @Override
@@ -142,6 +141,11 @@ public class Recuerdo implements Emocionable {
         this.emocion = emocion;
     }
 
+    @Override
+    public void limpiarEmocion() {
+        this.emocion = null;
+    }
+
     public boolean esFoto() {
         return tipo == TipoRecuerdo.FOTO;
     }
@@ -157,5 +161,4 @@ public class Recuerdo implements Emocionable {
     public boolean tieneUbicacion() {
         return ubicacion != null && !ubicacion.isBlank();
     }
-
 }

@@ -18,7 +18,38 @@ public class Viaje {
     private String destinoPais;
     private String destinoCiudad;
 
-    public Viaje(int idViaje, int idUsuario, String nombre, LocalDate fechaInicio, LocalDate fechaFin, TipoViaje tipoViaje, String imagenPortada, String notasGenerales, double presupuestoEstimado, String destinoPais, String destinoCiudad) {
+    public Viaje(int idUsuario, String nombre, LocalDate fechaInicio,
+                 LocalDate fechaFin, TipoViaje tipoViaje, String imagenPortada,
+                 String notasGenerales, double presupuestoEstimado,
+                 String destinoPais, String destinoCiudad) {
+
+        if (idViaje < 0)
+            throw new IllegalArgumentException("El id no puede ser negativo");
+
+        if (idUsuario <= 0)
+            throw new IllegalArgumentException("El id de usuario no es válido");
+
+        if (nombre == null || nombre.isBlank())
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+
+        if (fechaInicio == null || fechaFin == null)
+            throw new IllegalArgumentException("Las fechas no pueden ser nulas");
+
+        if (!fechaInicio.isBefore(fechaFin))
+            throw new IllegalArgumentException("La fecha de inicio debe ser anterior a la fecha de fin");
+
+        if (tipoViaje == null)
+            throw new IllegalArgumentException("El tipo de viaje no puede ser nulo");
+
+        if (presupuestoEstimado < 0)
+            throw new IllegalArgumentException("El presupuesto no puede ser negativo");
+
+        if (destinoPais == null || destinoPais.isBlank())
+            throw new IllegalArgumentException("El país de destino no puede estar vacío");
+
+        if (destinoCiudad == null || destinoCiudad.isBlank())
+            throw new IllegalArgumentException("La ciudad de destino no puede estar vacía");
+
         this.idViaje = idViaje;
         this.idUsuario = idUsuario;
         this.nombre = nombre;
@@ -28,9 +59,10 @@ public class Viaje {
         this.imagenPortada = imagenPortada;
         this.notasGenerales = notasGenerales;
         this.presupuestoEstimado = presupuestoEstimado;
-        this.destinoPais = destinoPais;
-        this.destinoCiudad = destinoCiudad;
+        this.destinoPais = destinoPais.trim();
+        this.destinoCiudad = destinoCiudad.trim();
     }
+
 
     public int getIdViaje() {
         return idViaje;
@@ -161,5 +193,17 @@ public class Viaje {
 
     public boolean esFuturo() {
         return LocalDate.now().isBefore(fechaInicio);
+    }
+
+    public boolean fechaValida() {
+        return fechaInicio.isBefore(fechaFin) &&  fechaFin.isAfter(LocalDate.now());
+    }
+
+    public String getDestinoCompleto() {
+        return destinoCiudad + ", " + destinoPais;
+    }
+
+    public boolean esPasado() {
+        return LocalDate.now().isAfter(fechaFin);
     }
 }

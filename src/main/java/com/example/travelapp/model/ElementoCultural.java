@@ -24,7 +24,7 @@ public abstract class ElementoCultural {
     }
 
     public void setId(int id) {
-        if (id <= 0)
+        if (id < 0)
             throw new IllegalArgumentException("El id debe ser mayor que 0");
         this.id = id;
     }
@@ -60,4 +60,9 @@ public abstract class ElementoCultural {
                 ", descripcion='" + descripcion + '\'' +
                 '}';
     }
+
+    public String resumen() {
+        return nombre + " - " + getTipo();
+    }
+
 }

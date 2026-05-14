@@ -6,5 +6,17 @@ public enum TipoViaje {
     CULTURAL,
     NEGOCIOS,
     ROMANTICO,
-    FAMILIAR
+    FAMILIAR;
+
+    public String getNombreBonito() {
+        return switch (this) {
+            case AVENTURA -> "Aventura";
+            case RELAX -> "Relax";
+            case CULTURAL -> "Cultural";
+            case NEGOCIOS -> "Negocios";
+            case ROMANTICO -> "Romántico";
+            case FAMILIAR -> "Familiar";
+        };
+    }
 }
+

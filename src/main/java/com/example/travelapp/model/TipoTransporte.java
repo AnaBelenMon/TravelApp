@@ -43,4 +43,18 @@ public enum TipoTransporte {
     public boolean esPublico() {
         return this == TREN || this == AUTOBUS;
     }
+
+    public boolean esPrivado() {
+        return this == COCHE;
+    }
+
+    public boolean puedeSerInternacional() {
+        return this == AVION || this == BARCO;
+    }
+
+    @Override
+    public String toString() {
+        return icono + " " + nombre;
+    }
+
 }

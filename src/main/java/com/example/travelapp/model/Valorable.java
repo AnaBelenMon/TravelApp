@@ -8,4 +8,5 @@ public interface Valorable {
      * @throws IllegalArgumentException si la puntuación no es válida
      */
     void valorar(int puntuacion);
+    void limpiarValoracion();
 }

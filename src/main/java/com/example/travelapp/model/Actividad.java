@@ -105,6 +105,9 @@ public class Actividad implements Valorable {
     }
 
     public void setDuracionMinutos(int duracionMinutos) {
+        if (duracionMinutos < 0) {
+            throw new IllegalArgumentException("La duración no puede ser negativa");
+        }
         this.duracionMinutos = duracionMinutos;
     }
 
@@ -160,6 +163,11 @@ public class Actividad implements Valorable {
             throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5");
         }
         this.valoracion = puntuacion;
+    }
+
+    @Override
+    public void limpiarValoracion() {
+        this.valoracion = 0;
     }
 
     public boolean esGratuita() {

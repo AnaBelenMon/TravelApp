@@ -6,8 +6,8 @@ public class Obra extends ElementoCultural {
     private String autor;
     private String estilo;
 
-    public Obra(int id, String nombre, String descripcion, String autor, String estilo) {
-        super(id, nombre, descripcion);
+    public Obra(String nombre, String descripcion, String autor, String estilo) {
+        super(0, nombre, descripcion);
         this.autor = autor;
         this.estilo = estilo;
     }
@@ -44,6 +44,11 @@ public class Obra extends ElementoCultural {
     public boolean esAnonima() {
         return autor == null || autor.isBlank();
     }
+
+    public boolean esDeAutor(String autor) {
+        return this.autor != null && this.autor.equalsIgnoreCase(autor);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

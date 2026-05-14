@@ -10,11 +10,26 @@ public class Usuario {
     private String passwordHash;
 
     public Usuario(int idUsuario, String nombre, String email, String passwordHash) {
+
+        if (idUsuario < 0)
+            throw new IllegalArgumentException("El id no puede ser negativo");
+
+        if (nombre == null || nombre.isBlank())
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+
+        if (email == null || !email.contains("@"))
+            throw new IllegalArgumentException("El email no es válido");
+
+        if (passwordHash == null || passwordHash.length() < 6)
+            throw new IllegalArgumentException("La contraseña no es válida");
+
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.email = email;
         this.passwordHash = passwordHash;
     }
+
+    public Usuario() {}
 
     public int getIdUsuario() {
         return idUsuario;
@@ -48,13 +63,16 @@ public class Usuario {
         this.passwordHash = passwordHash;
     }
 
-    // Métodos derivados
+    public boolean nombreValido() {
+        return nombre != null && !nombre.isBlank();
+    }
+
     public boolean emailValido() {
         return email != null && email.contains("@");
     }
 
-    public boolean tieneNombre() {
-        return nombre != null && !nombre.isBlank();
+    public boolean passwordValido() {
+        return passwordHash != null && passwordHash.length() > 5;
     }
 
     @Override

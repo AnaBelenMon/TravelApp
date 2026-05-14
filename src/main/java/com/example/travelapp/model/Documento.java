@@ -9,7 +9,7 @@ public class Documento {
     private TipoDocumento tipo;
     private String rutaArchivo;
 
-    public Documento(int idDocumento,int idViaje, String nombre, TipoDocumento tipo, String rutaArchivo) {
+    public Documento(int idViaje, String nombre, TipoDocumento tipo, String rutaArchivo) {
         if (nombre == null || nombre.isBlank())
             throw new IllegalArgumentException("El nombre no puede estar vacío");
 

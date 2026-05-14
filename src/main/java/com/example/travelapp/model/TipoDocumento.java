@@ -20,4 +20,9 @@ public enum TipoDocumento {
     public boolean esVisual() {
         return this == IMAGEN || this == PDF;
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

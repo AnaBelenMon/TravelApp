@@ -17,4 +17,11 @@ public enum CategoriaActividad {
     public String getNombreBonito() {
         return nombreBonito;
     }
+
+    @Override
+    public String toString() {
+        return "CategoriaActividad{" +
+                "nombreBonito='" + nombreBonito + '\'' +
+                '}';
+    }
 }
