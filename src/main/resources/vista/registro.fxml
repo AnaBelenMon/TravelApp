@@ -21,18 +21,18 @@
                   <Label layoutX="152.0" layoutY="55.0" text="Nombre:" />
                   <Label layoutX="154.0" layoutY="110.0" text="Email:" />
                   <Label layoutX="153.0" layoutY="170.0" text="Contraseña:" />
-                  <TextField layoutX="342.0" layoutY="51.0" />
-                  <TextField layoutX="342.0" layoutY="106.0" />
+                  <TextField fx:id="nombreUsuario" layoutX="342.0" layoutY="51.0" onAction="#validarNombreUsuario" />
+                  <TextField fx:id="emailUsuario" layoutX="342.0" layoutY="106.0" onAction="#validarEmailUsuario" />
                   <Label layoutX="148.0" layoutY="219.0" text="Repetir contraseña:" />
-                  <TextField layoutX="342.0" layoutY="215.0" />
-                  <Button layoutX="261.0" layoutY="276.0" mnemonicParsing="false" text="Registrarse" />
-                  <PasswordField layoutX="342.0" layoutY="166.0" />
+                  <TextField fx:id="repetirContraseña" layoutX="342.0" layoutY="215.0" onAction="#comprobarMismaContraseña" />
+                  <Button fx:id="registrarse" disable="true" layoutX="261.0" layoutY="276.0" mnemonicParsing="false" onAction="#registrarse" text="Registrarse" />
+                  <PasswordField fx:id="contraseñaUsuario" layoutX="342.0" layoutY="166.0" onAction="#validarContraseña" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="64.0" prefWidth="598.0">
                <children>
                   <Label layoutX="95.0" layoutY="22.0" text="¿Ya tienes cuenta?" />
-                  <Button layoutX="428.0" layoutY="18.0" mnemonicParsing="false" text="Iniciar Sesión" />
+                  <Button fx:id="inicioSesion" layoutX="428.0" layoutY="18.0" mnemonicParsing="false" onAction="#llevarAInicioSesion" text="Iniciar Sesión" />
                </children></AnchorPane>
         </items>
       </SplitPane>

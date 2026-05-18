@@ -19,11 +19,7 @@ public class AlojamientoDAO {
     private final static String SQL_FIND_BY_PRECIOTOTAL = "SELECT * FROM alojamiento WHERE precioTotal=? ";
     private final static String SQL_FIND_BY_FECHACHECKIN = "SELECT * FROM alojamiento WHERE fechacheckin=? ";
     private final static String SQL_FIND_BY_FECHACHECKOUT = "SELECT * FROM alojamiento WHERE fechacheckout=? ";
-
-    //private final static String SQL_FIND_BY_CATEGORIA = "SELECT * FROM alojamiento WHERE categoria=? ";
-    //private final static String SQL_FIND_BY_STATUS = "SELECT * FROM alojamiento WHERE estado=? ";
-    //private final static String SQL_FIND_BY_DATE =  "SELECT * FROM alojamiento WHERE fecha=? ";
-    //private final static String SQL_FIND_BY_PRICE = "SELECT * FROM alojamiento WHERE precio=? ";
+    private final static String SQL_FIND_BY_PUNTUACION = "SELECT * FROM alojamiento WHERE puntuacion=? ";
 
     private final static String SQL_INSERT = "INSERT INTO alojamiento(nombre) values (?)";
     private final static String SQL_UPDATE = "UPDATE alojamiento SET nombre=? WHERE id=?";
@@ -41,7 +37,8 @@ public class AlojamientoDAO {
                 double precioTotal = rs.getDouble("precioTotal");
                 LocalDate fechaCheckin = LocalDate.parse(rs.getString("fechacheckin"));
                 LocalDate fechacheckout= LocalDate.parse(rs.getString("fechacheckout"));
-                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion,precioTotal, fechaCheckin,fechacheckout);
+                int puntuacion = rs.getInt("puntuacion");
+                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion,precioTotal, fechaCheckin,fechacheckout,puntuacion);
                 alojamientos.add(alojamiento);
             }
         }
@@ -61,7 +58,8 @@ public class AlojamientoDAO {
                 double precioTotal = rs.getDouble("precio");
                 LocalDate fechacheckin = LocalDate.parse(rs.getString("fechacheckin"));
                 LocalDate fechacheckout= LocalDate.parse(rs.getString("fechacheckout"));
-                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion,precioTotal, fechacheckin,fechacheckout);
+                int puntuacion = rs.getInt("puntuacion");
+                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion,precioTotal, fechacheckin,fechacheckout,puntuacion);
             }
         }
         return alojamiento;
@@ -80,7 +78,8 @@ public class AlojamientoDAO {
                 double precioTotal = rs.getDouble("precio");
                 LocalDate fechacheckin = LocalDate.parse(rs.getString("fechacheckin"));
                 LocalDate fechacheckout= LocalDate.parse(rs.getString("fechacheckout"));
-                alojamiento = new Alojamiento(idAlojamiento,idViaje2,nombre,direccion,precioTotal, fechacheckin,fechacheckout);
+                int puntuacion = rs.getInt("puntuacion");
+                alojamiento = new Alojamiento(idAlojamiento,idViaje2,nombre,direccion,precioTotal, fechacheckin,fechacheckout,puntuacion);
             }
         }
         return alojamiento;
@@ -100,7 +99,8 @@ public class AlojamientoDAO {
                 double precioTotal = rs.getDouble("precio");
                 LocalDate fechacheckin = LocalDate.parse(rs.getString("fechacheckin"));
                 LocalDate fechacheckout= LocalDate.parse(rs.getString("fechacheckout"));
-                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre2,direccion,precioTotal, fechacheckin,fechacheckout);
+                int puntuacion = rs.getInt("puntuacion");
+                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre2,direccion,precioTotal, fechacheckin,fechacheckout,puntuacion);
                 alojamientos.add(alojamiento);
             }
         }
@@ -121,7 +121,8 @@ public class AlojamientoDAO {
                 double precioTotal = rs.getDouble("precio");
                 LocalDate fechacheckin = LocalDate.parse(rs.getString("fechacheckin"));
                 LocalDate fechacheckout= LocalDate.parse(rs.getString("fechacheckout"));
-                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion2,precioTotal, fechacheckin,fechacheckout);
+                int puntuacion = rs.getInt("puntuacion");
+                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion2,precioTotal, fechacheckin,fechacheckout,puntuacion);
                 alojamientos.add(alojamiento);
             }
         }
@@ -142,7 +143,8 @@ public class AlojamientoDAO {
                 double precioTotal2 = rs.getDouble("precio");
                 LocalDate fechacheckin = LocalDate.parse(rs.getString("fechacheckin"));
                 LocalDate fechacheckout= LocalDate.parse(rs.getString("fechacheckout"));
-                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion,precioTotal2, fechacheckin,fechacheckout);
+                int puntuacion = rs.getInt("puntuacion");
+                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion,precioTotal2, fechacheckin,fechacheckout, puntuacion);
                 alojamientos.add(alojamiento);
             }
         }
@@ -163,7 +165,8 @@ public class AlojamientoDAO {
                 double precioTotal = rs.getDouble("precio");
                 LocalDate fechaCheckin2 = LocalDate.parse(rs.getString("fechacheckin"));
                 LocalDate fechacheckout = LocalDate.parse(rs.getString("fechacheckout"));
-                alojamiento = new Alojamiento(idAlojamiento, idViaje, nombre, direccion, precioTotal, fechaCheckin2, fechacheckout);
+                int  puntuacion = rs.getInt("puntuacion");
+                alojamiento = new Alojamiento(idAlojamiento, idViaje, nombre, direccion, precioTotal, fechaCheckin2, fechacheckout,  puntuacion);
                 alojamientos.add(alojamiento);
             }
         }
@@ -184,7 +187,30 @@ public class AlojamientoDAO {
                 double precioTotal = rs.getDouble("precio");
                 LocalDate fechacheckin = LocalDate.parse(rs.getString("fechacheckin"));
                 LocalDate fechacheckout = LocalDate.parse(rs.getString("fechacheckout"));
-                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion,precioTotal, fechacheckin,fechacheckout);
+                int puntuacion = rs.getInt("puntuacion");
+                alojamiento = new Alojamiento(idAlojamiento,idViaje,nombre,direccion,precioTotal, fechacheckin,fechacheckout, puntuacion);
+                alojamientos.add(alojamiento);
+            }
+        }
+        return alojamientos;
+    }
+
+    public static List<Alojamiento> findByPuntuacion(int puntuacion) throws SQLException {
+        List<Alojamiento> alojamientos = new ArrayList<>();
+        Alojamiento alojamiento = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PUNTUACION)){
+            ps.setInt(1, puntuacion);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idAlojamiento = rs.getInt("idAlojamiento");
+                int idViaje = rs.getInt("idViaje");
+                String nombre = rs.getString("nombre");
+                String direccion = rs.getString("direccion");
+                double precioTotal = rs.getDouble("precio");
+                LocalDate fechacheckin = LocalDate.parse(rs.getString("fechacheckin"));
+                LocalDate fechacheckout = LocalDate.parse(rs.getString("fechacheckout"));
+                int puntuacion2 = rs.getInt("puntuacion");
+                alojamiento =  new Alojamiento(idAlojamiento,idViaje,nombre,direccion,precioTotal,fechacheckin,fechacheckout, puntuacion2);
                 alojamientos.add(alojamiento);
             }
         }

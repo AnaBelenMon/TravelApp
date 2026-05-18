@@ -8,20 +8,32 @@ public enum CategoriaGasto {
     COMPRAS("Compras️"),
     OTROS("Otros");
 
-    private final String nombreBonito;
+    private final String nombre;
 
-    CategoriaGasto(String nombreBonito) {
-        this.nombreBonito = nombreBonito;
+    /**
+     *
+     * @param nombre
+     */
+    CategoriaGasto(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getNombreBonito() {
-        return nombreBonito;
+    /**
+     *
+     * @return
+     */
+    public String getNombre() {
+        return nombre;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "CategoriaGasto{" +
-                "nombreBonito='" + nombreBonito + '\'' +
+                "nombre='" + nombre + '\'' +
                 '}';
     }
 }

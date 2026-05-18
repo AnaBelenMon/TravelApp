@@ -1,7 +1,6 @@
 package com.example.travelapp.dao;
 
 import com.example.travelapp.dataAccess.ConnectionBD;
-import com.example.travelapp.model.Emocion;
 import com.example.travelapp.model.Obra;
 
 import java.sql.PreparedStatement;

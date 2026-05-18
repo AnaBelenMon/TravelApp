@@ -9,7 +9,7 @@ public class Museo extends ElementoCultural {
     private String horario;
     private String webOficial;
 
-    public Museo(String nombre, String descripcion, String ciudad, String pais, double precioEntrada, String horario, String webOficial) {
+    public Museo(int id, String nombre, String descripcion, String ciudad, String pais, double precioEntrada, String horario, String webOficial) {
         if (ciudad == null || ciudad.isBlank())
             throw new IllegalArgumentException("La ciudad no puede estar vacía");
 
@@ -24,7 +24,7 @@ public class Museo extends ElementoCultural {
 
         if (webOficial == null || webOficial.isBlank())
             throw new IllegalArgumentException("La web oficial no puede estar vacía");
-        super(0, nombre, descripcion);
+        super(id, nombre, descripcion);
         this.ciudad = ciudad;
         this.pais = pais;
         this.precioEntrada = precioEntrada;

@@ -8,7 +8,11 @@ public enum TipoViaje {
     ROMANTICO,
     FAMILIAR;
 
-    public String getNombreBonito() {
+    /**
+     *
+     * @return
+     */
+    public String getNombre() {
         return switch (this) {
             case AVENTURA -> "Aventura";
             case RELAX -> "Relax";

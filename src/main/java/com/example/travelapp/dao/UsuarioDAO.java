@@ -14,6 +14,7 @@ public class UsuarioDAO {
     private final static String SQL_FIND_BY_ID = "SELECT * FROM Usuario WHERE id = ?";
     private final static String SQL_FIND_BY_NOMBRE = "SELECT * FROM Usuario WHERE nombre = ?";
     private final static String SQL_FIND_BY_EMAIL = "SELECT * FROM Usuario WHERE email = ?";
+    private final static String SQL_LOGIN = "SELECT * FROM Usuario WHERE email = ? AND password = ?";
 
     private final static String SQL_INSERT = "INSERT INTO Usuario values()";
     private final static String SQL_UPDATE = "UPDATE Usuario SET ";
@@ -67,7 +68,7 @@ public class UsuarioDAO {
         return usuario;
     }
 
-    public static Usuario findByEmail(String email) throws SQLException {
+    public Usuario findByEmail(String email) {
         Usuario usuario = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_EMAIL)){
             ps.setString(1, email);
@@ -79,11 +80,13 @@ public class UsuarioDAO {
                 String password = rs.getString("password");
                 usuario = new Usuario(id, nombre, email2, password);
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
         return usuario;
     }
 
-    public static Usuario addUsuario(Usuario usuario) throws SQLException {
+    public Usuario addUsuario(Usuario usuario) throws SQLException {
         if (usuario != null && findByNombre(usuario.getNombre()) == null) {
             try(PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)){
                 ps.setString(1, usuario.getNombre());
@@ -121,4 +124,34 @@ public class UsuarioDAO {
         }
         return deleted;
     }
+
+    public Usuario login(String email, String password) {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_LOGIN)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            // Caso 1: el usuario NO existe
+            if (!rs.next()) {
+                return null; // usuario no registrado
+            }
+
+            // Caso 2: el usuario existe → comprobar contraseña
+            String passwordBD = rs.getString("password");
+
+            if (!passwordBD.equals(password)) {
+                // Usuario existe pero contraseña incorrecta
+                return new Usuario(-1, "INVALIDO", email, "");
+                // Marcamos un usuario especial
+            }
+
+            int idUsuario = rs.getInt("id");
+            String nombre = rs.getString("nombre");
+            String email2 = rs.getString("email");
+            String password2 = rs.getString("password");
+            return new Usuario(idUsuario, nombre, email2, password2);
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

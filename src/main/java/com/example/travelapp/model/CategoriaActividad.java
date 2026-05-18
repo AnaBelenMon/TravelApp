@@ -8,20 +8,32 @@ public enum CategoriaActividad {
     OCIO("Ocio"),
     NATURALEZA("Naturaleza");
 
-    private final String nombreBonito;
+    private final String nombre;
 
-    CategoriaActividad(String nombreBonito) {
-        this.nombreBonito = nombreBonito;
+    /**
+     *
+     * @param nombre
+     */
+    CategoriaActividad(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getNombreBonito() {
-        return nombreBonito;
+    /**
+     *
+     * @return
+     */
+    public String getNombre() {
+        return nombre;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "CategoriaActividad{" +
-                "nombreBonito='" + nombreBonito + '\'' +
+                "nombre='" + nombre + '\'' +
                 '}';
     }
 }

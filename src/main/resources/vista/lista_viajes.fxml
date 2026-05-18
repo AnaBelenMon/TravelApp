@@ -1,14 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.travelapp.controllers.ViajeController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.travelapp.controllers.ListaViajesController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </children>
+      </VBox>
+      <AnchorPane prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <HBox alignment="CENTER" layoutY="23.0" prefHeight="62.0" prefWidth="600.0">
+               <children>
+                  <Label text="Mis viajes">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox layoutY="85.0" prefHeight="75.0" prefWidth="600.0">
+               <children>
+                  <Label prefHeight="18.0" prefWidth="38.0" text="Filtros:">
+                     <HBox.margin>
+                        <Insets left="20.0" top="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <VBox prefHeight="115.0" prefWidth="462.0">
+                     <children>
+                        <HBox prefHeight="15.0" prefWidth="522.0">
+                           <children>
+                              <ComboBox prefHeight="26.0" prefWidth="65.0" promptText="Año" />
+                              <ComboBox prefHeight="26.0" prefWidth="64.0" promptText="Pais" />
+                              <ComboBox prefHeight="26.0" prefWidth="91.0" promptText="Emoción" />
+                              <ComboBox prefHeight="26.0" prefWidth="111.0" promptText="Presupuesto" />
+                           </children>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
+                        </HBox>
+                        <ListView prefHeight="118.0" prefWidth="442.0" />
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox layoutY="160.0" prefHeight="100.0" prefWidth="600.0">
+               <children>
+                  <VBox prefHeight="100.0" prefWidth="302.0">
+                     <children>
+                        <Label fx:id="nombreViaje" text="Label" />
+                        <Label fx:id="diasViaje" text="Label" />
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Emoción:" />
+                              <Label fx:id="emocionViaje" text="Label">
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" top="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefHeight="100.0" prefWidth="304.0">
+                     <children>
+                        <Label text="Label" />
+                        <Label text="Label" />
+                        <Label text="Label" />
+                     </children>
+                     <padding>
+                        <Insets left="20.0" top="20.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </children>
 </AnchorPane>
