@@ -19,8 +19,6 @@ public class Viaje {
 
     /**
      *
-     * @param idViaje
-     * @param idUsuario
      * @param nombre
      * @param fechaInicio
      * @param fechaFin
@@ -31,7 +29,7 @@ public class Viaje {
      * @param destinoPais
      * @param destinoCiudad
      */
-    public Viaje(int idViaje,int idUsuario, String nombre, LocalDate fechaInicio, LocalDate fechaFin, TipoViaje tipoViaje, String imagenPortada, String notasGenerales, double presupuestoEstimado, String destinoPais, String destinoCiudad) {
+    public Viaje(String nombre, LocalDate fechaInicio, LocalDate fechaFin, TipoViaje tipoViaje, String imagenPortada, String notasGenerales, double presupuestoEstimado, String destinoPais, String destinoCiudad) {
         if (idViaje <= 0){
             throw new IllegalArgumentException("El id no puede ser negativo");
         }
@@ -59,8 +57,6 @@ public class Viaje {
         if (destinoCiudad == null || destinoCiudad.isBlank()) {
             throw new IllegalArgumentException("La ciudad de destino no puede estar vacía");
         }
-        this.idViaje = idViaje;
-        this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;

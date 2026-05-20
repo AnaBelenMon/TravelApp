@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="101.0"
+            prefWidth="630.0"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.travelapp.controllers.componentes.BarraNavegacionViajeController">
+   <children>
+      <HBox alignment="CENTER"
+            prefHeight="34.0"
+            prefWidth="630.0">
+         <children>
+            <Button fx:id="resumen"
+                    mnemonicParsing="false"
+                    onAction="#onclickButtonResumen"
+                    text="Resumen"
+                    textAlignment="CENTER">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="alojamiento" mnemonicParsing="false" onAction="#onclickButtonAlojamiento" text="Alojamiento">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="transporte" mnemonicParsing="false" onAction="#onclickButtonTransporte" text="Transporte">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="actividades" mnemonicParsing="false" onAction="#onclickButtonActividades" text="Actividades">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="gastos" mnemonicParsing="false" onAction="#onclickButtonGastos" text="Gastos">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutY="66.0" prefHeight="66.0" prefWidth="630.0">
+         <children>
+            <Button fx:id="documentos" mnemonicParsing="false" onAction="#onclickButtonDocumentos" text="Documentos">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="recuerdos" mnemonicParsing="false" onAction="#onclickButtonRecuerdos" text="Recuerdos">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="museos" mnemonicParsing="false" onAction="#onclickButtonMuseos" text="Museos">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="obras" mnemonicParsing="false" onAction="#onclickButtonObras" text="Obras">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="mapaCultural" mnemonicParsing="false" onAction="#onclickButtonMapaCultural" text="Mapa cultural">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

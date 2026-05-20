@@ -25,12 +25,11 @@ public class ObraDAO {
         Obra obra = null;
         try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)){
             while (rs.next()) {
-                int id =  rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
                 String autor = rs.getString("autor");
                 String estilo = rs.getString("estilo");
-                obra = new Obra(id, nombre, descripcion, autor, estilo);
+                obra = new Obra(nombre, descripcion, autor, estilo);
                 obras.add(obra);
             }
         }
@@ -43,12 +42,11 @@ public class ObraDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int id2 =  rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
                 String autor = rs.getString("autor");
                 String estilo = rs.getString("estilo");
-                obra = new Obra(id2, nombre, descripcion, autor, estilo);
+                obra = new Obra(nombre, descripcion, autor, estilo);
             }
         }
         return obra;
@@ -61,12 +59,11 @@ public class ObraDAO {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int id =  rs.getInt("id");
                 String nombre2 = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
                 String autor = rs.getString("autor");
                 String estilo = rs.getString("estilo");
-                obra = new Obra(id, nombre2, descripcion, autor, estilo);
+                obra = new Obra(nombre2, descripcion, autor, estilo);
                 obras.add(obra);
             }
         }
@@ -80,12 +77,11 @@ public class ObraDAO {
             ps.setString(1, autor);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int id =  rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
                 String autor2 = rs.getString("autor");
                 String estilo = rs.getString("estilo");
-                obra = new Obra(id, nombre, descripcion, autor, estilo);
+                obra = new Obra(nombre, descripcion, autor, estilo);
                 obras.add(obra);
             }
         }
@@ -99,12 +95,11 @@ public class ObraDAO {
             ps.setString(1, estilo);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int id =  rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
                 String autor = rs.getString("autor");
                 String estilo2 = rs.getString("estilo");
-                obra = new Obra(id, nombre, descripcion, autor, estilo);
+                obra = new Obra(nombre, descripcion, autor, estilo2);
                 obras.add(obra);
             }
         }

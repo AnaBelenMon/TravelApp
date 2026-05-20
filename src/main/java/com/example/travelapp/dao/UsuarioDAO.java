@@ -25,11 +25,10 @@ public class UsuarioDAO {
         Usuario usuario =  null;
         try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)){
             while(rs.next()){
-                int id = rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String email = rs.getString("email");
                 String password = rs.getString("password");
-                usuario = new Usuario(id, nombre, email, password);
+                usuario = new Usuario(nombre, email, password);
                 usuarios.add(usuario);
             }
         }
@@ -42,11 +41,10 @@ public class UsuarioDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                int id2  = rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String email = rs.getString("email");
                 String password = rs.getString("password");
-                usuario = new Usuario(id2, nombre, email, password);
+                usuario = new Usuario(nombre, email, password);
             }
         }
         return usuario;
@@ -58,11 +56,10 @@ public class UsuarioDAO {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                int id  = rs.getInt("id");
                 String nombre2 = rs.getString("nombre");
                 String email = rs.getString("email");
                 String password = rs.getString("password");
-                usuario = new Usuario(id, nombre2, email, password);
+                usuario = new Usuario(nombre2, email, password);
             }
         }
         return usuario;
@@ -74,11 +71,10 @@ public class UsuarioDAO {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                int id  = rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String email2 = rs.getString("email");
                 String password = rs.getString("password");
-                usuario = new Usuario(id, nombre, email2, password);
+                usuario = new Usuario(nombre, email2, password);
             }
         }catch (SQLException e){
             e.printStackTrace();
@@ -139,15 +135,14 @@ public class UsuarioDAO {
 
             if (!passwordBD.equals(password)) {
                 // Usuario existe pero contraseña incorrecta
-                return new Usuario(-1, "INVALIDO", email, "");
+                return new Usuario("INVALIDO", email, "");
                 // Marcamos un usuario especial
             }
 
-            int idUsuario = rs.getInt("id");
             String nombre = rs.getString("nombre");
             String email2 = rs.getString("email");
             String password2 = rs.getString("password");
-            return new Usuario(idUsuario, nombre, email2, password2);
+            return new Usuario(nombre, email2, password2);
         }catch (SQLException e){
             e.printStackTrace();
             return null;

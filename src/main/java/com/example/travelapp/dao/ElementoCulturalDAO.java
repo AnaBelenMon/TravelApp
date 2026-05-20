@@ -23,10 +23,9 @@ public class ElementoCulturalDAO {
         ElementoCultural elementoCultural = null;
         try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)) {
             while (rs.next()) {
-                int id = rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
-                elementoCultural = new ElementoCultural(id, nombre, descripcion) {
+                elementoCultural = new ElementoCultural(nombre, descripcion) {
                     @Override
                     public String getTipo() {
                         return "";
@@ -45,10 +44,9 @@ public class ElementoCulturalDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int id2 =  rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
-                elementoCultural = new ElementoCultural(id2, nombre, descripcion) {
+                elementoCultural = new ElementoCultural(nombre, descripcion) {
                     @Override
                     public String getTipo() {
                         return "";
@@ -66,10 +64,9 @@ public class ElementoCulturalDAO {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id2 =  rs.getInt("id");
                 String nombre2 = rs.getString("nombre");
                 String descripcion2 = rs.getString("descripcion");
-                elementoCultural = new ElementoCultural(id2, nombre2, descripcion2) {
+                elementoCultural = new ElementoCultural(nombre2, descripcion2) {
                     @Override
                     public String getTipo() {
                         return "";

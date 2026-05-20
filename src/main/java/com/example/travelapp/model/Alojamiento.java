@@ -16,8 +16,6 @@ public class Alojamiento implements Valorable{
 
     /**
      *
-     * @param idAlojamiento
-     * @param idViaje
      * @param nombre
      * @param direccion
      * @param precioTotal
@@ -25,9 +23,7 @@ public class Alojamiento implements Valorable{
      * @param fechaCheckout
      * @param valoracion
      */
-    public Alojamiento(int idAlojamiento, int idViaje, String nombre, String direccion, double precioTotal, LocalDate fechaCheckin, LocalDate fechaCheckout, int valoracion) {
-        this.idAlojamiento = idAlojamiento;
-        this.idViaje = idViaje;
+    public Alojamiento(String nombre, String direccion, double precioTotal, LocalDate fechaCheckin, LocalDate fechaCheckout, int valoracion) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.precioTotal = precioTotal;

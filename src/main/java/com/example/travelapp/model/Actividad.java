@@ -1,7 +1,6 @@
 package com.example.travelapp.model;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 public class Actividad implements Valorable {
     private int idActividad;
@@ -56,8 +55,6 @@ public class Actividad implements Valorable {
         if (valoracion < 1 || valoracion > 5) {
             throw new IllegalArgumentException("Valoración inválida");
         }
-        this.idActividad = idActividad;
-        this.idViaje = idViaje;
         this.nombre = nombre;
         this.categoria = categoria;
         this.fecha = fecha;
@@ -116,7 +113,7 @@ public class Actividad implements Valorable {
     }
 
     /**
-     *
+     * Método que obtiene el nombre a traves del usuario.
      * @param nombre el nombre de la actividad obtenido por el usuario
      */
     public void setNombre(String nombre) {
@@ -127,7 +124,7 @@ public class Actividad implements Valorable {
     }
 
     /**
-     *
+     * Método que devuelve la categoria de la actividad
      * @return devuelve la categoria de la actividad
      */
     public CategoriaActividad getCategoria() {
@@ -272,48 +269,13 @@ public class Actividad implements Valorable {
         this.lugar = lugar;
     }
 
-
-    /**
-     *
-     * @param o   the reference object with which to compare.
-     * @return
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Actividad)) return false;
-        Actividad a = (Actividad) o;
-        return idActividad == a.idActividad;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(idActividad);
-    }
-
     /**
      * Método toString que imprime la información de la actividad.
      * @return devuelve la información de la actividad.
      */
     @Override
     public String toString() {
-        return "Actividad{" +
-                "idActividad=" + idActividad +
-                ", idViaje=" + idViaje +
-                ", nombre='" + nombre + '\'' +
-                ", categoria=" + categoria +
-                ", fecha='" + fecha + '\'' +
-                ", precio=" + precio +
-                ", notas='" + notas + '\'' +
-                ", valoracion=" + valoracion +
-                ", duracionMinutos=" + duracionMinutos +
-                ", reservada=" + reservada +
-                ", lugar='" + lugar + '\'' +
-                '}';
+        return nombre + ":" + fecha;
     }
 
     /**

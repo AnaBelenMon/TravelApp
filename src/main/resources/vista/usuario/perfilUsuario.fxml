@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0"
+            prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.travelapp.controllers.usuario.PerfilUsuarioController">
+   <children>
+      <VBox prefHeight="400.0"
+            prefWidth="600.0">
+         <children>
+            <HBox alignment="CENTER"
+                  prefHeight="100.0"
+                  prefWidth="200.0">
+               <children>
+                  <Label text="Perfil del Usuario">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="20.0"
+                                left="20.0"
+                                right="20.0"
+                                top="20.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <Label text="Datos personales:">
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+            </Label>
+            <VBox prefHeight="32.0"
+                  prefWidth="600.0">
+               <children>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="10.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="10.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="20.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Button fx:id="editarPerfil"
+                          mnemonicParsing="false"
+                          onAction="#onclickButtonEditarPerfil"
+                          text="Editar perfil">
+                     <VBox.margin>
+                        <Insets bottom="20.0"
+                                left="20.0"
+                                right="20.0"
+                                top="20.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <Label text="Resumen emocional:">
+               <VBox.margin>
+                  <Insets left="20.0" />
+               </VBox.margin>
+            </Label>
+            <VBox prefHeight="86.0"
+                  prefWidth="600.0">
+               <children>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="10.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="10.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="10.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="10.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Button fx:id="verEstadisticasEmocionales"
+                          mnemonicParsing="false"
+                          onAction="#onclickButtonVerEstadisticasEmocionales"
+                          text="Ver estadisticas emocionales">
+                     <VBox.margin>
+                        <Insets bottom="20.0"
+                                left="20.0"
+                                right="20.0"
+                                top="20.0"/>
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <Label text="Preferencias y ajustes:">
+               <VBox.margin>
+                  <Insets left="20.0" />
+               </VBox.margin>
+            </Label>
+            <VBox prefHeight="26.0"
+                  prefWidth="600.0">
+               <children>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="10.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="10.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Label">
+                     <VBox.margin>
+                        <Insets bottom="20.0"
+                                left="20.0"
+                                right="10.0"
+                                top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Button fx:id="cambiarAjustes"
+                          mnemonicParsing="false"
+                          onAction="#onclickButtonCambiarAjustes"
+                          text="Cambiar ajustes">
+                     <VBox.margin>
+                        <Insets bottom="20.0"
+                                left="20.0"
+                                right="20.0"
+                                top="20.0"/>
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <HBox alignment="CENTER"
+                  prefHeight="100.0"
+                  prefWidth="200.0">
+               <children>
+                  <Button fx:id="cerrarSesion"
+                          mnemonicParsing="false"
+                          onAction="#onclickButtonCerrarSesion"
+                          text="Cerrar sesión">
+                     <HBox.margin>
+                        <Insets bottom="20.0"
+                                left="20.0"
+                                right="20.0"
+                                top="20.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="eliminarCuenta"
+                          mnemonicParsing="false"
+                          onAction="#onclickButtonEliminarCuenta"
+                          text="Eliminar cuenta">
+                     <HBox.margin>
+                        <Insets bottom="20.0"
+                                left="20.0"
+                                right="20.0"
+                                top="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

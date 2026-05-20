@@ -29,14 +29,13 @@ public class TransporteDAO {
         Transporte transporte =  null;
         try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)){
             while(rs.next()){
-                int idTransporte = rs.getInt("idTransporte");
-                int idViaje = rs.getInt("idViaje");
+
                 TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
                 double precio = rs.getDouble("precio");
                 TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
                 String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(idTransporte,idViaje,tipo,fecha,precio,tipoDocumento,rutaDocumento);
+                transporte = new Transporte(tipo,fecha,precio,tipoDocumento,rutaDocumento);
                 transportes.add(transporte);
             }
         }
@@ -49,14 +48,13 @@ public class TransporteDAO {
             ps.setInt(1, idTransporte);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                int idTransporte2 = rs.getInt("idTransporte");
-                int idViaje = rs.getInt("idViaje");
+
                 TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
                 double precio = rs.getDouble("precio");
                 TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
                 String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(idTransporte2,idViaje,tipo,fecha,precio,tipoDocumento,rutaDocumento);
+                transporte = new Transporte(tipo,fecha,precio,tipoDocumento,rutaDocumento);
             }
         }
         return transporte;
@@ -68,14 +66,12 @@ public class TransporteDAO {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                int idTransporte = rs.getInt("idTransporte");
-                int idViaje2 = rs.getInt("idViaje");
                 TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
                 double precio = rs.getDouble("precio");
                 TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
                 String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(idTransporte,idViaje2,tipo,fecha,precio,tipoDocumento,rutaDocumento);
+                transporte = new Transporte(tipo,fecha,precio,tipoDocumento,rutaDocumento);
             }
         }
         return transporte;
@@ -88,14 +84,12 @@ public class TransporteDAO {
             ps.setString(1, tipoTransporte.toString());
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int idTransporte = rs.getInt("idTransporte");
-                int idViaje = rs.getInt("idViaje");
                 TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
                 double precio = rs.getDouble("precio");
                 TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
                 String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(idTransporte,idViaje,tipo,fecha,precio,tipoDocumento,rutaDocumento);
+                transporte = new Transporte(tipo,fecha,precio,tipoDocumento,rutaDocumento);
                 transportes.add(transporte);
             }
         }
@@ -109,14 +103,12 @@ public class TransporteDAO {
             ps.setString(1, fecha.toString());
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int idTransporte = rs.getInt("idTransporte");
-                int idViaje = rs.getInt("idViaje");
                 TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
                 LocalDate fecha2 = LocalDate.parse(rs.getString("fecha"));
                 double precio = rs.getDouble("precio");
                 TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
                 String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(idTransporte,idViaje,tipo,fecha2,precio,tipoDocumento,rutaDocumento);
+                transporte = new Transporte(tipo,fecha2,precio,tipoDocumento,rutaDocumento);
                 transportes.add(transporte);
             }
         }
@@ -130,14 +122,12 @@ public class TransporteDAO {
             ps.setDouble(1, precio);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int idTransporte = rs.getInt("idTransporte");
-                int idViaje = rs.getInt("idViaje");
                 TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
                 double precio2 = rs.getDouble("precio");
                 TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
                 String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(idTransporte,idViaje,tipo,fecha,precio2,tipoDocumento,rutaDocumento);
+                transporte = new Transporte(tipo,fecha,precio2,tipoDocumento,rutaDocumento);
                 transportes.add(transporte);
             }
         }

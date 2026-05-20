@@ -14,6 +14,8 @@ import java.util.List;
 
 public class ActividadDAO {
     private final static String SQL_ALL = "SELECT * FROM actividad";
+    private final static String SQL_FIND_BY_IDACTIVIDAD = "SELECT * FROM actividad WHERE idActividad =? ";
+    private final static String SQL_FIND_BY_IDVIAJE = "SELECT * FROM actividad WHERE idviaje=? ";
     private final static String SQL_FIND_BY_NAME = "SELECT * FROM actividad WHERE nombre LIKE ? ";
     private final static String SQL_FIND_BY_CATEGORIA = "SELECT * FROM actividad WHERE categoria=? ";
     private final static String SQL_FIND_BY_DATE = "SELECT * FROM actividad WHERE fecha=? ";
@@ -25,7 +27,6 @@ public class ActividadDAO {
     private final static String SQL_INSERT = "INSERT INTO actividad(idActividad,idViaje, nombre, categoria, fecha, precio, notas, valoracion, duracionMinutos, reservada, lugar) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final static String SQL_UPDATE = "UPDATE actividad SET nombre=?, categoria=?, fecha=?, precio=?, notas=?, valoracion=?, duracionMinutos=?, reservada=?, lugar=? " + "WHERE idActividad=?";
     private final static String SQL_DELETE = "DELETE FROM actividad WHERE idActividad=?";
-
     public static List<Actividad> findAll() {
         List<Actividad> actividades = new ArrayList<>();
         Actividad actividad = null;
@@ -48,6 +49,48 @@ public class ActividadDAO {
             throw new RuntimeException(e);
         }
         return actividades;
+    }
+
+    public static Actividad findByIdActividad(int idActividad) throws SQLException {
+        Actividad actividad = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDACTIVIDAD)){
+            ps.setInt(1, idActividad);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(nombre,categoria,fecha,precio,notas,valoracion,duracionMinutos,reservada,lugar);
+            }
+        }
+        return actividad;
+    }
+
+    public static Actividad findByIdViaje(int idViaje) throws SQLException {
+        Actividad actividad = null;
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)){
+            ps.setInt(1, idViaje);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String nombre = rs.getString("nombre");
+                CategoriaActividad categoria = CategoriaActividad.valueOf(rs.getString("categoria"));
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                double precio = rs.getDouble("precio");
+                String notas = rs.getString("notas");
+                int valoracion = rs.getInt("valoracion");
+                int duracionMinutos = rs.getInt("duracionMinutos");
+                boolean reservada = rs.getBoolean("reservada");
+                String lugar = rs.getString("lugar");
+                actividad = new Actividad(nombre,categoria,fecha,precio,notas,valoracion,duracionMinutos,reservada,lugar);
+            }
+        }
+        return actividad;
     }
 
     public static List<Actividad> findByNombre(String nombre) throws SQLException {
@@ -251,11 +294,11 @@ public class ActividadDAO {
         return updated;
     }
 
-    public static boolean deleteActividadByNombre(String nombreActividad) throws SQLException {
+    public static boolean deleteActividadById(int idActividad) throws SQLException {
         boolean deleted = false;
-        if(findByNombre(nombreActividad) != null){
+        if (findByIdActividad(idActividad) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
-                ps.setString(1, nombreActividad);
+                ps.setInt(1, idActividad);
                 ps.executeUpdate();
                 deleted = true;
             }

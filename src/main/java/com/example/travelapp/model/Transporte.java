@@ -14,35 +14,31 @@ public class Transporte {
 
     /**
      *
-     * @param idTransporte
-     * @param idViaje
      * @param tipo
      * @param fecha
      * @param precio
      * @param tipoDocumento
      * @param rutaDocumento
      */
-    public Transporte(int idTransporte, int idViaje, TipoTransporte tipo, LocalDate fecha, double precio, TipoDocumento tipoDocumento, String rutaDocumento) {
-        if (idTransporte <= 0)
+    public Transporte(TipoTransporte tipo, LocalDate fecha, double precio, TipoDocumento tipoDocumento, String rutaDocumento) {
+        if (idTransporte <= 0) {
             throw new IllegalArgumentException("El id no puede ser negativo");
-
-        if (tipo == null)
+        }
+        if (tipo == null) {
             throw new IllegalArgumentException("El tipo de transporte no puede ser nulo");
-
-        if (fecha == null)
+        }
+        if (fecha == null) {
             throw new IllegalArgumentException("La fecha no puede ser nula");
-
-        if (precio < 0)
+        }
+        if (precio < 0) {
             throw new IllegalArgumentException("El precio no puede ser negativo");
-
-        if (tipoDocumento == null)
+        }
+        if (tipoDocumento == null) {
             throw new IllegalArgumentException("El tipo de documento no puede ser nulo");
-
-        if (rutaDocumento == null || rutaDocumento.isBlank())
+        }
+        if (rutaDocumento == null || rutaDocumento.isBlank()) {
             rutaDocumento = "";
-
-        this.idTransporte = idTransporte;
-        this.idViaje = idViaje;
+        }
         this.tipo = tipo;
         this.fecha = fecha;
         this.precio = precio;

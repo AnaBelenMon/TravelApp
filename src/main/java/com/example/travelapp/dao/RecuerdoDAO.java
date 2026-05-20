@@ -33,8 +33,6 @@ public class RecuerdoDAO {
         Recuerdo recuerdo = null;
         try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_FIND_ALL)) {
             while (rs.next()) {
-                int idRecuerdo = rs.getInt("idRecuerdo");
-                int idViaje = rs.getInt("idViaje");
                 String rutaArchivo = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion = rs.getString("ubicacion");
@@ -43,7 +41,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito = rs.getBoolean("favorito");
                 String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo, idViaje, rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
+                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
                 recuerdos.add(recuerdo);
             }
         }
@@ -56,8 +54,6 @@ public class RecuerdoDAO {
             ps.setInt(1, idRecuerdo);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idRecuerdo2 = rs.getInt("idRecuerdo");
-                int idViaje = rs.getInt("idViaje");
                 String rutaArchivo = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion = rs.getString("ubicacion");
@@ -66,7 +62,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito = rs.getBoolean("favorito");
                 String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo2, idViaje, rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
+                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
             }
         }
         return recuerdo;
@@ -78,8 +74,6 @@ public class RecuerdoDAO {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idRecuerdo = rs.getInt("idRecuerdo");
-                int idViaje2 = rs.getInt("idViaje");
                 String rutaArchivo = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion = rs.getString("ubicacion");
@@ -88,7 +82,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito = rs.getBoolean("favorito");
                 String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo, idViaje2, rutaMiniatura, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
+                recuerdo = new Recuerdo(rutaMiniatura, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
             }
         }
         return recuerdo;
@@ -100,8 +94,6 @@ public class RecuerdoDAO {
             ps.setString(1, rutaArchivo);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idRecuerdo = rs.getInt("idRecuerdo");
-                int idViaje = rs.getInt("idViaje");
                 String rutaArchivo2 = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion = rs.getString("ubicacion");
@@ -110,7 +102,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito = rs.getBoolean("favorito");
                 String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo, idViaje, rutaArchivo2, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
+                recuerdo = new Recuerdo(rutaArchivo2, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
             }
         }
         return recuerdo;
@@ -123,8 +115,6 @@ public class RecuerdoDAO {
             ps.setString(1, ubicacion);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idRecuerdo = rs.getInt("idRecuerdo");
-                int idViaje = rs.getInt("idViaje");
                 String rutaArchivo = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion2 = rs.getString("ubicacion");
@@ -133,7 +123,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito = rs.getBoolean("favorito");
                 String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo, idViaje, rutaArchivo, descripcion, ubicacion2, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
+                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion2, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
                 recuerdos.add(recuerdo);
             }
         }
@@ -147,8 +137,6 @@ public class RecuerdoDAO {
             ps.setString(1, fecha.toString());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idRecuerdo = rs.getInt("idRecuerdo");
-                int idViaje = rs.getInt("idViaje");
                 String rutaArchivo = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion = rs.getString("ubicacion");
@@ -157,7 +145,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito = rs.getBoolean("favorito");
                 String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo, idViaje, rutaArchivo, descripcion, ubicacion, fecha2, emocion, tipoRecuerdo, favorito, rutaMiniatura);
+                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha2, emocion, tipoRecuerdo, favorito, rutaMiniatura);
                 recuerdos.add(recuerdo);
             }
         }
@@ -172,8 +160,6 @@ public class RecuerdoDAO {
             ps.setString(1, emocion.toString());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idRecuerdo = rs.getInt("idRecuerdo");
-                int idViaje = rs.getInt("idViaje");
                 String rutaArchivo = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion = rs.getString("ubicacion");
@@ -182,7 +168,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito = rs.getBoolean("favorito");
                 String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo, idViaje, rutaArchivo, descripcion, ubicacion, fecha, emocion2, tipoRecuerdo, favorito, rutaMiniatura);
+                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion2, tipoRecuerdo, favorito, rutaMiniatura);
                 recuerdos.add(recuerdo);
             }
         }
@@ -196,8 +182,6 @@ public class RecuerdoDAO {
             ps.setString(1, tipoRecuerdo.toString());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idRecuerdo = rs.getInt("idRecuerdo");
-                int idViaje = rs.getInt("idViaje");
                 String rutaArchivo = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion = rs.getString("ubicacion");
@@ -206,7 +190,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo2 = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito = rs.getBoolean("favorito");
                 String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo, idViaje, rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo2, favorito, rutaMiniatura);
+                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo2, favorito, rutaMiniatura);
                 recuerdos.add(recuerdo);
             }
         }
@@ -220,8 +204,6 @@ public class RecuerdoDAO {
             ps.setBoolean(1, favorito);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idRecuerdo = rs.getInt("idRecuerdo");
-                int idViaje = rs.getInt("idViaje");
                 String rutaArchivo = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion = rs.getString("ubicacion");
@@ -230,7 +212,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito2 = rs.getBoolean("favorito");
                 String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo, idViaje, rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito2, rutaMiniatura);
+                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito2, rutaMiniatura);
                 recuerdos.add(recuerdo);
             }
 
@@ -244,8 +226,6 @@ public class RecuerdoDAO {
             ps.setString(1, rutaMiniatura);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idRecuerdo = rs.getInt("idRecuerdo");
-                int idViaje = rs.getInt("idViaje");
                 String rutaArchivo = rs.getString("rutaArchivo");
                 String descripcion = rs.getString("descripcion");
                 String ubicacion = rs.getString("ubicacion");
@@ -254,7 +234,7 @@ public class RecuerdoDAO {
                 TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
                 boolean favorito = rs.getBoolean("favorito");
                 String rutaMiniatura2 = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(idRecuerdo, idViaje, rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura2);
+                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura2);
             }
         }
         return recuerdo;

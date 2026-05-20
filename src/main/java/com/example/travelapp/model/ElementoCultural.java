@@ -7,12 +7,10 @@ public abstract class ElementoCultural {
 
     /**
      *
-     * @param id
      * @param nombre
      * @param descripcion
      */
-    public ElementoCultural(int id, String nombre, String descripcion) {
-        this.id = id;
+    public ElementoCultural(String nombre, String descripcion) {
         this.nombre = nombre;
         this.descripcion = descripcion;
     }

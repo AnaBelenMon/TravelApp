@@ -11,22 +11,20 @@ public class Documento {
 
     /**
      *
-     * @param idViaje
      * @param nombre
      * @param tipo
      * @param rutaArchivo
      */
-    public Documento(int idDocumento, int idViaje, String nombre, TipoDocumento tipo, String rutaArchivo) {
-        if (nombre == null || nombre.isBlank())
+    public Documento(String nombre, TipoDocumento tipo, String rutaArchivo) {
+        if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre no puede estar vacío");
-
-        if (tipo == null)
+        }
+        if (tipo == null) {
             throw new IllegalArgumentException("El tipo de documento no puede ser nulo");
-
-        if (rutaArchivo == null || rutaArchivo.isBlank())
+        }
+        if (rutaArchivo == null || rutaArchivo.isBlank()) {
             throw new IllegalArgumentException("La ruta del archivo no puede estar vacía");
-        this.idDocumento = idDocumento;
-        this.idViaje = idViaje;
+        }
         this.nombre = nombre;
         this.tipo = tipo;
         this.rutaArchivo = rutaArchivo;
@@ -81,8 +79,9 @@ public class Documento {
      * @param nombre
      */
     public void setNombre(String nombre) {
-        if (nombre == null || nombre.isBlank())
+        if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre no puede estar vacío");
+        }
         this.nombre = nombre;
     }
 
@@ -99,8 +98,9 @@ public class Documento {
      * @param tipo
      */
     public void setTipo(TipoDocumento tipo) {
-        if (tipo == null)
+        if (tipo == null) {
             throw new IllegalArgumentException("El tipo no puede ser nulo");
+        }
         this.tipo = tipo;
     }
 
@@ -117,8 +117,9 @@ public class Documento {
      * @param rutaArchivo
      */
     public void setRutaArchivo(String rutaArchivo) {
-        if (rutaArchivo == null || rutaArchivo.isBlank())
+        if (rutaArchivo == null || rutaArchivo.isBlank()) {
             throw new IllegalArgumentException("La ruta no puede estar vacía");
+        }
         this.rutaArchivo = rutaArchivo;
     }
 

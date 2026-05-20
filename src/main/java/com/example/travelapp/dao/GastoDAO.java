@@ -28,13 +28,11 @@ public class GastoDAO {
         Gasto gasto = null;
         try(ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)){
             while(rs.next()){
-                int idGasto = rs.getInt("idGasto");
-                int idViaje = rs.getInt("idViaje");
                 CategoriaGasto categoria = CategoriaGasto.valueOf(rs.getString("categoria"));
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
                 double importe = rs.getDouble("importe");
                 String notas = rs.getString("notas");
-                gasto = new Gasto(idGasto,idViaje,categoria,fecha,importe,notas);
+                gasto = new Gasto(categoria,fecha,importe,notas);
                 gastos.add(gasto);
             }
         }
@@ -47,13 +45,11 @@ public class GastoDAO {
             ps.setInt(1, idGasto);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int idGasto2 = rs.getInt("idGasto");
-                int idViaje = rs.getInt("idViaje");
                 CategoriaGasto categoria = CategoriaGasto.valueOf(rs.getString("categoria"));
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
                 double importe = rs.getDouble("importe");
                 String notas = rs.getString("notas");
-                gasto = new Gasto(idGasto2,idViaje,categoria,fecha,importe,notas);
+                gasto = new Gasto(categoria,fecha,importe,notas);
             }
         }
         return gasto;
@@ -65,13 +61,11 @@ public class GastoDAO {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int idGasto = rs.getInt("idGasto");
-                int idViaje2 = rs.getInt("idViaje");
                 CategoriaGasto categoria = CategoriaGasto.valueOf(rs.getString("categoria"));
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
                 double importe = rs.getDouble("importe");
                 String notas = rs.getString("notas");
-                gasto = new Gasto(idGasto,idViaje2,categoria,fecha,importe,notas);
+                gasto = new Gasto(categoria,fecha,importe,notas);
             }
         }
         return gasto;
@@ -84,13 +78,12 @@ public class GastoDAO {
             ps.setString(1, categoria);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int idGasto = rs.getInt("idGasto");
-                int idViaje = rs.getInt("idViaje");
                 CategoriaGasto categoria1 = CategoriaGasto.valueOf(rs.getString("categoria"));
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
                 double importe = rs.getDouble("importe");
                 String notas = rs.getString("notas");
-                gasto= new Gasto(idGasto,idViaje,categoria1,fecha,importe,notas);
+                gasto= new Gasto(categoria1,fecha,importe,notas);
+                gastos.add(gasto);
             }
         }
         return gastos;
@@ -103,13 +96,11 @@ public class GastoDAO {
             ps.setString(1, fecha);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int idGasto = rs.getInt("idGasto");
-                int idViaje = rs.getInt("idViaje");
                 CategoriaGasto categoria = CategoriaGasto.valueOf(rs.getString("categoria"));
                 LocalDate fecha1 = LocalDate.parse(rs.getString("fecha"));
                 double importe = rs.getDouble("importe");
                 String notas = rs.getString("notas");
-                gasto = new Gasto(idGasto,idViaje,categoria,fecha1,importe,notas);
+                gasto = new Gasto(categoria,fecha1,importe,notas);
                 gastos.add(gasto);
             }
         }

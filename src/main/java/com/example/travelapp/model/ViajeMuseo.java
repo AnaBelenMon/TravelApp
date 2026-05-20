@@ -11,12 +11,10 @@ public class ViajeMuseo {
 
     /**
      *
-     * @param idViaje
-     * @param idMuseo
      * @param fechaVisita
      * @param emocion
      */
-    public ViajeMuseo(int idViaje, int idMuseo, LocalDate fechaVisita, Emocion emocion) {
+    public ViajeMuseo(LocalDate fechaVisita, Emocion emocion) {
         if (idViaje <= 0) {
             throw new IllegalArgumentException("El id del viaje no es válido");
         }
@@ -29,8 +27,6 @@ public class ViajeMuseo {
         if (emocion == null) {
             throw new IllegalArgumentException("La emoción no puede ser nula");
         }
-        this.idViaje = idViaje;
-        this.idMuseo = idMuseo;
         this.fechaVisita = fechaVisita;
         this.emocion = emocion;
     }

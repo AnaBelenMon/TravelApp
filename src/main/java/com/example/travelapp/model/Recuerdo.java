@@ -17,8 +17,6 @@ public class Recuerdo implements Emocionable {
 
     /**
      *
-     * @param idRecuerdo
-     * @param idViaje
      * @param rutaArchivo
      * @param descripcion
      * @param ubicacion
@@ -28,9 +26,7 @@ public class Recuerdo implements Emocionable {
      * @param favorito
      * @param rutaMiniatura
      */
-    public Recuerdo(int idRecuerdo, int idViaje, String rutaArchivo, String descripcion, String ubicacion, LocalDate fecha, Emocion emocion, TipoRecuerdo tipo, boolean favorito, String rutaMiniatura) {
-        this.idRecuerdo = idRecuerdo;
-        this.idViaje = idViaje;
+    public Recuerdo(String rutaArchivo, String descripcion, String ubicacion, LocalDate fecha, Emocion emocion, TipoRecuerdo tipo, boolean favorito, String rutaMiniatura) {
         this.rutaArchivo = rutaArchivo;
         this.descripcion = descripcion;
         this.ubicacion = ubicacion;

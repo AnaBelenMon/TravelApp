@@ -44,7 +44,7 @@ public class ViajeDAO {
                 double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
                 String destinoPais = rs.getString("destinoPais");
                 String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje,idUsuario,nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
+                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
                 viajes.add(viaje);
             }
         }
@@ -57,8 +57,6 @@ public class ViajeDAO {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idViaje2 = rs.getInt("idViaje");
-                int idUsuario = rs.getInt("idUsuario");
                 String nombre = rs.getString("nombre");
                 LocalDate fechaInicio = LocalDate.parse(rs.getString("fechaInicio"));
                 LocalDate fechaFin = LocalDate.parse(rs.getString("fechaFin"));
@@ -68,7 +66,7 @@ public class ViajeDAO {
                 double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
                 String destinoPais = rs.getString("destinoPais");
                 String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje2,idUsuario,nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
+                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
             }
         }
         return viaje;
@@ -80,8 +78,6 @@ public class ViajeDAO {
             ps.setInt(1, idUsuario);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idUsuario2 = rs.getInt("idUsuario");
                 String nombre = rs.getString("nombre");
                 LocalDate fechaInicio = LocalDate.parse(rs.getString("fechaInicio"));
                 LocalDate fechaFin = LocalDate.parse(rs.getString("fechaFin"));
@@ -91,7 +87,7 @@ public class ViajeDAO {
                 double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
                 String destinoPais = rs.getString("destinoPais");
                 String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje,idUsuario2,nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
+                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
             }
         }
         return viaje;
@@ -104,8 +100,6 @@ public class ViajeDAO {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idUsuario = rs.getInt("idUsuario");
                 String nombre2 = rs.getString("nombre");
                 LocalDate fechaInicio = LocalDate.parse(rs.getString("fechaInicio"));
                 LocalDate fechaFin = LocalDate.parse(rs.getString("fechaFin"));
@@ -115,7 +109,7 @@ public class ViajeDAO {
                 double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
                 String destinoPais = rs.getString("destinoPais");
                 String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje,idUsuario,nombre2,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
+                viaje = new Viaje(nombre2,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
                 viajes.add(viaje);
             }
         }
@@ -128,8 +122,6 @@ public class ViajeDAO {
             ps.setString(1, fechaInicio);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idUsuario = rs.getInt("idUsuario");
                 String nombre = rs.getString("nombre");
                 LocalDate fechaInicio2  = LocalDate.parse(rs.getString("fechaInicio"));
                 LocalDate fechaFin  = LocalDate.parse(rs.getString("fechaFin"));
@@ -139,7 +131,7 @@ public class ViajeDAO {
                 double presuspuestoEstimado = rs.getDouble("presupuestoEstimado");
                 String destinoPais = rs.getString("destinoPais");
                 String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje,idUsuario,nombre,fechaInicio2,fechaFin,tipoViaje,imagenPortada,notasGenerales,presuspuestoEstimado,destinoPais,destinoCiudad);
+                viaje = new Viaje(nombre,fechaInicio2,fechaFin,tipoViaje,imagenPortada,notasGenerales,presuspuestoEstimado,destinoPais,destinoCiudad);
             }
         }
         return viaje;
@@ -151,8 +143,6 @@ public class ViajeDAO {
             ps.setString(1, fechaFin);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idUsuario = rs.getInt("idUsuario");
                 String nombre = rs.getString("nombre");
                 LocalDate fechaInicio  = LocalDate.parse(rs.getString("fechaInicio"));
                 LocalDate fechaFin2 = LocalDate.parse(rs.getString("fechaFin"));
@@ -162,7 +152,7 @@ public class ViajeDAO {
                 double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
                 String destinoPais = rs.getString("destinoPais");
                 String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje,idUsuario,nombre,fechaInicio,fechaFin2,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
+                viaje = new Viaje(nombre,fechaInicio,fechaFin2,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
             }
         }
         return viaje;
@@ -175,8 +165,6 @@ public class ViajeDAO {
             ps.setString(1, tipoViaje.toString());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idUsuario = rs.getInt("idUsuario");
                 String nombre = rs.getString("nombre");
                 LocalDate fechaInicio  = LocalDate.parse(rs.getString("fechaInicio"));
                 LocalDate fechaFin  = LocalDate.parse(rs.getString("fechaFin"));
@@ -186,7 +174,7 @@ public class ViajeDAO {
                 double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
                 String destinoPais = rs.getString("destinoPais");
                 String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje,idUsuario,nombre,fechaInicio,fechaFin,tipoViaje2,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
+                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje2,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
                 viajes.add(viaje);
             }
         }
@@ -200,8 +188,6 @@ public class ViajeDAO {
             ps.setDouble(1, presupuestoEstimado);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idUsuario = rs.getInt("idUsuario");
                 String nombre = rs.getString("nombre");
                 LocalDate fechaInicio  = LocalDate.parse(rs.getString("fechaInicio"));
                 LocalDate fechaFin  = LocalDate.parse(rs.getString("fechaFin"));
@@ -211,7 +197,7 @@ public class ViajeDAO {
                 double presupuestoEstimado2 =  rs.getDouble("presupuestoEstimado");
                 String destinoPais = rs.getString("destinoPais");
                 String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje,idUsuario,nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado2,destinoPais,destinoCiudad);
+                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado2,destinoPais,destinoCiudad);
                 viajes.add(viaje);
             }
         }
@@ -225,8 +211,6 @@ public class ViajeDAO {
             ps.setString(1, destinoPais);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idUsuario = rs.getInt("idUsuario");
                 String nombre = rs.getString("nombre");
                 LocalDate fechaInicio = LocalDate.parse(rs.getString("fechaInicio"));
                 LocalDate fechaFin = LocalDate.parse(rs.getString("fechaFin"));
@@ -236,7 +220,7 @@ public class ViajeDAO {
                 double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
                 String destinoPais2  = rs.getString("destinoPais");
                 String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje,idUsuario,nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais2,destinoCiudad);
+                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais2,destinoCiudad);
             }
         }
         return  viajes;
@@ -249,8 +233,6 @@ public class ViajeDAO {
             ps.setString(1, destinoCiudad);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idUsuario = rs.getInt("idUsuario");
                 String nombre = rs.getString("nombre");
                 LocalDate fechaInicio  = LocalDate.parse(rs.getString("fechaInicio"));
                 LocalDate fechaFin  = LocalDate.parse(rs.getString("fechaFin"));
@@ -260,7 +242,7 @@ public class ViajeDAO {
                 double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
                 String destinoPais = rs.getString("destinoPais");
                 String destinoCiudad2 = rs.getString("destinoCiudad");
-                viaje = new Viaje(idViaje,idUsuario,nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad2);
+                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad2);
                 viajes.add(viaje);
             }
         }

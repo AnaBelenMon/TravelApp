@@ -15,21 +15,19 @@ public class Usuario {
      * @param email
      * @param password
      */
-    public Usuario(int idUsuario, String nombre, String email, String password) {
-
-        if (idUsuario < 0)
+    public Usuario(String nombre, String email, String password) {
+        if (idUsuario < 0) {
             throw new IllegalArgumentException("El id no puede ser negativo");
-
-        if (nombre == null || nombre.isBlank())
+        }
+        if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre no puede estar vacío");
-
-        if (email == null || !email.contains("@"))
+        }
+        if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("El email no es válido");
-
-        if (password == null || password.length() < 6)
+        }
+        if (password == null || password.length() < 6) {
             throw new IllegalArgumentException("La contraseña no es válida");
-
-        this.idUsuario = idUsuario;
+        }
         this.nombre = nombre;
         this.email = email;
         this.password = password;
@@ -89,16 +87,16 @@ public class Usuario {
      *
      * @return
      */
-    public String getPasswordHash() {
+    public String getPassword() {
         return password;
     }
 
     /**
      *
-     * @param passwordHash
+     * @param password
      */
-    public void setPasswordHash(String passwordHash) {
-        this.password = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**

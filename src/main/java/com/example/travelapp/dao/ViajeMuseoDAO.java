@@ -27,11 +27,9 @@ public class ViajeMuseoDAO {
 
         try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_FIND_ALL)){
             while (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idMuseo = rs.getInt("idMuseo");
                 LocalDate fechaVisita = rs.getDate("fechaVisita").toLocalDate();
                 Emocion emocion = rs.getObject("emocion", Emocion.class);
-                viajeMuseo = new ViajeMuseo(idViaje, idMuseo, fechaVisita, emocion);
+                viajeMuseo = new ViajeMuseo(fechaVisita, emocion);
                 viajeMuseos.add(viajeMuseo);
             }
         }
@@ -44,11 +42,9 @@ public class ViajeMuseoDAO {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idMuseo = rs.getInt("idMuseo");
-                int idViaje2 = rs.getInt("idViaje");
                 LocalDate fechaVisita = rs.getDate("fechaVisita").toLocalDate();
                 Emocion emocion = rs.getObject("emocion", Emocion.class);
-                viajeMuseo = new ViajeMuseo(idMuseo, idViaje2, fechaVisita, emocion);
+                viajeMuseo = new ViajeMuseo( fechaVisita, emocion);
             }
         }
         return viajeMuseo;
@@ -61,11 +57,9 @@ public class ViajeMuseoDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
 
-                int idViaje = rs.getInt("idViaje");
-                int idMuseo2 = rs.getInt("idMuseo");
                 LocalDate fechaVisita = rs.getDate("fechaVisita").toLocalDate();
                 Emocion emocion = rs.getObject("emocion", Emocion.class);
-                viajeMuseo = new ViajeMuseo( idViaje,idMuseo2, fechaVisita, emocion);
+                viajeMuseo = new ViajeMuseo(fechaVisita, emocion);
             }
         }
         return viajeMuseo;
@@ -78,11 +72,10 @@ public class ViajeMuseoDAO {
             ps.setString(1, fechaVisita.toString());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idMuseo = rs.getInt("idMuseo");
+
                 LocalDate fechaVisita2 = rs.getDate("fechaVisita").toLocalDate();
                 Emocion emocion = rs.getObject("emocion", Emocion.class);
-                viajeMuseo = new ViajeMuseo(idViaje, idMuseo, fechaVisita2, emocion);
+                viajeMuseo = new ViajeMuseo(fechaVisita2, emocion);
                 viajeMuseos.add(viajeMuseo);
             }
         }

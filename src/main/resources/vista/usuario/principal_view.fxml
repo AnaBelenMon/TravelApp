@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="642.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.travelapp.controllers.usuario.Principal">
+   <content>
+      <VBox prefHeight="642.0" prefWidth="598.0">
+         <children>
+            <Label text="Label" />
+            <VBox prefHeight="42.0" prefWidth="598.0">
+               <children>
+                  <Label fx:id="lblProximosViajes" text="Label" />
+                  <Label fx:id="lblMuseosVisitados" text="Label" />
+                  <Label fx:id="lblEmocionDominante" text="Label" />
+               </children>
+            </VBox>
+            <VBox prefHeight="181.0" prefWidth="598.0">
+               <children>
+                  <ImageView fx:id="imgUltimoRecuerdo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="lblLugarRecuerdo" text="Label" />
+                  <Label fx:id="lblEmocionRecuerdo" text="Label" />
+                  <Button fx:id="btnVerViajeRecuerdo" mnemonicParsing="false" onAction="#onclickButtonVerViaje" text="Ver Viaje" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="imgMapaEmocional" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="btnNuevoViaje" mnemonicParsing="false" onAction="#onclickButtonNuevoViaje" text="Nuevo Viaje">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="verMisViajes" mnemonicParsing="false" onAction="#onclickButtonVerMisViajes" text="Ver mis Viajes">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="verPerfil" mnemonicParsing="false" onAction="#onclickButtonVerPerfil" text="Ver perfil">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="estadisticas" mnemonicParsing="false" onAction="#onclickButtonEstadisticas" text="Estadisticas">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>

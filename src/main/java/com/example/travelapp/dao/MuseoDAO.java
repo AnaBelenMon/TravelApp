@@ -27,7 +27,6 @@ public class MuseoDAO {
         Museo museo = null;
         try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)){
             while (rs.next()) {
-                int idMuseo = rs.getInt("idMuseo");
                 String nameMuseo = rs.getString("nameMuseo");
                 String descriptionMuseo = rs.getString("descriptionMuseo");
                 String ciudadMuseo = rs.getString("ciudadMuseo");
@@ -35,7 +34,7 @@ public class MuseoDAO {
                 double precioEntrada = rs.getDouble("precioEntrada");
                 String horarioMuseo = rs.getString("horarioMuseo");
                 String webOficialMuseo = rs.getString("webOficialMuseo");
-                museo = new Museo(idMuseo,nameMuseo,descriptionMuseo,ciudadMuseo,paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
+                museo = new Museo(nameMuseo,descriptionMuseo,ciudadMuseo,paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
                 museos.add(museo);
             }
         }
@@ -48,7 +47,6 @@ public class MuseoDAO {
             ps.setInt(1, idMuseo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idMuseo2 = rs.getInt("idMuseo");
                 String nameMuseo = rs.getString("nameMuseo");
                 String descriptionMuseo = rs.getString("descriptionMuseo");
                 String ciudadMuseo = rs.getString("ciudadMuseo");
@@ -56,7 +54,7 @@ public class MuseoDAO {
                 double precioEntrada = rs.getDouble("precioEntrada");
                 String horarioMuseo = rs.getString("horarioMuseo");
                 String webOficialMuseo = rs.getString("webOficialMuseo");
-                museo = new Museo(idMuseo2,nameMuseo,descriptionMuseo,ciudadMuseo,paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
+                museo = new Museo(nameMuseo,descriptionMuseo,ciudadMuseo,paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
             }
         }
         return museo;
@@ -69,7 +67,6 @@ public class MuseoDAO {
             ps.setString(1, nameMuseo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idMuseo = rs.getInt("idMuseo");
                 String nameMuseo2 = rs.getString("nameMuseo");
                 String descriptionMuseo = rs.getString("descriptionMuseo");
                 String ciudadMuseo = rs.getString("ciudadMuseo");
@@ -77,7 +74,7 @@ public class MuseoDAO {
                 double precioEntrada = rs.getDouble("precioEntrada");
                 String horarioMuseo = rs.getString("horarioMuseo");
                 String webOficialMuseo = rs.getString("webOficialMuseo");
-                museo = new Museo(idMuseo, nameMuseo2, descriptionMuseo, ciudadMuseo, paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
+                museo = new Museo( nameMuseo2, descriptionMuseo, ciudadMuseo, paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
                 museos.add(museo);
             }
         }
@@ -91,7 +88,6 @@ public class MuseoDAO {
             ps.setString(1, ciudadMuseo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idMuseo = rs.getInt("idMuseo");
                 String nameMuseo = rs.getString("nameMuseo");
                 String descriptionMuseo = rs.getString("descriptionMuseo");
                 String ciudadMuseo2 = rs.getString("ciudadMuseo");
@@ -99,7 +95,7 @@ public class MuseoDAO {
                 double precioEntrada = rs.getDouble("precioEntrada");
                 String horarioMuseo = rs.getString("horarioMuseo");
                 String webOficialMuseo = rs.getString("webOficialMuseo");
-                museo = new Museo(idMuseo,nameMuseo,descriptionMuseo,ciudadMuseo2,paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
+                museo = new Museo(nameMuseo,descriptionMuseo,ciudadMuseo2,paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
                 museos.add(museo);
             }
         }
@@ -113,7 +109,6 @@ public class MuseoDAO {
             ps.setString(1, paisMuseo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idMuseo = rs.getInt("idMuseo");
                 String nameMuseo = rs.getString("nameMuseo");
                 String descriptionMuseo = rs.getString("descriptionMuseo");
                 String ciudadMuseo = rs.getString("ciudadMuseo");
@@ -121,7 +116,7 @@ public class MuseoDAO {
                 double precioEntrada = rs.getDouble("precioEntrada");
                 String horarioMuseo = rs.getString("horarioMuseo");
                 String webOficialMuseo = rs.getString("webOficialMuseo");
-                museo = new Museo(idMuseo,nameMuseo,descriptionMuseo,ciudadMuseo,paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
+                museo = new Museo(nameMuseo,descriptionMuseo,ciudadMuseo,paisMuseo,precioEntrada, horarioMuseo,webOficialMuseo);
                 museos.add(museo);
             }
         }

@@ -6,8 +6,8 @@ public class Obra extends ElementoCultural {
     private String autor;
     private String estilo;
 
-    public Obra(int id, String nombre, String descripcion, String autor, String estilo) {
-        super(id, nombre, descripcion);
+    public Obra(String nombre, String descripcion, String autor, String estilo) {
+        super(nombre, descripcion);
         this.autor = autor;
         this.estilo = estilo;
     }

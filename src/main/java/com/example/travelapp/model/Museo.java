@@ -9,22 +9,23 @@ public class Museo extends ElementoCultural {
     private String horario;
     private String webOficial;
 
-    public Museo(int id, String nombre, String descripcion, String ciudad, String pais, double precioEntrada, String horario, String webOficial) {
-        if (ciudad == null || ciudad.isBlank())
+    public Museo(String nombre, String descripcion, String ciudad, String pais, double precioEntrada, String horario, String webOficial) {
+        if (ciudad == null || ciudad.isBlank()) {
             throw new IllegalArgumentException("La ciudad no puede estar vacía");
-
-        if (pais == null || pais.isBlank())
+        }
+        if (pais == null || pais.isBlank()) {
             throw new IllegalArgumentException("El país no puede estar vacío");
-
-        if (precioEntrada < 0)
+        }
+        if (precioEntrada < 0) {
             throw new IllegalArgumentException("El precio no puede ser negativo");
-
-        if (horario == null || horario.isBlank())
+        }
+        if (horario == null || horario.isBlank()) {
             throw new IllegalArgumentException("El horario no puede estar vacío");
-
-        if (webOficial == null || webOficial.isBlank())
+        }
+        if (webOficial == null || webOficial.isBlank()) {
             throw new IllegalArgumentException("La web oficial no puede estar vacía");
-        super(id, nombre, descripcion);
+        }
+        super(nombre, descripcion);
         this.ciudad = ciudad;
         this.pais = pais;
         this.precioEntrada = precioEntrada;
@@ -42,8 +43,9 @@ public class Museo extends ElementoCultural {
     }
 
     public void setCiudad(String ciudad) {
-        if (ciudad == null || ciudad.isBlank())
+        if (ciudad == null || ciudad.isBlank()) {
             throw new IllegalArgumentException("La ciudad no puede estar vacía");
+        }
         this.ciudad = ciudad;
     }
 
@@ -52,8 +54,9 @@ public class Museo extends ElementoCultural {
     }
 
     public void setPais(String pais) {
-        if (pais == null || pais.isBlank())
+        if (pais == null || pais.isBlank()) {
             throw new IllegalArgumentException("El país no puede estar vacío");
+        }
         this.pais = pais;
     }
 
@@ -62,8 +65,9 @@ public class Museo extends ElementoCultural {
     }
 
     public void setPrecioEntrada(double precioEntrada) {
-        if (precioEntrada < 0)
+        if (precioEntrada < 0) {
             throw new IllegalArgumentException("El precio no puede ser negativo");
+        }
         this.precioEntrada = precioEntrada;
     }
 
@@ -72,8 +76,9 @@ public class Museo extends ElementoCultural {
     }
 
     public void setHorario(String horario) {
-        if (horario == null || horario.isBlank())
+        if (horario == null || horario.isBlank()) {
             throw new IllegalArgumentException("El horario no puede estar vacío");
+        }
         this.horario = horario;
     }
 
@@ -82,8 +87,9 @@ public class Museo extends ElementoCultural {
     }
 
     public void setWebOficial(String webOficial) {
-        if (webOficial == null || webOficial.isBlank())
+        if (webOficial == null || webOficial.isBlank()) {
             throw new IllegalArgumentException("La web oficial no puede estar vacía");
+        }
         this.webOficial = webOficial;
     }
 

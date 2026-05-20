@@ -13,16 +13,12 @@ public class Gasto {
 
     /**
      *
-     * @param idGasto
-     * @param idViaje
      * @param categoriaGasto
      * @param fecha
      * @param importe
      * @param notas
      */
-    public Gasto(int idGasto, int idViaje, CategoriaGasto categoriaGasto, LocalDate fecha, double importe, String notas) {
-        this.idGasto = idGasto;
-        this.idViaje = idViaje;
+    public Gasto(CategoriaGasto categoriaGasto, LocalDate fecha, double importe, String notas) {
         this.categoriaGasto = categoriaGasto;
         this.fecha = fecha;
         this.importe = importe;

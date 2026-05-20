@@ -28,12 +28,10 @@ public class DocumentoDAO {
         Documento documento = null;
         try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)) {
             while (rs.next()) {
-                int idDocumento = rs.getInt("idDocumento");
-                int idViaje = rs.getInt("idViaje");
                 String nombre = rs.getString("nombre");
                 TipoDocumento tipo = TipoDocumento.valueOf(rs.getString("tipo"));
                 String archivo = rs.getString("archivo");
-                documento = new Documento(idDocumento, idViaje, nombre, tipo, archivo);
+                documento = new Documento(nombre, tipo, archivo);
                 documentos.add(documento);
             }
         }
@@ -46,12 +44,10 @@ public class DocumentoDAO {
             ps.setInt(1, idDocumento);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idDocumento2 = rs.getInt("idDocumento");
-                int idViaje = rs.getInt("idViaje");
                 String nombre = rs.getString("nombre");
                 TipoDocumento tipo = TipoDocumento.valueOf(rs.getString("tipo"));
                 String archivo = rs.getString("archivo");
-                documento = new Documento(idDocumento2, idViaje, nombre, tipo, archivo);
+                documento = new Documento(nombre, tipo, archivo);
             }
         }
         return documento;
@@ -63,12 +59,10 @@ public class DocumentoDAO {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idDocumento = rs.getInt("idDocumento");
-                int idViaje2 = rs.getInt("idViaje");
                 String nombre = rs.getString("nombre");
                 TipoDocumento tipo = TipoDocumento.valueOf(rs.getString("tipo"));
                 String archivo = rs.getString("archivo");
-                documento = new Documento(idViaje2, idDocumento, nombre, tipo, archivo);
+                documento = new Documento(nombre, tipo, archivo);
             }
         }
         return documento;
@@ -80,12 +74,10 @@ public class DocumentoDAO {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idDocumento = rs.getInt("idDocumento");
-                int idViaje = rs.getInt("idViaje");
                 String nombre2 = rs.getString("nombre");
                 TipoDocumento tipo = TipoDocumento.valueOf(rs.getString("tipo"));
                 String archivo = rs.getString("archivo");
-                documento = new Documento(idViaje, idDocumento, nombre2, tipo, archivo);
+                documento = new Documento(nombre2, tipo, archivo);
             }
         }
         return documento;
@@ -98,12 +90,10 @@ public class DocumentoDAO {
             ps.setString(1, String.valueOf(tipo));
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idDocumento = rs.getInt("idDocumento");
-                int idViaje = rs.getInt("idViaje");
                 String nombre = rs.getString("nombre");
                 TipoDocumento tipo2 = TipoDocumento.valueOf(rs.getString("tipo"));
                 String archivo = rs.getString("archivo");
-                documento = new Documento(idViaje, idDocumento, nombre, tipo2, archivo);
+                documento = new Documento(nombre, tipo2, archivo);
             }
         }
         return documentos;
@@ -116,12 +106,11 @@ public class DocumentoDAO {
             ps.setString(1, rutaArchivo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idDocumento = rs.getInt("idDocumento");
-                int idViaje = rs.getInt("idViaje");
                 String nombre = rs.getString("nombre");
                 TipoDocumento tipo = TipoDocumento.valueOf(rs.getString("tipo"));
                 String archivo = rs.getString("archivo");
-                documento = new Documento(idDocumento, idViaje, nombre, tipo, archivo);
+                documento = new Documento(nombre, tipo, archivo);
+                documentos.add(documento);
             }
         }
         return documentos;
