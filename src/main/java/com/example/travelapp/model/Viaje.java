@@ -17,6 +17,8 @@ public class Viaje {
     private String destinoPais;
     private String destinoCiudad;
 
+    public Viaje() {}
+
     /**
      *
      * @param nombre

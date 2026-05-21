@@ -15,6 +15,8 @@ public class Actividad implements Valorable {
     private boolean reservada;
     private String lugar;
 
+    public Actividad() {}
+
     /**
      * Constructor de la clase Actividad compuesto por:
      * @param nombre representa el nombre de la actividad.

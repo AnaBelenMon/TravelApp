@@ -27,7 +27,8 @@ public class ActividadDAO {
     private final static String SQL_INSERT = "INSERT INTO actividad(idActividad,idViaje, nombre, categoria, fecha, precio, notas, valoracion, duracionMinutos, reservada, lugar) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final static String SQL_UPDATE = "UPDATE actividad SET nombre=?, categoria=?, fecha=?, precio=?, notas=?, valoracion=?, duracionMinutos=?, reservada=?, lugar=? " + "WHERE idActividad=?";
     private final static String SQL_DELETE = "DELETE FROM actividad WHERE idActividad=?";
-    public static List<Actividad> findAll() {
+
+    public  List<Actividad> findAll() {
         List<Actividad> actividades = new ArrayList<>();
         Actividad actividad = null;
 
@@ -51,7 +52,7 @@ public class ActividadDAO {
         return actividades;
     }
 
-    public static Actividad findByIdActividad(int idActividad) throws SQLException {
+    public Actividad findByIdActividad(int idActividad) throws SQLException {
         Actividad actividad = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDACTIVIDAD)){
             ps.setInt(1, idActividad);
@@ -72,7 +73,7 @@ public class ActividadDAO {
         return actividad;
     }
 
-    public static Actividad findByIdViaje(int idViaje) throws SQLException {
+    public Actividad findByIdViaje(int idViaje) throws SQLException {
         Actividad actividad = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)){
             ps.setInt(1, idViaje);
@@ -93,7 +94,7 @@ public class ActividadDAO {
         return actividad;
     }
 
-    public static List<Actividad> findByNombre(String nombre) throws SQLException {
+    public List<Actividad> findByNombre(String nombre) throws SQLException {
         List<Actividad> actividades = new ArrayList<>();
         Actividad actividad = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_NAME)){
@@ -116,7 +117,7 @@ public class ActividadDAO {
         return actividades;
     }
 
-    public static List<Actividad> findByCategoria(CategoriaActividad categoria) throws SQLException {
+    public List<Actividad> findByCategoria(CategoriaActividad categoria) throws SQLException {
         List<Actividad> actividades = new ArrayList<>();
         Actividad actividad = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_CATEGORIA)){
@@ -139,7 +140,7 @@ public class ActividadDAO {
         return actividades;
     }
 
-    public static List<Actividad> findByFecha(LocalDate fecha) throws SQLException {
+    public List<Actividad> findByFecha(LocalDate fecha) throws SQLException {
         List<Actividad> actividades = new ArrayList<>();
         Actividad actividad = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_DATE)){
@@ -162,7 +163,7 @@ public class ActividadDAO {
         return actividades;
     }
 
-    public static List<Actividad> findByPrice(double precio) throws SQLException {
+    public List<Actividad> findByPrice(double precio) throws SQLException {
         List<Actividad> actividades = new ArrayList<>();
         Actividad actividad = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PRICE)){
@@ -185,7 +186,7 @@ public class ActividadDAO {
         return actividades;
     }
 
-    public static List<Actividad> findByValoracion(int valoracion) throws SQLException {
+    public List<Actividad> findByValoracion(int valoracion) throws SQLException {
         List<Actividad> actividades = new ArrayList<>();
         Actividad actividad = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_VALORACION)){
@@ -208,7 +209,7 @@ public class ActividadDAO {
         return actividades;
     }
 
-    public static List<Actividad> findByReservada(boolean reservada) throws SQLException {
+    public List<Actividad> findByReservada(boolean reservada) throws SQLException {
         List<Actividad> actividades = new ArrayList<>();
         Actividad actividad = null;
         try(PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_RESERVADA)){
@@ -231,7 +232,7 @@ public class ActividadDAO {
         return actividades;
     }
 
-    public static List<Actividad> findByLugar(String lugar) throws SQLException {
+    public List<Actividad> findByLugar(String lugar) throws SQLException {
         List<Actividad> actividades = new ArrayList<>();
         Actividad actividad = null;
         try(PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PLACE)){
@@ -254,7 +255,7 @@ public class ActividadDAO {
         return actividades;
     }
 
-    public static Actividad addActividad(Actividad actividad) throws SQLException {
+    public Actividad addActividad(Actividad actividad) throws SQLException {
         if (actividad != null && findByNombre(actividad.getNombre()) == null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)){
                 ps.setString(1, actividad.getNombre());
@@ -274,7 +275,7 @@ public class ActividadDAO {
         return actividad;
     }
 
-    public static boolean updateActividad(Actividad actividad) throws SQLException {
+    public boolean updateActividad(Actividad actividad) throws SQLException {
         boolean updated = false;
         if (findByNombre(actividad.getNombre()).isEmpty()){
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
@@ -294,7 +295,7 @@ public class ActividadDAO {
         return updated;
     }
 
-    public static boolean deleteActividadById(int idActividad) throws SQLException {
+    public boolean deleteActividadById(int idActividad) throws SQLException {
         boolean deleted = false;
         if (findByIdActividad(idActividad) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {

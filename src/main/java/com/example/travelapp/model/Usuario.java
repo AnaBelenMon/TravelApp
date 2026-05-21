@@ -10,7 +10,6 @@ public class Usuario {
 
     /**
      *
-     * @param idUsuario
      * @param nombre
      * @param email
      * @param password

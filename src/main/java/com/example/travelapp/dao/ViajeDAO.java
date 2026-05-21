@@ -51,7 +51,7 @@ public class ViajeDAO {
         return viajes;
     }
 
-    public static Viaje findByIdViaje(int idViaje) throws SQLException {
+    public static Viaje findByIdViaje(int idViaje) {
         Viaje viaje = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)){
             ps.setInt(1, idViaje);
@@ -68,6 +68,8 @@ public class ViajeDAO {
                 String destinoCiudad = rs.getString("destinoCiudad");
                 viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
             }
+        }catch (SQLException e) {
+            e.printStackTrace();
         }
         return viaje;
     }
@@ -93,7 +95,7 @@ public class ViajeDAO {
         return viaje;
     }
 
-    public static List<Viaje> findByNombre(String nombre) throws SQLException {
+    public static List<Viaje> findByNombre(String nombre) {
         List<Viaje> viajes = new ArrayList<>();
         Viaje viaje = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_NAME)){
@@ -112,6 +114,8 @@ public class ViajeDAO {
                 viaje = new Viaje(nombre2,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
                 viajes.add(viaje);
             }
+        }catch (SQLException e) {
+            e.printStackTrace();
         }
         return viajes;
     }
@@ -249,7 +253,7 @@ public class ViajeDAO {
         return viajes;
     }
 
-    public static Viaje addViaje(Viaje viaje) throws SQLException {
+    public Viaje addViaje(Viaje viaje) {
         if (viaje != null && findByNombre(viaje.getNombre()) == null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)){
                 ps.setString(1, viaje.getNombre());
@@ -257,6 +261,8 @@ public class ViajeDAO {
                 ps.setString(3, viaje.getDestinoPais());
                 ps.setString(4, viaje.getDestinoCiudad());
                 ps.executeUpdate();
+            }catch (SQLException e) {
+                e.printStackTrace();
             }
         }else {
             viaje = null;
@@ -264,28 +270,32 @@ public class ViajeDAO {
         return viaje;
     }
 
-    public static boolean updateViaje(Viaje viajeNuevo, Viaje viajeActual) throws SQLException {
+    public  boolean updateViaje(Viaje viaje) {
         boolean updated = false;
-        if((viajeActual!=null)&&(viajeNuevo!=null)&&findByNombre(viajeActual.getNombre())!=null && findByNombre(viajeNuevo.getNombre())==null) {
+        if((viaje!=null)&&findByNombre(viaje.getNombre())!=null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
-                ps.setString(1, viajeActual.getNombre());
-                ps.setDouble(2, viajeActual.getPresupuestoEstimado());
-                ps.setString(3, viajeActual.getDestinoPais());
-                ps.setString(4, viajeActual.getDestinoCiudad());
+                ps.setString(1, viaje.getNombre());
+                ps.setDouble(2, viaje.getPresupuestoEstimado());
+                ps.setString(3, viaje.getDestinoPais());
+                ps.setString(4, viaje.getDestinoCiudad());
                 ps.executeUpdate();
                 updated = true;
+            }catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return updated;
     }
 
-    public static boolean deleteViaje(int idViaje) throws SQLException {
+    public boolean deleteViaje(int idViaje) {
         boolean deleted = false;
         if(findByIdViaje(idViaje)!=null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
                 ps.setInt(1, idViaje);
                 ps.executeUpdate();
                 deleted = true;
+            }catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return deleted;
