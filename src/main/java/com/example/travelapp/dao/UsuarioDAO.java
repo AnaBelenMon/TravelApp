@@ -121,31 +121,28 @@ public class UsuarioDAO {
         return deleted;
     }
 
-    public Usuario login(String email, String password) {
+    public static boolean login(String email, String password) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_LOGIN)) {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             // Caso 1: el usuario NO existe
             if (!rs.next()) {
-                return null; // usuario no registrado
+                return false;
             }
 
-            // Caso 2: el usuario existe → comprobar contraseña
             String passwordBD = rs.getString("password");
 
             if (!passwordBD.equals(password)) {
-                // Usuario existe pero contraseña incorrecta
-                return new Usuario("INVALIDO", email, "");
-                // Marcamos un usuario especial
+                return false;
             }
-
             String nombre = rs.getString("nombre");
             String email2 = rs.getString("email");
             String password2 = rs.getString("password");
-            return new Usuario(nombre, email2, password2);
+            new Usuario(nombre, email2, password2);
+            return true;
         }catch (SQLException e){
             e.printStackTrace();
-            return null;
+            return false;
         }
     }
 

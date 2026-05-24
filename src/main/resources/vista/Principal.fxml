@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.travelapp.controllers.PrincipalController">
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="TravelAPP- Viaja. Siente. Recuerda." />
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button fx:id="botonCerrarSesion" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar Sesión" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </HBox>
+   </top>
+   <left>
+      <VBox spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label onDragDetected="#abrirActividades" text="Módulos" />
+            <Button mnemonicParsing="false" text="Actividades" />
+            <Button mnemonicParsing="false" onAction="#abrirAlojamientos" text="Alojamientos" />
+            <Button mnemonicParsing="false" onAction="#abrirGastos" text="Gastos" />
+            <Button mnemonicParsing="false" onAction="#abrirMuseos" text="Museos" />
+            <Button mnemonicParsing="false" onAction="#abrirObras" text="Obras" />
+            <Button mnemonicParsing="false" onAction="#abrirRecuerdos" text="Recuerdos" />
+            <Button mnemonicParsing="false" onAction="#abrirEmociones" text="Emociones" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </left>
+   <center>
+      <VBox spacing="15.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Panel principal" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Button fx:id="botonNuevoViaje" mnemonicParsing="false" onAction="#nuevoViaje" text="Nuevo viaje" />
+                  <Button fx:id="botonVerDetalles" mnemonicParsing="false" onAction="#verDetalles" text="Ver detalles" />
+               </children>
+            </HBox>
+            <TableView fx:id="tablaViajes">
+              <columns>
+                <TableColumn fx:id="colNombre" minWidth="-1.0" prefWidth="75.0" text="Nombre" />
+                <TableColumn fx:id="colFechaInicio" minWidth="-1.0" prefWidth="75.0" text="Fecha inicio" />
+                  <TableColumn fx:id="colFechaFin" minWidth="-1.0" prefWidth="75.0" text="Fecha fin" />
+                  <TableColumn fx:id="colTipo" minWidth="-1.0" prefWidth="75.0" text="Tipo" />
+              </columns>
+            </TableView>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>

@@ -4,300 +4,306 @@ import com.example.travelapp.dataAccess.ConnectionBD;
 import com.example.travelapp.model.TipoViaje;
 import com.example.travelapp.model.Viaje;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViajeDAO {
-    private final static String SQL_FIND_ALL = "SELECT * FROM viaje";
-    private final static String SQL_FIND_BY_IDVIAJE = "SELECT * FROM viaje WHERE idViaje = ?";
-    private final static String SQL_FIND_BY_IDUSUARIO = "SELECT * FROM viaje WHERE idUsuario = ?";
-    private final static String SQL_FIND_BY_NAME = "SELECT * FROM viaje WHERE nombre = ?";
-    private final static String SQL_FIND_BY_FECHAINICIO = "SELECT * FROM viaje WHERE fechaInicio = ?";
-    private final static String SQL_FIND_BY_FECHAFIN =  "SELECT * FROM viaje WHERE fechaFin = ?";
-    private final static String SQL_FIND_BY_TIPOV = "SELECT * FROM viaje WHERE tipoViaje = ?";
-    private final static String SQL_FIND_BY_PRESUPUESTOESTIMADO = "SELECT * FROM viaje WHERE presupuestoEstimado = ?";
-    private final static String SQL_FIND_BY_DESTINOPAIS = "SELECT * FROM viaje WHERE destinoPais = ?";
-    private final static String SQL_FIND_BY_DESTINOCIUDAD = "SELECT * FROM viaje WHERE destinoCiudad = ?";
 
-    private final static String SQL_INSERT = "INSERT INTO viaje";
-    private final static String SQL_UPDATE =  "UPDATE viaje SET ";
-    private final static String SQL_DELETE = "DELETE FROM viaje WHERE idViaje = ?";
+    private final static String SQL_ALL =
+            "SELECT * FROM viaje";
+
+    private final static String SQL_FIND_BY_ID =
+            "SELECT * FROM viaje WHERE idViaje = ?";
+
+    private final static String SQL_FIND_BY_USUARIO =
+            "SELECT * FROM viaje WHERE idUsuario = ?";
+
+    private final static String SQL_FIND_BY_NOMBRE =
+            "SELECT * FROM viaje WHERE nombre = ?";
+
+    private final static String SQL_FIND_BY_FECHAINICIO =
+            "SELECT * FROM viaje WHERE fechaInicio = ?";
+
+    private final static String SQL_FIND_BY_FECHAFIN =
+            "SELECT * FROM viaje WHERE fechaFin = ?";
+
+    private final static String SQL_FIND_BY_TIPO =
+            "SELECT * FROM viaje WHERE tipoViaje = ?";
+
+    private final static String SQL_FIND_BY_PRESUPUESTO =
+            "SELECT * FROM viaje WHERE presupuestoEstimado = ?";
+
+    private final static String SQL_FIND_BY_DESTINOPAIS =
+            "SELECT * FROM viaje WHERE destinoPais = ?";
+
+    private final static String SQL_FIND_BY_DESTINOCIUDAD =
+            "SELECT * FROM viaje WHERE destinoCiudad = ?";
+
+    private final static String SQL_INSERT =
+            "INSERT INTO viaje (idUsuario, nombre, fechaInicio, fechaFin, tipoViaje, imagenPortada, notasGenerales, presupuestoEstimado, destinoPais, destinoCiudad) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private final static String SQL_UPDATE =
+            "UPDATE viaje SET idUsuario=?, nombre=?, fechaInicio=?, fechaFin=?, tipoViaje=?, imagenPortada=?, notasGenerales=?, presupuestoEstimado=?, destinoPais=?, destinoCiudad=? " +
+                    "WHERE idViaje=?";
+
+    private final static String SQL_DELETE =
+            "DELETE FROM viaje WHERE idViaje = ?";
 
 
-    public static List<Viaje>  findAllViaje() throws SQLException {
-        List<Viaje> viajes = new ArrayList<>();
-        Viaje viaje = null;
-        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_FIND_ALL)){
-            while (rs.next()) {
-                int idViaje = rs.getInt("idViaje");
-                int idUsuario = rs.getInt("idUsuario");
-                String nombre = rs.getString("nombre");
-                LocalDate fechaInicio = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje = TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
-                String destinoPais = rs.getString("destinoPais");
-                String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
-                viajes.add(viaje);
-            }
-        }
-        return viajes;
+    // ---------------------------------------------------------
+    // MAPEO
+    // ---------------------------------------------------------
+    private static Viaje map(ResultSet rs) throws SQLException {
+        return new Viaje(
+                rs.getInt("idViaje"),
+                rs.getInt("idUsuario"),
+                rs.getString("nombre"),
+                rs.getDate("fechaInicio").toLocalDate(),
+                rs.getDate("fechaFin").toLocalDate(),
+                TipoViaje.valueOf(rs.getString("tipoViaje")),
+                rs.getString("imagenPortada"),
+                rs.getString("notasGenerales"),
+                rs.getDouble("presupuestoEstimado"),
+                rs.getString("destinoPais"),
+                rs.getString("destinoCiudad")
+        );
     }
 
-    public static Viaje findByIdViaje(int idViaje) {
-        Viaje viaje = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)){
+
+    // ---------------------------------------------------------
+    // FIND ALL
+    // ---------------------------------------------------------
+    public static List<Viaje> findAll() throws SQLException {
+        List<Viaje> lista = new ArrayList<>();
+
+        try (Statement st = ConnectionBD.getConnection().createStatement();
+             ResultSet rs = st.executeQuery(SQL_ALL)) {
+
+            while (rs.next()) {
+                lista.add(map(rs));
+            }
+        }
+        return lista;
+    }
+
+
+    // ---------------------------------------------------------
+    // FIND BY ID
+    // ---------------------------------------------------------
+    public static Viaje findById(int idViaje) throws SQLException {
+        Viaje v = null;
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
-                String nombre = rs.getString("nombre");
-                LocalDate fechaInicio = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje = TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
-                String destinoPais = rs.getString("destinoPais");
-                String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
+                v = map(rs);
             }
-        }catch (SQLException e) {
-            e.printStackTrace();
         }
-        return viaje;
+        return v;
     }
 
-    public static Viaje findByIdUsuario(int idUsuario) throws SQLException {
-        Viaje viaje = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDUSUARIO)){
+
+    // ---------------------------------------------------------
+    // FIND BY USUARIO
+    // ---------------------------------------------------------
+    public static List<Viaje> findByUsuario(int idUsuario) throws SQLException {
+        List<Viaje> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_USUARIO)) {
             ps.setInt(1, idUsuario);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String nombre = rs.getString("nombre");
-                LocalDate fechaInicio = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje = TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
-                String destinoPais = rs.getString("destinoPais");
-                String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return viaje;
+        return lista;
     }
 
-    public static List<Viaje> findByNombre(String nombre) {
-        List<Viaje> viajes = new ArrayList<>();
-        Viaje viaje = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_NAME)){
+
+    // ---------------------------------------------------------
+    // FIND BY NOMBRE
+    // ---------------------------------------------------------
+    public static List<Viaje> findByNombre(String nombre) throws SQLException {
+        List<Viaje> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_NOMBRE)) {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                String nombre2 = rs.getString("nombre");
-                LocalDate fechaInicio = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje = TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
-                String destinoPais = rs.getString("destinoPais");
-                String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre2,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
-                viajes.add(viaje);
+                lista.add(map(rs));
             }
-        }catch (SQLException e) {
-            e.printStackTrace();
         }
-        return viajes;
+        return lista;
     }
 
-    public static Viaje findByFechaInicio(String fechaInicio) throws SQLException {
-        Viaje viaje = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHAINICIO)){
-            ps.setString(1, fechaInicio);
+
+    // ---------------------------------------------------------
+    // FIND BY FECHA INICIO
+    // ---------------------------------------------------------
+    public static List<Viaje> findByFechaInicio(LocalDate fechaInicio) throws SQLException {
+        List<Viaje> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHAINICIO)) {
+            ps.setDate(1, Date.valueOf(fechaInicio));
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String nombre = rs.getString("nombre");
-                LocalDate fechaInicio2  = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin  = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje = TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presuspuestoEstimado = rs.getDouble("presupuestoEstimado");
-                String destinoPais = rs.getString("destinoPais");
-                String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre,fechaInicio2,fechaFin,tipoViaje,imagenPortada,notasGenerales,presuspuestoEstimado,destinoPais,destinoCiudad);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return viaje;
+        return lista;
     }
 
-    public static Viaje findByFechaFin(String fechaFin) throws SQLException {
-        Viaje viaje = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHAFIN)){
-            ps.setString(1, fechaFin);
+
+    // ---------------------------------------------------------
+    // FIND BY FECHA FIN
+    // ---------------------------------------------------------
+    public static List<Viaje> findByFechaFin(LocalDate fechaFin) throws SQLException {
+        List<Viaje> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHAFIN)) {
+            ps.setDate(1, Date.valueOf(fechaFin));
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String nombre = rs.getString("nombre");
-                LocalDate fechaInicio  = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin2 = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje = TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
-                String destinoPais = rs.getString("destinoPais");
-                String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre,fechaInicio,fechaFin2,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return viaje;
+        return lista;
     }
 
+
+    // ---------------------------------------------------------
+    // FIND BY TIPO VIAJE
+    // ---------------------------------------------------------
     public static List<Viaje> findByTipoViaje(TipoViaje tipoViaje) throws SQLException {
-        List<Viaje> viajes = new ArrayList<>();
-        Viaje viaje = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_TIPOV)){
+        List<Viaje> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_TIPO)) {
             ps.setString(1, tipoViaje.toString());
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                LocalDate fechaInicio  = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin  = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje2 = TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
-                String destinoPais = rs.getString("destinoPais");
-                String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje2,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad);
-                viajes.add(viaje);
+                lista.add(map(rs));
             }
         }
-        return viajes;
+        return lista;
     }
 
-    public static List<Viaje> findByPresupuestoEstimado(double presupuestoEstimado) throws SQLException {
-        List<Viaje> viajes = new ArrayList<>();
-        Viaje viaje = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PRESUPUESTOESTIMADO)){
-            ps.setDouble(1, presupuestoEstimado);
+
+    // ---------------------------------------------------------
+    // FIND BY PRESUPUESTO
+    // ---------------------------------------------------------
+    public static List<Viaje> findByPresupuesto(double presupuesto) throws SQLException {
+        List<Viaje> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PRESUPUESTO)) {
+            ps.setDouble(1, presupuesto);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                LocalDate fechaInicio  = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin  = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje =  TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presupuestoEstimado2 =  rs.getDouble("presupuestoEstimado");
-                String destinoPais = rs.getString("destinoPais");
-                String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado2,destinoPais,destinoCiudad);
-                viajes.add(viaje);
+                lista.add(map(rs));
             }
         }
-        return viajes;
+        return lista;
     }
 
-    public static List<Viaje> findByDestinoPais(String destinoPais) throws SQLException {
-        List<Viaje> viajes = new ArrayList<>();
-        Viaje viaje = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_DESTINOPAIS)){
-            ps.setString(1, destinoPais);
+
+    // ---------------------------------------------------------
+    // FIND BY DESTINO PAIS
+    // ---------------------------------------------------------
+    public static List<Viaje> findByDestinoPais(String pais) throws SQLException {
+        List<Viaje> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_DESTINOPAIS)) {
+            ps.setString(1, pais);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                LocalDate fechaInicio = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje = TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
-                String destinoPais2  = rs.getString("destinoPais");
-                String destinoCiudad = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais2,destinoCiudad);
+                lista.add(map(rs));
             }
         }
-        return  viajes;
+        return lista;
     }
 
-    public static List<Viaje> findByDestinoCiudad(String destinoCiudad) throws SQLException {
-        List<Viaje> viajes = new ArrayList<>();
-        Viaje viaje = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_DESTINOCIUDAD)){
-            ps.setString(1, destinoCiudad);
+
+    // ---------------------------------------------------------
+    // FIND BY DESTINO CIUDAD
+    // ---------------------------------------------------------
+    public static List<Viaje> findByDestinoCiudad(String ciudad) throws SQLException {
+        List<Viaje> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_DESTINOCIUDAD)) {
+            ps.setString(1, ciudad);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                LocalDate fechaInicio  = LocalDate.parse(rs.getString("fechaInicio"));
-                LocalDate fechaFin  = LocalDate.parse(rs.getString("fechaFin"));
-                TipoViaje tipoViaje = TipoViaje.valueOf(rs.getString("tipoViaje"));
-                String imagenPortada = rs.getString("imagenPortada");
-                String notasGenerales = rs.getString("notasGenerales");
-                double presupuestoEstimado = rs.getDouble("presupuestoEstimado");
-                String destinoPais = rs.getString("destinoPais");
-                String destinoCiudad2 = rs.getString("destinoCiudad");
-                viaje = new Viaje(nombre,fechaInicio,fechaFin,tipoViaje,imagenPortada,notasGenerales,presupuestoEstimado,destinoPais,destinoCiudad2);
-                viajes.add(viaje);
+                lista.add(map(rs));
             }
         }
-        return viajes;
+        return lista;
     }
 
-    public Viaje addViaje(Viaje viaje) {
-        if (viaje != null && findByNombre(viaje.getNombre()) == null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)){
-                ps.setString(1, viaje.getNombre());
-                ps.setDouble(2, viaje.getPresupuestoEstimado());
-                ps.setString(3, viaje.getDestinoPais());
-                ps.setString(4, viaje.getDestinoCiudad());
-                ps.executeUpdate();
-            }catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }else {
-            viaje = null;
+
+    // ---------------------------------------------------------
+    // INSERT
+    // ---------------------------------------------------------
+    public static boolean insert(Viaje v) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
+
+            ps.setInt(1, v.getIdUsuario());
+            ps.setString(2, v.getNombre());
+            ps.setDate(3, Date.valueOf(v.getFechaInicio()));
+            ps.setDate(4, Date.valueOf(v.getFechaFin()));
+            ps.setString(5, v.getTipoViaje().toString());
+            ps.setString(6, v.getImagenPortada());
+            ps.setString(7, v.getNotasGenerales());
+            ps.setDouble(8, v.getPresupuestoEstimado());
+            ps.setString(9, v.getDestinoPais());
+            ps.setString(10, v.getDestinoCiudad());
+
+            return ps.executeUpdate() > 0;
         }
-        return viaje;
     }
 
-    public  boolean updateViaje(Viaje viaje) {
-        boolean updated = false;
-        if((viaje!=null)&&findByNombre(viaje.getNombre())!=null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
-                ps.setString(1, viaje.getNombre());
-                ps.setDouble(2, viaje.getPresupuestoEstimado());
-                ps.setString(3, viaje.getDestinoPais());
-                ps.setString(4, viaje.getDestinoCiudad());
-                ps.executeUpdate();
-                updated = true;
-            }catch (SQLException e) {
-                e.printStackTrace();
-            }
+
+    // ---------------------------------------------------------
+    // UPDATE
+    // ---------------------------------------------------------
+    public static boolean update(Viaje v) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
+
+            ps.setInt(1, v.getIdUsuario());
+            ps.setString(2, v.getNombre());
+            ps.setDate(3, Date.valueOf(v.getFechaInicio()));
+            ps.setDate(4, Date.valueOf(v.getFechaFin()));
+            ps.setString(5, v.getTipoViaje().toString());
+            ps.setString(6, v.getImagenPortada());
+            ps.setString(7, v.getNotasGenerales());
+            ps.setDouble(8, v.getPresupuestoEstimado());
+            ps.setString(9, v.getDestinoPais());
+            ps.setString(10, v.getDestinoCiudad());
+            ps.setInt(11, v.getIdViaje());
+
+            return ps.executeUpdate() > 0;
         }
-        return updated;
     }
 
-    public boolean deleteViaje(int idViaje) {
-        boolean deleted = false;
-        if(findByIdViaje(idViaje)!=null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
-                ps.setInt(1, idViaje);
-                ps.executeUpdate();
-                deleted = true;
-            }catch (SQLException e) {
-                e.printStackTrace();
-            }
+
+    // ---------------------------------------------------------
+    // DELETE
+    // ---------------------------------------------------------
+    public static boolean delete(int idViaje) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
+            ps.setInt(1, idViaje);
+            return ps.executeUpdate() > 0;
         }
-        return deleted;
     }
 }

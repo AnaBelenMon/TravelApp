@@ -4,116 +4,159 @@ import com.example.travelapp.dataAccess.ConnectionBD;
 import com.example.travelapp.model.Emocion;
 import com.example.travelapp.model.ViajeMuseo;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViajeMuseoDAO {
-    private final static String SQL_FIND_ALL = "SELECT * FROM ViajeMuseo";
-    private final static String SQL_FIND_BY_IDVIAJE = "SELECT * FROM ViajeMuseo WHERE idViaje=?";
-    private final static String SQL_FIND_BY_IDMUSEO = "SELECT * FROM Museo WHERE idMuseo=?";
-    private final static String SQL_FIND_BY_FECHAVISITA =  "SELECT * FROM Museo WHERE fechaVisita=?";
 
-    private final static String SQL_INSERT ="INSERT INTO viajeMuseo VALUES (?,?)";
-    private final static String SQL_UPDATE ="UPDATE viajeMuseo SET nombre=? WHERE id=?";
-    private final static String SQL_DELETE ="DELETE FROM viajeMuseo WHERE id=?";
+    private final static String SQL_ALL =
+            "SELECT * FROM viajeMuseo";
 
-    public static List<ViajeMuseo> findAllViajeMuseo() throws SQLException {
-        List<ViajeMuseo> viajeMuseos = new ArrayList<>();
-        ViajeMuseo viajeMuseo = null;
+    private final static String SQL_FIND_BY_IDVIAJE =
+            "SELECT * FROM viajeMuseo WHERE idViaje = ?";
 
-        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_FIND_ALL)){
-            while (rs.next()) {
-                LocalDate fechaVisita = rs.getDate("fechaVisita").toLocalDate();
-                Emocion emocion = rs.getObject("emocion", Emocion.class);
-                viajeMuseo = new ViajeMuseo(fechaVisita, emocion);
-                viajeMuseos.add(viajeMuseo);
-            }
-        }
-        return viajeMuseos;
+    private final static String SQL_FIND_BY_IDMUSEO =
+            "SELECT * FROM viajeMuseo WHERE idMuseo = ?";
+
+    private final static String SQL_FIND_BY_FECHAVISITA =
+            "SELECT * FROM viajeMuseo WHERE fechaVisita = ?";
+
+    private final static String SQL_INSERT =
+            "INSERT INTO viajeMuseo (idViaje, idMuseo, fechaVisita, emocion) VALUES (?, ?, ?, ?)";
+
+    private final static String SQL_UPDATE =
+            "UPDATE viajeMuseo SET fechaVisita=?, emocion=? WHERE idViaje=? AND idMuseo=?";
+
+    private final static String SQL_DELETE =
+            "DELETE FROM viajeMuseo WHERE idViaje=? AND idMuseo=?";
+
+
+    // ---------------------------------------------------------
+    // MAPEO
+    // ---------------------------------------------------------
+    private static ViajeMuseo map(ResultSet rs) throws SQLException {
+        return new ViajeMuseo(
+                rs.getInt("idViaje"),
+                rs.getInt("idMuseo"),
+                rs.getDate("fechaVisita").toLocalDate(),
+                Emocion.valueOf(rs.getString("emocion"))
+        );
     }
 
-    public static ViajeMuseo findByIdViaje(int idViaje) throws SQLException {
-        ViajeMuseo viajeMuseo = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)){
+
+    // ---------------------------------------------------------
+    // FIND ALL
+    // ---------------------------------------------------------
+    public static List<ViajeMuseo> findAll() throws SQLException {
+        List<ViajeMuseo> lista = new ArrayList<>();
+
+        try (Statement st = ConnectionBD.getConnection().createStatement();
+             ResultSet rs = st.executeQuery(SQL_ALL)) {
+
+            while (rs.next()) {
+                lista.add(map(rs));
+            }
+        }
+        return lista;
+    }
+
+
+    // ---------------------------------------------------------
+    // FIND BY ID VIAJE
+    // ---------------------------------------------------------
+    public static List<ViajeMuseo> findByIdViaje(int idViaje) throws SQLException {
+        List<ViajeMuseo> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)) {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                LocalDate fechaVisita = rs.getDate("fechaVisita").toLocalDate();
-                Emocion emocion = rs.getObject("emocion", Emocion.class);
-                viajeMuseo = new ViajeMuseo( fechaVisita, emocion);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return viajeMuseo;
+        return lista;
     }
 
-    public static ViajeMuseo findByIdMuseo(int idMuseo) throws SQLException {
-        ViajeMuseo viajeMuseo = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDMUSEO)){
+
+    // ---------------------------------------------------------
+    // FIND BY ID MUSEO
+    // ---------------------------------------------------------
+    public static List<ViajeMuseo> findByIdMuseo(int idMuseo) throws SQLException {
+        List<ViajeMuseo> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDMUSEO)) {
             ps.setInt(1, idMuseo);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
 
-                LocalDate fechaVisita = rs.getDate("fechaVisita").toLocalDate();
-                Emocion emocion = rs.getObject("emocion", Emocion.class);
-                viajeMuseo = new ViajeMuseo(fechaVisita, emocion);
-            }
-        }
-        return viajeMuseo;
-    }
-
-    public static List<ViajeMuseo> findByFechaVisita(LocalDate fechaVisita) throws SQLException {
-        List<ViajeMuseo> viajeMuseos = new ArrayList<>();
-        ViajeMuseo viajeMuseo = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHAVISITA)){
-            ps.setString(1, fechaVisita.toString());
-            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-
-                LocalDate fechaVisita2 = rs.getDate("fechaVisita").toLocalDate();
-                Emocion emocion = rs.getObject("emocion", Emocion.class);
-                viajeMuseo = new ViajeMuseo(fechaVisita2, emocion);
-                viajeMuseos.add(viajeMuseo);
+                lista.add(map(rs));
             }
         }
-        return viajeMuseos;
+        return lista;
     }
 
-    public static ViajeMuseo addViajeMuseo(ViajeMuseo viajeMuseo) throws SQLException {
-        if (viajeMuseo != null && (findByIdMuseo(viajeMuseo.getIdMuseo()) == null) && (findByIdViaje(viajeMuseo.getIdViaje())) == null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)){
-                ps.setInt(1, viajeMuseo.getIdMuseo());
-                ps.setInt(2, viajeMuseo.getIdViaje());
-                ps.executeUpdate();
+
+    // ---------------------------------------------------------
+    // FIND BY FECHA VISITA
+    // ---------------------------------------------------------
+    public static List<ViajeMuseo> findByFechaVisita(LocalDate fecha) throws SQLException {
+        List<ViajeMuseo> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHAVISITA)) {
+            ps.setDate(1, Date.valueOf(fecha));
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return viajeMuseo;
+        return lista;
     }
 
-    public static boolean updateViajeMuseo(ViajeMuseo viajeMuseoNuevo, ViajeMuseo viajeMuseoActual) throws SQLException {
-        boolean updated = false;
-        if((viajeMuseoActual!=null)&&(viajeMuseoNuevo!=null)&&findByIdMuseo(viajeMuseoActual.getIdMuseo())!=null && findByIdMuseo(viajeMuseoNuevo.getIdMuseo())==null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
-                ps.setInt(1, viajeMuseoActual.getIdMuseo());
-                ps.setInt(2, viajeMuseoActual.getIdViaje());
-                ps.executeUpdate();
-                updated = true;
-            }
+
+    // ---------------------------------------------------------
+    // INSERT
+    // ---------------------------------------------------------
+    public static boolean insert(ViajeMuseo vm) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
+
+            ps.setInt(1, vm.getIdViaje());
+            ps.setInt(2, vm.getIdMuseo());
+            ps.setDate(3, Date.valueOf(vm.getFechaVisita()));
+            ps.setString(4, vm.getEmocion().toString());
+
+            return ps.executeUpdate() > 0;
         }
-        return updated;
     }
 
-    public static boolean deleteViajeMuseo(int idViaje) throws SQLException {
-        boolean deleted = false;
-        if (findByIdViaje(idViaje) != null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
-                ps.setInt(1, idViaje);
-                ps.executeUpdate();
-            }
+
+    // ---------------------------------------------------------
+    // UPDATE
+    // ---------------------------------------------------------
+    public static boolean update(ViajeMuseo vm) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
+
+            ps.setDate(1, Date.valueOf(vm.getFechaVisita()));
+            ps.setString(2, vm.getEmocion().toString());
+            ps.setInt(3, vm.getIdViaje());
+            ps.setInt(4, vm.getIdMuseo());
+
+            return ps.executeUpdate() > 0;
         }
-        return deleted;
+    }
+
+
+    // ---------------------------------------------------------
+    // DELETE
+    // ---------------------------------------------------------
+    public static boolean delete(int idViaje, int idMuseo) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
+            ps.setInt(1, idViaje);
+            ps.setInt(2, idMuseo);
+            return ps.executeUpdate() > 0;
+        }
     }
 }

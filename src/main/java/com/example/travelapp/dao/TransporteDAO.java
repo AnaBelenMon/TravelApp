@@ -5,169 +5,210 @@ import com.example.travelapp.model.TipoDocumento;
 import com.example.travelapp.model.TipoTransporte;
 import com.example.travelapp.model.Transporte;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransporteDAO {
-    private final static String SQL_ALL = "SELECT * FROM Transporte";
-    private final static String SQL_FIND_BY_IDTRANSPORTE = "SELECT * FROM Transporte WHERE idTransporte = ?";
-    private final static String SQL_FIND_BY_IDVIAJE = "SELECT * FROM Transporte WHERE idViaje = ?";
-    private final static String SQL_FIND_BY_TIPO = "SELECT * FROM Transporte WHERE tipo = ?";
-    private final static String SQL_FIND_BY_FECHA = "SELECT * FROM Transporte WHERE fecha = ?";
-    private final static String SQL_FIND_BY_PRECIO = "SELECT * FROM Transporte WHERE precio = ?";
 
-    private final static String SQL_INSERT = "INSERT INTO Transporte values()";
-    private final static String SQL_UPDATE = "UPDATE Transporte SET ";
-    private final static String SQL_DELETE = "DELETE FROM Transporte WHERE idTransporte = ?";
+    private final static String SQL_ALL =
+            "SELECT * FROM transporte";
 
+    private final static String SQL_FIND_BY_ID =
+            "SELECT * FROM transporte WHERE idTransporte = ?";
+
+    private final static String SQL_FIND_BY_IDVIAJE =
+            "SELECT * FROM transporte WHERE idViaje = ?";
+
+    private final static String SQL_FIND_BY_TIPO =
+            "SELECT * FROM transporte WHERE tipo = ?";
+
+    private final static String SQL_FIND_BY_FECHA =
+            "SELECT * FROM transporte WHERE fecha = ?";
+
+    private final static String SQL_FIND_BY_PRECIO =
+            "SELECT * FROM transporte WHERE precio = ?";
+
+    private final static String SQL_INSERT =
+            "INSERT INTO transporte (idViaje, tipo, fecha, precio, tipoDocumento, rutaDocumento) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+
+    private final static String SQL_UPDATE =
+            "UPDATE transporte SET idViaje=?, tipo=?, fecha=?, precio=?, tipoDocumento=?, rutaDocumento=? " +
+                    "WHERE idTransporte=?";
+
+    private final static String SQL_DELETE =
+            "DELETE FROM transporte WHERE idTransporte = ?";
+
+
+    // ---------------------------------------------------------
+    // MAPEO
+    // ---------------------------------------------------------
+    private static Transporte map(ResultSet rs) throws SQLException {
+        return new Transporte(
+                rs.getInt("idTransporte"),
+                rs.getInt("idViaje"),
+                TipoTransporte.valueOf(rs.getString("tipo")),
+                rs.getDate("fecha").toLocalDate(),
+                rs.getDouble("precio"),
+                TipoDocumento.valueOf(rs.getString("tipoDocumento")),
+                rs.getString("rutaDocumento")
+        );
+    }
+
+
+    // ---------------------------------------------------------
+    // FIND ALL
+    // ---------------------------------------------------------
     public static List<Transporte> findAll() throws SQLException {
-        List<Transporte> transportes = new ArrayList<>();
-        Transporte transporte =  null;
-        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)){
-            while(rs.next()){
+        List<Transporte> lista = new ArrayList<>();
 
-                TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                double precio = rs.getDouble("precio");
-                TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
-                String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(tipo,fecha,precio,tipoDocumento,rutaDocumento);
-                transportes.add(transporte);
+        try (Statement st = ConnectionBD.getConnection().createStatement();
+             ResultSet rs = st.executeQuery(SQL_ALL)) {
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return transportes;
+        return lista;
     }
 
-    public static Transporte findById(int idTransporte) throws SQLException {
-        Transporte transporte = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDTRANSPORTE)){
-            ps.setInt(1, idTransporte);
+
+    // ---------------------------------------------------------
+    // FIND BY ID
+    // ---------------------------------------------------------
+    public static Transporte findById(int id) throws SQLException {
+        Transporte t = null;
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
 
-                TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                double precio = rs.getDouble("precio");
-                TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
-                String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(tipo,fecha,precio,tipoDocumento,rutaDocumento);
+            if (rs.next()) {
+                t = map(rs);
             }
         }
-        return transporte;
+        return t;
     }
 
-    public static Transporte findByIdViaje(int idViaje) throws SQLException {
-        Transporte transporte = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)){
+
+    // ---------------------------------------------------------
+    // FIND BY ID VIAJE
+    // ---------------------------------------------------------
+    public static List<Transporte> findByIdViaje(int idViaje) throws SQLException {
+        List<Transporte> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)) {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                double precio = rs.getDouble("precio");
-                TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
-                String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(tipo,fecha,precio,tipoDocumento,rutaDocumento);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return transporte;
+        return lista;
     }
 
-    public static List<Transporte> findByTipoTransporte(TipoTransporte tipoTransporte) throws SQLException {
-        List<Transporte> transportes = new ArrayList<>();
-        Transporte transporte = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_TIPO)){
-            ps.setString(1, tipoTransporte.toString());
+
+    // ---------------------------------------------------------
+    // FIND BY TIPO
+    // ---------------------------------------------------------
+    public static List<Transporte> findByTipo(TipoTransporte tipo) throws SQLException {
+        List<Transporte> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_TIPO)) {
+            ps.setString(1, tipo.toString());
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                double precio = rs.getDouble("precio");
-                TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
-                String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(tipo,fecha,precio,tipoDocumento,rutaDocumento);
-                transportes.add(transporte);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return transportes;
+        return lista;
     }
 
+
+    // ---------------------------------------------------------
+    // FIND BY FECHA
+    // ---------------------------------------------------------
     public static List<Transporte> findByFecha(LocalDate fecha) throws SQLException {
-        List<Transporte> transportes = new ArrayList<>();
-        Transporte transporte = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHA)){
-            ps.setString(1, fecha.toString());
+        List<Transporte> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHA)) {
+            ps.setDate(1, Date.valueOf(fecha));
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
-                LocalDate fecha2 = LocalDate.parse(rs.getString("fecha"));
-                double precio = rs.getDouble("precio");
-                TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
-                String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(tipo,fecha2,precio,tipoDocumento,rutaDocumento);
-                transportes.add(transporte);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return transportes;
+        return lista;
     }
 
+
+    // ---------------------------------------------------------
+    // FIND BY PRECIO
+    // ---------------------------------------------------------
     public static List<Transporte> findByPrecio(double precio) throws SQLException {
-        List<Transporte> transportes = new ArrayList<>();
-        Transporte transporte = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PRECIO)){
+        List<Transporte> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PRECIO)) {
             ps.setDouble(1, precio);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                TipoTransporte tipo = TipoTransporte.valueOf(rs.getString("tipo"));
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                double precio2 = rs.getDouble("precio");
-                TipoDocumento tipoDocumento = TipoDocumento.valueOf(rs.getString("tipoDocumento"));
-                String rutaDocumento = rs.getString("rutaDocumento");
-                transporte = new Transporte(tipo,fecha,precio2,tipoDocumento,rutaDocumento);
-                transportes.add(transporte);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return transportes;
+        return lista;
     }
 
-    public static Transporte addTransporte(Transporte transporte) throws SQLException {
-        if (transporte != null && findById(transporte.getIdTransporte()) == null){
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)){
-                ps.setInt(1, transporte.getIdTransporte());
-                ps.setInt(2, transporte.getIdViaje());
-                ps.executeUpdate();
-            }
+
+    // ---------------------------------------------------------
+    // INSERT
+    // ---------------------------------------------------------
+    public static boolean insert(Transporte t) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
+
+            ps.setInt(1, t.getIdViaje());
+            ps.setString(2, t.getTipo().toString());
+            ps.setDate(3, Date.valueOf(t.getFecha()));
+            ps.setDouble(4, t.getPrecio());
+            ps.setString(5, t.getTipoDocumento().toString());
+            ps.setString(6, t.getRutaDocumento());
+
+            return ps.executeUpdate() > 0;
         }
-        return transporte;
     }
 
-    public static boolean updateTransporte(Transporte transporteNuevo, Transporte transporteActual) throws SQLException {
-        boolean updated = false;
-        if((transporteActual!=null)&&(transporteNuevo!=null)&&findById(transporteActual.getIdTransporte())!=null && findById(transporteNuevo.getIdTransporte())==null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
-                ps.setInt(1, transporteActual.getIdTransporte());
-                ps.setInt(2, transporteNuevo.getIdTransporte());
-                ps.setInt(3, transporteActual.getIdViaje());
-                ps.executeUpdate();
-                updated = true;
-            }
+
+    // ---------------------------------------------------------
+    // UPDATE
+    // ---------------------------------------------------------
+    public static boolean update(Transporte t) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
+
+            ps.setInt(1, t.getIdViaje());
+            ps.setString(2, t.getTipo().toString());
+            ps.setDate(3, Date.valueOf(t.getFecha()));
+            ps.setDouble(4, t.getPrecio());
+            ps.setString(5, t.getTipoDocumento().toString());
+            ps.setString(6, t.getRutaDocumento());
+            ps.setInt(7, t.getIdTransporte());
+
+            return ps.executeUpdate() > 0;
         }
-        return updated;
     }
 
-    public static boolean deleteTransporte(int idTransporte) throws SQLException {
-        boolean deleted = false;
-        if(findById(idTransporte)!=null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
-                ps.setInt(1, idTransporte);
-                ps.executeUpdate();
-                deleted = true;
-            }
+
+    // ---------------------------------------------------------
+    // DELETE
+    // ---------------------------------------------------------
+    public static boolean delete(int idTransporte) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
+            ps.setInt(1, idTransporte);
+            return ps.executeUpdate() > 0;
         }
-        return deleted;
     }
 }

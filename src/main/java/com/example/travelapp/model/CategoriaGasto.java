@@ -1,39 +1,25 @@
 package com.example.travelapp.model;
 
 public enum CategoriaGasto {
-    COMIDA("Comida️"),
+    COMIDA("Comida"),
     TRANSPORTE("Transporte"),
     ALOJAMIENTO("Alojamiento"),
     OCIO("Ocio"),
-    COMPRAS("Compras️"),
+    COMPRAS("Compras"),
     OTROS("Otros");
 
     private final String nombre;
 
-    /**
-     *
-     * @param nombre
-     */
     CategoriaGasto(String nombre) {
         this.nombre = nombre;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getNombre() {
         return nombre;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public String toString() {
-        return "CategoriaGasto{" +
-                "nombre='" + nombre + '\'' +
-                '}';
+        return nombre;
     }
 }

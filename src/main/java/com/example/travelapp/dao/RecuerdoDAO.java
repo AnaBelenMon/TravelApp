@@ -5,277 +5,303 @@ import com.example.travelapp.model.Emocion;
 import com.example.travelapp.model.Recuerdo;
 import com.example.travelapp.model.TipoRecuerdo;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecuerdoDAO {
-    private final static String SQL_FIND_ALL = "SELECT * FROM recuerdo";
-    private final static String SQL_FIND_BY_IDRECUERDO = "SELECT * FROM recuerdo WHERE idRecuerdo = ?";
-    private final static String SQL_FIND_BY_IDVIAJE = "SELECT * FROM recuerdo WHERE idViaje = ?";
-    private final static String SQL_FIND_BY_RUTAARCHIVO = "SELECT * FROM recuerdo WHERE rutaArchivo = ?";
-    private final static String SQL_FIND_BY_UBICACION = "SELECT * FROM recuerdo WHERE ubicacion = ?";
-    private final static String SQL_FIND_BY_FECHA = "SELECT * FROM recuerdo WHERE fecha = ?";
-    private final static String SQL_FIND_BY_EMOCION = "SELECT * FROM recuerdo WHERE emocion = ?";
-    private final static String SQL_FIND_BY_TIPO = "SELECT * FROM recuerdo WHERE tipo = ?";
-    private final static String SQL_FIND_BY_FAVORITO = "SELECT * FROM recuerdo WHERE favorito = ?";
-    private final static String SQL_FIND_BY_RUTAMINIATURA = "SELECT * FROM recuerdo WHERE rutaMiniatura = ?";
 
-    private final static String SQL_INSERT = "INSERT INTO Recuerdo values()";
-    private final static String SQL_UPDATE = "UPDATE Recuerdo SET ";
-    private final static String SQL_DELETE = "DELETE FROM Recuerdo WHERE idRecuerdo = ?";
+    private final static String SQL_FIND_ALL =
+            "SELECT * FROM recuerdo";
 
+    private final static String SQL_FIND_BY_ID =
+            "SELECT * FROM recuerdo WHERE idRecuerdo = ?";
+
+    private final static String SQL_FIND_BY_IDVIAJE =
+            "SELECT * FROM recuerdo WHERE idViaje = ?";
+
+    private final static String SQL_FIND_BY_RUTAARCHIVO =
+            "SELECT * FROM recuerdo WHERE rutaArchivo = ?";
+
+    private final static String SQL_FIND_BY_UBICACION =
+            "SELECT * FROM recuerdo WHERE ubicacion = ?";
+
+    private final static String SQL_FIND_BY_FECHA =
+            "SELECT * FROM recuerdo WHERE fecha = ?";
+
+    private final static String SQL_FIND_BY_EMOCION =
+            "SELECT * FROM recuerdo WHERE emocion = ?";
+
+    private final static String SQL_FIND_BY_TIPO =
+            "SELECT * FROM recuerdo WHERE tipo = ?";
+
+    private final static String SQL_FIND_BY_FAVORITO =
+            "SELECT * FROM recuerdo WHERE favorito = ?";
+
+    private final static String SQL_FIND_BY_RUTAMINIATURA =
+            "SELECT * FROM recuerdo WHERE rutaMiniatura = ?";
+
+    private final static String SQL_INSERT =
+            "INSERT INTO recuerdo (idViaje, rutaArchivo, descripcion, ubicacion, fecha, emocion, tipo, favorito, rutaMiniatura) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private final static String SQL_UPDATE =
+            "UPDATE recuerdo SET idViaje=?, rutaArchivo=?, descripcion=?, ubicacion=?, fecha=?, emocion=?, tipo=?, favorito=?, rutaMiniatura=? " +
+                    "WHERE idRecuerdo=?";
+
+    private final static String SQL_DELETE =
+            "DELETE FROM recuerdo WHERE idRecuerdo = ?";
+
+
+    // ---------------------------------------------------------
+    // MAPEO
+    // ---------------------------------------------------------
+    private static Recuerdo map(ResultSet rs) throws SQLException {
+        return new Recuerdo(
+                rs.getInt("idRecuerdo"),
+                rs.getInt("idViaje"),
+                rs.getString("rutaArchivo"),
+                rs.getString("descripcion"),
+                rs.getString("ubicacion"),
+                rs.getDate("fecha").toLocalDate(),
+                Emocion.valueOf(rs.getString("emocion")),
+                TipoRecuerdo.valueOf(rs.getString("tipo")),
+                rs.getBoolean("favorito"),
+                rs.getString("rutaMiniatura")
+        );
+    }
+
+
+    // ---------------------------------------------------------
+    // FIND ALL
+    // ---------------------------------------------------------
     public static List<Recuerdo> findAll() throws SQLException {
-        List<Recuerdo> recuerdos = new ArrayList<>();
-        Recuerdo recuerdo = null;
-        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_FIND_ALL)) {
+        List<Recuerdo> lista = new ArrayList<>();
+
+        try (Statement st = ConnectionBD.getConnection().createStatement();
+             ResultSet rs = st.executeQuery(SQL_FIND_ALL)) {
+
             while (rs.next()) {
-                String rutaArchivo = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion = rs.getString("ubicacion");
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito = rs.getBoolean("favorito");
-                String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
-                recuerdos.add(recuerdo);
+                lista.add(map(rs));
             }
         }
-        return recuerdos;
+        return lista;
     }
 
-    public static Recuerdo findById(int idRecuerdo) throws SQLException {
-        Recuerdo recuerdo = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDRECUERDO)) {
-            ps.setInt(1, idRecuerdo);
+
+    // ---------------------------------------------------------
+    // FIND BY ID
+    // ---------------------------------------------------------
+    public static Recuerdo findById(int id) throws SQLException {
+        Recuerdo r = null;
+
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
-                String rutaArchivo = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion = rs.getString("ubicacion");
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito = rs.getBoolean("favorito");
-                String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
+                r = map(rs);
             }
         }
-        return recuerdo;
+        return r;
     }
 
-    public static Recuerdo findByIdViaje(int idViaje) throws SQLException {
-        Recuerdo recuerdo = null;
+
+    // ---------------------------------------------------------
+    // FIND BY ID VIAJE
+    // ---------------------------------------------------------
+    public static List<Recuerdo> findByIdViaje(int idViaje) throws SQLException {
+        List<Recuerdo> lista = new ArrayList<>();
+
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)) {
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String rutaArchivo = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion = rs.getString("ubicacion");
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito = rs.getBoolean("favorito");
-                String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaMiniatura, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return recuerdo;
+        return lista;
     }
 
-    public static Recuerdo findByRutaArchivo(String rutaArchivo) throws SQLException {
-        Recuerdo recuerdo = null;
+
+    // ---------------------------------------------------------
+    // FIND BY RUTA ARCHIVO
+    // ---------------------------------------------------------
+    public static Recuerdo findByRutaArchivo(String ruta) throws SQLException {
+        Recuerdo r = null;
+
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_RUTAARCHIVO)) {
-            ps.setString(1, rutaArchivo);
+            ps.setString(1, ruta);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
-                String rutaArchivo2 = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion = rs.getString("ubicacion");
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito = rs.getBoolean("favorito");
-                String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaArchivo2, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
+                r = map(rs);
             }
         }
-        return recuerdo;
+        return r;
     }
 
+
+    // ---------------------------------------------------------
+    // FIND BY UBICACION
+    // ---------------------------------------------------------
     public static List<Recuerdo> findByUbicacion(String ubicacion) throws SQLException {
-        List<Recuerdo> recuerdos = null;
-        Recuerdo recuerdo = null;
+        List<Recuerdo> lista = new ArrayList<>();
+
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_UBICACION)) {
             ps.setString(1, ubicacion);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String rutaArchivo = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion2 = rs.getString("ubicacion");
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito = rs.getBoolean("favorito");
-                String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion2, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura);
-                recuerdos.add(recuerdo);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return recuerdos;
+        return lista;
     }
 
+
+    // ---------------------------------------------------------
+    // FIND BY FECHA
+    // ---------------------------------------------------------
     public static List<Recuerdo> findByFecha(LocalDate fecha) throws SQLException {
-        List<Recuerdo> recuerdos = null;
-        Recuerdo recuerdo = null;
+        List<Recuerdo> lista = new ArrayList<>();
+
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHA)) {
-            ps.setString(1, fecha.toString());
+            ps.setDate(1, Date.valueOf(fecha));
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String rutaArchivo = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion = rs.getString("ubicacion");
-                LocalDate fecha2 = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito = rs.getBoolean("favorito");
-                String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha2, emocion, tipoRecuerdo, favorito, rutaMiniatura);
-                recuerdos.add(recuerdo);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return recuerdos;
+        return lista;
     }
 
 
+    // ---------------------------------------------------------
+    // FIND BY EMOCION
+    // ---------------------------------------------------------
     public static List<Recuerdo> findByEmocion(Emocion emocion) throws SQLException {
-        List<Recuerdo> recuerdos = null;
-        Recuerdo recuerdo = null;
+        List<Recuerdo> lista = new ArrayList<>();
+
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_EMOCION)) {
             ps.setString(1, emocion.toString());
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String rutaArchivo = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion = rs.getString("ubicacion");
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion2 = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito = rs.getBoolean("favorito");
-                String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion2, tipoRecuerdo, favorito, rutaMiniatura);
-                recuerdos.add(recuerdo);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return recuerdos;
+        return lista;
     }
 
-    public static List<Recuerdo> findByTipoRecuerdo(TipoRecuerdo tipoRecuerdo) throws SQLException {
-        List<Recuerdo> recuerdos = new ArrayList<>();
-        Recuerdo recuerdo = null;
+
+    // ---------------------------------------------------------
+    // FIND BY TIPO
+    // ---------------------------------------------------------
+    public static List<Recuerdo> findByTipo(TipoRecuerdo tipo) throws SQLException {
+        List<Recuerdo> lista = new ArrayList<>();
+
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_TIPO)) {
-            ps.setString(1, tipoRecuerdo.toString());
+            ps.setString(1, tipo.toString());
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String rutaArchivo = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion = rs.getString("ubicacion");
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo2 = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito = rs.getBoolean("favorito");
-                String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo2, favorito, rutaMiniatura);
-                recuerdos.add(recuerdo);
+
+            while (rs.next()) {
+                lista.add(map(rs));
             }
         }
-        return recuerdos;
+        return lista;
     }
 
+
+    // ---------------------------------------------------------
+    // FIND BY FAVORITO
+    // ---------------------------------------------------------
     public static List<Recuerdo> findByFavorito(boolean favorito) throws SQLException {
-        List<Recuerdo> recuerdos = new ArrayList<>();
-        Recuerdo recuerdo = null;
+        List<Recuerdo> lista = new ArrayList<>();
+
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FAVORITO)) {
             ps.setBoolean(1, favorito);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String rutaArchivo = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion = rs.getString("ubicacion");
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito2 = rs.getBoolean("favorito");
-                String rutaMiniatura = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito2, rutaMiniatura);
-                recuerdos.add(recuerdo);
-            }
 
+            while (rs.next()) {
+                lista.add(map(rs));
+            }
         }
-        return recuerdos;
+        return lista;
     }
 
+
+    // ---------------------------------------------------------
+    // FIND BY RUTA MINIATURA
+    // ---------------------------------------------------------
     public static Recuerdo findByRutaMiniatura(String rutaMiniatura) throws SQLException {
-        Recuerdo recuerdo = null;
+        Recuerdo r = null;
+
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_RUTAMINIATURA)) {
             ps.setString(1, rutaMiniatura);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
-                String rutaArchivo = rs.getString("rutaArchivo");
-                String descripcion = rs.getString("descripcion");
-                String ubicacion = rs.getString("ubicacion");
-                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
-                Emocion emocion = Emocion.valueOf(rs.getString("emocion"));
-                TipoRecuerdo tipoRecuerdo = TipoRecuerdo.valueOf(rs.getString("tipo"));
-                boolean favorito = rs.getBoolean("favorito");
-                String rutaMiniatura2 = rs.getString("rutaMiniatura");
-                recuerdo = new Recuerdo(rutaArchivo, descripcion, ubicacion, fecha, emocion, tipoRecuerdo, favorito, rutaMiniatura2);
+                r = map(rs);
             }
         }
-        return recuerdo;
+        return r;
     }
 
-    public static Recuerdo addRecuerdo(Recuerdo recuerdo) throws SQLException {
-        if ((recuerdo != null) && findById(recuerdo.getIdRecuerdo()) == null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
-                ps.setString(1, recuerdo.getDescripcion());
-                ps.setString(2, recuerdo.getRutaArchivo());
-                ps.setString(3, recuerdo.getRutaMiniatura());
-                ps.executeUpdate();
-            }
+
+    // ---------------------------------------------------------
+    // INSERT
+    // ---------------------------------------------------------
+    public static boolean insert(Recuerdo r) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
+
+            ps.setInt(1, r.getIdViaje());
+            ps.setString(2, r.getRutaArchivo());
+            ps.setString(3, r.getDescripcion());
+            ps.setString(4, r.getUbicacion());
+            ps.setDate(5, Date.valueOf(r.getFecha()));
+            ps.setString(6, r.getEmocion().toString());
+            ps.setString(7, r.getTipo().toString());
+            ps.setBoolean(8, r.isFavorito());
+            ps.setString(9, r.getRutaMiniatura());
+
+            return ps.executeUpdate() > 0;
         }
-        return recuerdo;
     }
 
-    public static boolean updateRecuerdo(Recuerdo recuerdoNuevo, Recuerdo recuerdoActual) throws SQLException {
-        boolean updated = false;
-        if ((recuerdoActual != null) && (recuerdoNuevo != null) && findById(recuerdoActual.getIdRecuerdo()) != null && findById(recuerdoNuevo.getIdRecuerdo()) == null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
-                ps.setString(1, recuerdoNuevo.getDescripcion());
-                ps.setString(2, recuerdoNuevo.getRutaArchivo());
-                ps.setString(3, recuerdoNuevo.getRutaMiniatura());
-                ps.setInt(4, recuerdoActual.getIdRecuerdo());
-                ps.executeUpdate();
-                updated = true;
-            }
+
+    // ---------------------------------------------------------
+    // UPDATE
+    // ---------------------------------------------------------
+    public static boolean update(Recuerdo r) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
+
+            ps.setInt(1, r.getIdViaje());
+            ps.setString(2, r.getRutaArchivo());
+            ps.setString(3, r.getDescripcion());
+            ps.setString(4, r.getUbicacion());
+            ps.setDate(5, Date.valueOf(r.getFecha()));
+            ps.setString(6, r.getEmocion().toString());
+            ps.setString(7, r.getTipo().toString());
+            ps.setBoolean(8, r.isFavorito());
+            ps.setString(9, r.getRutaMiniatura());
+            ps.setInt(10, r.getIdRecuerdo());
+
+            return ps.executeUpdate() > 0;
         }
-        return updated;
     }
 
-    public static boolean deleteRecuerdo(int idRecuerdo) throws SQLException {
-        boolean deleted = false;
-        if (findById(idRecuerdo) != null) {
-            try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
-                ps.setInt(1, idRecuerdo);
-                ps.executeUpdate();
-                deleted = true;
-            }
+
+    // ---------------------------------------------------------
+    // DELETE
+    // ---------------------------------------------------------
+    public static boolean delete(int idRecuerdo) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
+            ps.setInt(1, idRecuerdo);
+            return ps.executeUpdate() > 0;
         }
-        return deleted;
     }
 }

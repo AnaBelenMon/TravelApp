@@ -6,9 +6,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.travelapp.controllers.LoginController"
-            prefHeight="400.0" prefWidth="600.0">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="15" alignment="CENTER" xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.travelapp.controllers.LoginController"
+      style="-fx-padding: 40;">
 
-</AnchorPane>
+    <Label text="Iniciar Sesión" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="txtUsuario" promptText="Usuario" prefWidth="250"/>
+    <PasswordField fx:id="txtPassword" promptText="Contraseña" prefWidth="250"/>
+
+    <Button text="Entrar" prefWidth="250" onAction="#login"/>
+    <Hyperlink text="Crear cuenta" onAction="#irRegistro"/>
+
+</VBox>

@@ -4,6 +4,14 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
+/**
+ * Representa un alojamiento asociado a un viaje dentro de la aplicación.
+ * Contiene información básica como nombre, dirección, precio total,
+ * fechas de check-in y check-out y una valoración opcional.
+ *
+ * Esta clase actúa como un POJO sin validaciones internas. Las comprobaciones
+ * de datos se realizan en los controladores siguiendo el patrón MVC.
+ */
 public class Alojamiento implements Valorable{
     private int idAlojamiento;
     private int idViaje;
@@ -15,13 +23,14 @@ public class Alojamiento implements Valorable{
     private int valoracion;
 
     /**
-     *
-     * @param nombre
-     * @param direccion
-     * @param precioTotal
-     * @param fechaCheckin
-     * @param fechaCheckout
-     * @param valoracion
+     * Constructor para crear un alojamiento sin IDs asignados.
+     * Se utiliza al crear un nuevo alojamiento desde la interfaz.
+     * @param nombre nombre del alojamiento
+     * @param direccion dirección del alojamiento
+     * @param precioTotal precio total de la estancia
+     * @param fechaCheckin fecha de entrada
+     * @param fechaCheckout fecha de salida
+     * @param valoracion valoración inicial
      */
     public Alojamiento(String nombre, String direccion, double precioTotal, LocalDate fechaCheckin, LocalDate fechaCheckout, int valoracion) {
         this.nombre = nombre;
@@ -33,177 +42,163 @@ public class Alojamiento implements Valorable{
     }
 
     /**
+     * Constructor completo con IDs. Se utiliza al cargar datos desde la base de datos.
      *
-     * @return
+     * @param idAlojamiento identificador del alojamiento
+     * @param idViaje identificador del viaje asociado
+     * @param nombre nombre del alojamiento
+     * @param direccion dirección del alojamiento
+     * @param precioTotal precio total de la estancia
+     * @param fechaCheckin fecha de entrada
+     * @param fechaCheckout fecha de salida
+     * @param valoracion valoración del alojamiento
      */
+    public Alojamiento(int idAlojamiento, int idViaje, String nombre, String direccion, double precioTotal, LocalDate fechaCheckin, LocalDate fechaCheckout, int valoracion) {
+        this.idAlojamiento = idAlojamiento;
+        this.idViaje = idViaje;
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.precioTotal = precioTotal;
+        this.fechaCheckin = fechaCheckin;
+        this.fechaCheckout = fechaCheckout;
+        this.valoracion = valoracion;
+    }
+
+    /** @return id del alojamiento */
     public int getIdAlojamiento() {
         return idAlojamiento;
     }
 
-    /**
-     *
-     * @param idAlojamiento
-     */
+    /** @param idAlojamiento nuevo id */
     public void setIdAlojamiento(int idAlojamiento) {
-        if (idAlojamiento < 0){
-            throw new IllegalArgumentException("La fechas no puede ser negativo");
-        }
         this.idAlojamiento = idAlojamiento;
     }
 
-    /**
-     *
-     * @return
-     */
+    /** @return id del viaje asociado */
     public int getIdViaje() {
         return idViaje;
     }
 
-    /**
-     *
-     * @param idViaje
-     */
+    /** @param idViaje nuevo id de viaje */
     public void setIdViaje(int idViaje) {
-        if (idViaje < 0){
-            throw new IllegalArgumentException("La fechas no puede ser negativo");
-        }
         this.idViaje = idViaje;
     }
 
-    /**
-     *
-     * @return
-     */
+    /** @return nombre del alojamiento */
     public String getNombre() {
         return nombre;
     }
 
-    /**
-     *
-     * @param nombre
-     */
+    /** @param nombre nuevo nombre */
     public void setNombre(String nombre) {
-        if (nombre == null || nombre.isBlank())
-            throw new IllegalArgumentException("El nombre no puede estar vacío");
         this.nombre = nombre;
     }
 
-    /**
-     *
-     * @return
-     */
+    /** @return dirección del alojamiento */
     public String getDireccion() {
         return direccion;
     }
 
-    /**
-     *
-     * @param direccion
-     */
+    /** @param direccion nueva dirección */
     public void setDireccion(String direccion) {
-        if (direccion == null || direccion.isBlank())
-            throw new IllegalArgumentException("La dirección no puede estar vacía");
         this.direccion = direccion;
     }
 
-    /**
-     *
-     * @return
-     */
+    /** @return precio total de la estancia */
     public double getPrecioTotal() {
         return precioTotal;
     }
 
-    /**
-     *
-     * @param precioTotal
-     */
+    /** @param precioTotal nuevo precio total */
     public void setPrecioTotal(double precioTotal) {
-        if (precioTotal < 0){
-            throw new IllegalArgumentException("El precio no puede ser negativo");
-        }
         this.precioTotal = precioTotal;
     }
 
-    /**
-     *
-     * @return
-     */
+    /** @return fecha de check-in */
     public LocalDate getFechaCheckin() {
         return fechaCheckin;
     }
 
-    /**
-     *
-     * @param fechaCheckin
-     */
+    /** @param fechaCheckin nueva fecha de entrada */
     public void setFechaCheckin(LocalDate fechaCheckin) {
-        if (fechaCheckin == null){
-            throw new IllegalArgumentException("La fecha de checkin no puede ser nula");
-        }
         this.fechaCheckin = fechaCheckin;
     }
 
-    /**
-     *
-     * @return
-     */
+    /** @return fecha de check-out */
     public LocalDate getFechaCheckout() {
         return fechaCheckout;
     }
 
-    /**
-     *
-     * @param fechaCheckout
-     */
+    /** @param fechaCheckout nueva fecha de salida */
     public void setFechaCheckout(LocalDate fechaCheckout) {
-        if (fechaCheckout == null)
-            throw new IllegalArgumentException("La fecha de check-out no puede ser nula");
-        if (!fechaCheckout.isAfter(fechaCheckin))
-            throw new IllegalArgumentException("El checkout debe ser posterior al checkin");
         this.fechaCheckout = fechaCheckout;
     }
 
-    /**
-     *
-     * @param valoracion
-     */
+    /** @return valoración del alojamiento */
+    public int getValoracion() {
+        return valoracion;
+    }
+
+    /** @param valoracion nueva valoración */
     public void setValoracion(int valoracion) {
         this.valoracion = valoracion;
     }
 
     /**
+     * Calcula el número total de noches entre check-in y check-out.
      *
-     * @return
+     * @return número de noches
      */
-    public int getValoracion() {
-        return valoracion;
+    public int getNumeroNoches() {
+        return (int) ChronoUnit.DAYS.between(fechaCheckin, fechaCheckout);
     }
 
     /**
+     * Calcula el precio por noche.
      *
-     * @param o   the reference object with which to compare.
-     * @return
+     * @return precio dividido entre número de noches
+     */
+    public double getPrecioPorNoche() {
+        return precioTotal / getNumeroNoches();
+    }
+
+    /**
+     * Indica si el alojamiento es gratuito.
+     *
+     * @return true si el precio total es 0
+     */
+    public boolean esGratuito() {
+        return precioTotal == 0;
+    }
+
+    /**
+     * Indica si el alojamiento tiene una dirección válida.
+     *
+     * @return true si la dirección no está vacía
+     */
+    public boolean tieneDireccion() {
+        return direccion != null && !direccion.isBlank();
+    }
+
+    /**
+     * Asigna una valoración al alojamiento.
+     *
+     * @param puntuacion valor entre 1 y 5
      */
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Alojamiento that = (Alojamiento) o;
-        return idAlojamiento == that.idAlojamiento && idViaje == that.idViaje && Double.compare(precioTotal, that.precioTotal) == 0 && valoracion == that.valoracion && Objects.equals(nombre, that.nombre) && Objects.equals(direccion, that.direccion) && Objects.equals(fechaCheckin, that.fechaCheckin) && Objects.equals(fechaCheckout, that.fechaCheckout);
+    public void valorar(int puntuacion) {
+        setValoracion(puntuacion);
     }
 
-    /**
-     *
-     * @return
-     */
+    /** Elimina la valoración del alojamiento. */
     @Override
-    public int hashCode() {
-        return Objects.hash(idAlojamiento);
+    public void limpiarValoracion() {
+        this.valoracion = 0;
     }
 
     /**
-     *
-     * @return
+     * Representación en texto del alojamiento.
+     * @return cadena descriptiva
      */
     @Override
     public String toString() {
@@ -217,51 +212,5 @@ public class Alojamiento implements Valorable{
                 ", fechaCheckout=" + fechaCheckout +
                 ", valoracion=" + valoracion +
                 '}';
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getNumeroNoches() {
-        return (int) ChronoUnit.DAYS.between(fechaCheckin, fechaCheckout);
-    }
-
-    /**
-     *
-     * @return
-     */
-    public double getPrecioPorNoche() {
-        return precioTotal / getNumeroNoches();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean esGratuito() {
-        return precioTotal == 0;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean tieneDireccion() {
-        return direccion != null && !direccion.isBlank();
-    }
-
-    /**
-     *
-     * @param puntuacion valor entre 1 y 5
-     */
-    @Override
-    public void valorar(int puntuacion) {
-        setValoracion(puntuacion);
-    }
-
-    @Override
-    public void limpiarValoracion() {
-        this.valoracion = 0;
     }
 }
