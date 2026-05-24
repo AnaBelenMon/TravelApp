@@ -7,6 +7,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+/**
+ * Controlador de la vista de edición de actividades.
+ *
+ * Permite crear nuevas actividades o editar actividades existentes
+ * asociadas a un viaje. Gestiona la validación de datos y la
+ * comunicación con la capa DAO.
+ */
 public class EditarActividadController {
 
     @FXML private Label labelTitulo;
@@ -30,16 +37,31 @@ public class EditarActividadController {
 
     private final ActividadDAO actividadDAO = new ActividadDAO();
 
+    /**
+     * Inicializa los componentes de la vista.
+     *
+     * Se cargan los valores de los ComboBox de categoría y valoración.
+     */
     @FXML
     public void initialize() {
         cmbCategoria.getItems().setAll(CategoriaActividad.values());
         cmbValoracion.getItems().addAll(1, 2, 3, 4, 5);
     }
 
+    /**
+     * Establece el identificador del viaje asociado a la actividad.
+     *
+     * @param idViaje identificador del viaje
+     */
     public void setIdViaje(int idViaje) {
         this.idViaje = idViaje;
     }
 
+    /**
+     * Carga los datos de una actividad existente en la vista.
+     *
+     * @param a actividad a editar
+     */
     public void cargarActividad(Actividad a) {
         this.actividad = a;
         labelTitulo.setText("Editar Actividad");
@@ -55,8 +77,14 @@ public class EditarActividadController {
         chkReservada.setSelected(a.isReservada());
     }
 
+    /**
+     * Guarda la actividad, ya sea creando una nueva o actualizando una existente.
+     *
+     * Valida los campos del formulario antes de persistir los datos.
+     */
     @FXML
     private void guardar() {
+
         if (txtNombre.getText().isEmpty()) {
             mostrarError("El nombre no puede estar vacío.");
             return;
@@ -109,7 +137,7 @@ public class EditarActividadController {
         try {
             if (actividad == null) {
                 actividad = new Actividad(
-                        0,
+                        1,
                         idViaje,
                         txtNombre.getText(),
                         cmbCategoria.getValue(),
@@ -146,12 +174,20 @@ public class EditarActividadController {
         }
     }
 
+    /**
+     * Cancela la operación y cierra la ventana actual.
+     */
     @FXML
     private void cancelar() {
         cerrarVentana();
         mostrarInfo("Operación cancelada.");
     }
 
+    /**
+     * Muestra un mensaje de error en un diálogo emergente.
+     *
+     * @param mensaje texto del error
+     */
     private void mostrarError(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -160,6 +196,11 @@ public class EditarActividadController {
         alert.showAndWait();
     }
 
+    /**
+     * Muestra un mensaje informativo en un diálogo emergente.
+     *
+     * @param mensaje texto informativo
+     */
     private void mostrarInfo(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
@@ -168,9 +209,11 @@ public class EditarActividadController {
         alert.showAndWait();
     }
 
+    /**
+     * Cierra la ventana actual del formulario.
+     */
     private void cerrarVentana() {
         Stage stage = (Stage) labelTitulo.getScene().getWindow();
         stage.close();
     }
-
 }

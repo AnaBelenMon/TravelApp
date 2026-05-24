@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="350" prefWidth="450" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-
-    <!-- TÍTULO -->
+<BorderPane xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.travelapp.controllers.EditarTransporteController">
     <top>
         <VBox alignment="CENTER" spacing="5">
             <children>
@@ -28,33 +18,33 @@
             </padding>
         </VBox>
     </top>
-
-    <!-- FORMULARIO -->
     <center>
-        <GridPane alignment="CENTER" hgap="10" vgap="15">
-            <columnConstraints>
-                <ColumnConstraints prefWidth="120" />
-                <ColumnConstraints hgrow="ALWAYS" />
-            </columnConstraints>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
 
-            <!-- Tipo -->
-            <Label text="Tipo de transporte:" GridPane.rowIndex="0" />
-            <ComboBox fx:id="cmbTipoTransporte" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <GridPane hgap="10" vgap="12">
 
-            <!-- Fecha -->
-            <Label text="Fecha:" GridPane.rowIndex="1" />
-            <DatePicker fx:id="dpFecha" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <columnConstraints>
+                    <ColumnConstraints minWidth="130"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
 
-            <!-- Precio -->
-            <Label text="Precio (€):" GridPane.rowIndex="2" />
-            <TextField fx:id="txtPrecio" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label text="Tipo de transporte:" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="cmbTipoTransporte" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-            <!-- Documento -->
+                <Label text="Fecha:" GridPane.rowIndex="1"/>
+                <DatePicker fx:id="dpFecha" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Precio (€):" GridPane.rowIndex="2"/>
+                <TextField fx:id="txtPrecio" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Ej: 25.50"/>
+
             <Label text="Documento:" GridPane.rowIndex="3" />
             <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
                 <children>
                     <Button onAction="#seleccionarDocumento" text="Seleccionar archivo" />
-                    <Label fx:id="lblDocumento" style="-fx-text-fill: gray;" text="Ninguno" />
+                    <Label fx:id="lblDocumento" />
                 </children>
             </HBox>
          <rowConstraints>
@@ -70,10 +60,10 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
 
-        </GridPane>
+            </GridPane>
+        </VBox>
     </center>
 
-    <!-- BOTONES -->
     <bottom>
         <HBox alignment="CENTER" spacing="15">
             <children>

@@ -9,10 +9,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO de la entidad Viaje.
+ *
+ * Gestiona el acceso a datos de los viajes almacenados en la base de datos.
+ * Permite operaciones CRUD completas y múltiples consultas filtradas.
+ *
+ * Esta entidad es la principal del sistema, ya que agrupa usuarios,
+ * gastos, recuerdos, documentos y transporte.
+ */
 public class ViajeDAO {
 
-    private final static String SQL_ALL =
-            "SELECT * FROM viaje";
+    private final static String SQL_ALL = "SELECT * FROM viaje";
 
     private final static String SQL_FIND_BY_ID =
             "SELECT * FROM viaje WHERE idViaje = ?";
@@ -52,10 +60,9 @@ public class ViajeDAO {
     private final static String SQL_DELETE =
             "DELETE FROM viaje WHERE idViaje = ?";
 
-
-    // ---------------------------------------------------------
-    // MAPEO
-    // ---------------------------------------------------------
+    /**
+     * Mapea un ResultSet a un objeto Viaje.
+     */
     private static Viaje map(ResultSet rs) throws SQLException {
         return new Viaje(
                 rs.getInt("idViaje"),
@@ -72,10 +79,9 @@ public class ViajeDAO {
         );
     }
 
-
-    // ---------------------------------------------------------
-    // FIND ALL
-    // ---------------------------------------------------------
+    /**
+     * Obtiene todos los viajes.
+     */
     public static List<Viaje> findAll() throws SQLException {
         List<Viaje> lista = new ArrayList<>();
 
@@ -89,14 +95,15 @@ public class ViajeDAO {
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY ID
-    // ---------------------------------------------------------
+    /**
+     * Busca un viaje por su ID.
+     */
     public static Viaje findById(int idViaje) throws SQLException {
         Viaje v = null;
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_ID)) {
+
             ps.setInt(1, idViaje);
             ResultSet rs = ps.executeQuery();
 
@@ -107,14 +114,15 @@ public class ViajeDAO {
         return v;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY USUARIO
-    // ---------------------------------------------------------
+    /**
+     * Obtiene los viajes de un usuario.
+     */
     public static List<Viaje> findByUsuario(int idUsuario) throws SQLException {
         List<Viaje> lista = new ArrayList<>();
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_USUARIO)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_USUARIO)) {
+
             ps.setInt(1, idUsuario);
             ResultSet rs = ps.executeQuery();
 
@@ -125,14 +133,15 @@ public class ViajeDAO {
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY NOMBRE
-    // ---------------------------------------------------------
+    /**
+     * Busca viajes por nombre.
+     */
     public static List<Viaje> findByNombre(String nombre) throws SQLException {
         List<Viaje> lista = new ArrayList<>();
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_NOMBRE)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_NOMBRE)) {
+
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
 
@@ -143,14 +152,15 @@ public class ViajeDAO {
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY FECHA INICIO
-    // ---------------------------------------------------------
+    /**
+     * Busca viajes por fecha de inicio.
+     */
     public static List<Viaje> findByFechaInicio(LocalDate fechaInicio) throws SQLException {
         List<Viaje> lista = new ArrayList<>();
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHAINICIO)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_FECHAINICIO)) {
+
             ps.setDate(1, Date.valueOf(fechaInicio));
             ResultSet rs = ps.executeQuery();
 
@@ -161,14 +171,15 @@ public class ViajeDAO {
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY FECHA FIN
-    // ---------------------------------------------------------
+    /**
+     * Busca viajes por fecha de fin.
+     */
     public static List<Viaje> findByFechaFin(LocalDate fechaFin) throws SQLException {
         List<Viaje> lista = new ArrayList<>();
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHAFIN)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_FECHAFIN)) {
+
             ps.setDate(1, Date.valueOf(fechaFin));
             ResultSet rs = ps.executeQuery();
 
@@ -179,14 +190,15 @@ public class ViajeDAO {
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY TIPO VIAJE
-    // ---------------------------------------------------------
+    /**
+     * Busca viajes por tipo.
+     */
     public static List<Viaje> findByTipoViaje(TipoViaje tipoViaje) throws SQLException {
         List<Viaje> lista = new ArrayList<>();
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_TIPO)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_TIPO)) {
+
             ps.setString(1, tipoViaje.toString());
             ResultSet rs = ps.executeQuery();
 
@@ -197,14 +209,15 @@ public class ViajeDAO {
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY PRESUPUESTO
-    // ---------------------------------------------------------
+    /**
+     * Busca viajes por presupuesto.
+     */
     public static List<Viaje> findByPresupuesto(double presupuesto) throws SQLException {
         List<Viaje> lista = new ArrayList<>();
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PRESUPUESTO)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_PRESUPUESTO)) {
+
             ps.setDouble(1, presupuesto);
             ResultSet rs = ps.executeQuery();
 
@@ -215,14 +228,15 @@ public class ViajeDAO {
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY DESTINO PAIS
-    // ---------------------------------------------------------
+    /**
+     * Busca viajes por país de destino.
+     */
     public static List<Viaje> findByDestinoPais(String pais) throws SQLException {
         List<Viaje> lista = new ArrayList<>();
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_DESTINOPAIS)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_DESTINOPAIS)) {
+
             ps.setString(1, pais);
             ResultSet rs = ps.executeQuery();
 
@@ -233,14 +247,15 @@ public class ViajeDAO {
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY DESTINO CIUDAD
-    // ---------------------------------------------------------
+    /**
+     * Busca viajes por ciudad de destino.
+     */
     public static List<Viaje> findByDestinoCiudad(String ciudad) throws SQLException {
         List<Viaje> lista = new ArrayList<>();
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_DESTINOCIUDAD)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_DESTINOCIUDAD)) {
+
             ps.setString(1, ciudad);
             ResultSet rs = ps.executeQuery();
 
@@ -251,12 +266,12 @@ public class ViajeDAO {
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // INSERT
-    // ---------------------------------------------------------
+    /**
+     * Inserta un nuevo viaje en la base de datos.
+     */
     public static boolean insert(Viaje v) throws SQLException {
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_INSERT)) {
 
             ps.setInt(1, v.getIdUsuario());
             ps.setString(2, v.getNombre());
@@ -273,12 +288,12 @@ public class ViajeDAO {
         }
     }
 
-
-    // ---------------------------------------------------------
-    // UPDATE
-    // ---------------------------------------------------------
+    /**
+     * Actualiza un viaje existente.
+     */
     public static boolean update(Viaje v) throws SQLException {
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_UPDATE)) {
 
             ps.setInt(1, v.getIdUsuario());
             ps.setString(2, v.getNombre());
@@ -296,12 +311,13 @@ public class ViajeDAO {
         }
     }
 
-
-    // ---------------------------------------------------------
-    // DELETE
-    // ---------------------------------------------------------
+    /**
+     * Elimina un viaje por ID.
+     */
     public static boolean delete(int idViaje) throws SQLException {
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_DELETE)) {
+
             ps.setInt(1, idViaje);
             return ps.executeUpdate() > 0;
         }

@@ -32,7 +32,7 @@ public class ListaGastosController {
 
         colId.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getIdGasto()));
         //colConcepto.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getConcepto()));
-        colCategoria.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getCategoria()));
+        colCategoria.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getCategoriaGasto()));
         colFecha.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getFecha()));
         colImporte.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getImporte()));
 

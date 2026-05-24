@@ -10,7 +10,21 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO de la entidad Recuerdo.
+ *
+ * Gestiona el acceso a la tabla "recuerdo" de la base de datos,
+ * permitiendo realizar operaciones CRUD (crear, leer, actualizar y eliminar)
+ * así como consultas filtradas por distintos campos.
+ *
+ * Cada recuerdo representa un elemento multimedia asociado a un viaje,
+ * incluyendo información como ubicación, emoción, tipo, fecha y rutas de archivo.
+ */
 public class RecuerdoDAO {
+
+    // =========================================================
+    // CONSULTAS SQL
+    // =========================================================
 
     private final static String SQL_FIND_ALL =
             "SELECT * FROM recuerdo";
@@ -53,10 +67,13 @@ public class RecuerdoDAO {
     private final static String SQL_DELETE =
             "DELETE FROM recuerdo WHERE idRecuerdo = ?";
 
+    // =========================================================
+    // MAPEADOR RESULTSET -> OBJETO
+    // =========================================================
 
-    // ---------------------------------------------------------
-    // MAPEO
-    // ---------------------------------------------------------
+    /**
+     * Convierte una fila del ResultSet en un objeto Recuerdo.
+     */
     private static Recuerdo map(ResultSet rs) throws SQLException {
         return new Recuerdo(
                 rs.getInt("idRecuerdo"),
@@ -72,10 +89,13 @@ public class RecuerdoDAO {
         );
     }
 
+    // =========================================================
+    // CONSULTAS SELECT
+    // =========================================================
 
-    // ---------------------------------------------------------
-    // FIND ALL
-    // ---------------------------------------------------------
+    /**
+     * Obtiene todos los recuerdos almacenados.
+     */
     public static List<Recuerdo> findAll() throws SQLException {
         List<Recuerdo> lista = new ArrayList<>();
 
@@ -86,175 +106,188 @@ public class RecuerdoDAO {
                 lista.add(map(rs));
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY ID
-    // ---------------------------------------------------------
+    /**
+     * Busca un recuerdo por su ID.
+     */
     public static Recuerdo findById(int id) throws SQLException {
         Recuerdo r = null;
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                r = map(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    r = map(rs);
+                }
             }
         }
+
         return r;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY ID VIAJE
-    // ---------------------------------------------------------
+    /**
+     * Obtiene todos los recuerdos de un viaje concreto.
+     */
     public static List<Recuerdo> findByIdViaje(int idViaje) throws SQLException {
         List<Recuerdo> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)) {
             ps.setInt(1, idViaje);
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY RUTA ARCHIVO
-    // ---------------------------------------------------------
+    /**
+     * Busca un recuerdo por la ruta del archivo original.
+     */
     public static Recuerdo findByRutaArchivo(String ruta) throws SQLException {
         Recuerdo r = null;
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_RUTAARCHIVO)) {
             ps.setString(1, ruta);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                r = map(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    r = map(rs);
+                }
             }
         }
+
         return r;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY UBICACION
-    // ---------------------------------------------------------
+    /**
+     * Obtiene recuerdos por ubicación.
+     */
     public static List<Recuerdo> findByUbicacion(String ubicacion) throws SQLException {
         List<Recuerdo> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_UBICACION)) {
             ps.setString(1, ubicacion);
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY FECHA
-    // ---------------------------------------------------------
+    /**
+     * Obtiene recuerdos por fecha.
+     */
     public static List<Recuerdo> findByFecha(LocalDate fecha) throws SQLException {
         List<Recuerdo> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHA)) {
             ps.setDate(1, Date.valueOf(fecha));
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY EMOCION
-    // ---------------------------------------------------------
+    /**
+     * Obtiene recuerdos filtrando por emoción.
+     */
     public static List<Recuerdo> findByEmocion(Emocion emocion) throws SQLException {
         List<Recuerdo> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_EMOCION)) {
             ps.setString(1, emocion.toString());
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY TIPO
-    // ---------------------------------------------------------
+    /**
+     * Obtiene recuerdos filtrando por tipo.
+     */
     public static List<Recuerdo> findByTipo(TipoRecuerdo tipo) throws SQLException {
         List<Recuerdo> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_TIPO)) {
             ps.setString(1, tipo.toString());
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY FAVORITO
-    // ---------------------------------------------------------
+    /**
+     * Filtra recuerdos por si están marcados como favoritos o no.
+     */
     public static List<Recuerdo> findByFavorito(boolean favorito) throws SQLException {
         List<Recuerdo> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FAVORITO)) {
             ps.setBoolean(1, favorito);
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY RUTA MINIATURA
-    // ---------------------------------------------------------
+    /**
+     * Busca un recuerdo por su ruta de miniatura.
+     */
     public static Recuerdo findByRutaMiniatura(String rutaMiniatura) throws SQLException {
         Recuerdo r = null;
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_RUTAMINIATURA)) {
             ps.setString(1, rutaMiniatura);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                r = map(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    r = map(rs);
+                }
             }
         }
+
         return r;
     }
 
+    // =========================================================
+    // INSERT / UPDATE / DELETE
+    // =========================================================
 
-    // ---------------------------------------------------------
-    // INSERT
-    // ---------------------------------------------------------
+    /**
+     * Inserta un nuevo recuerdo en la base de datos.
+     */
     public static boolean insert(Recuerdo r) throws SQLException {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
 
@@ -272,10 +305,9 @@ public class RecuerdoDAO {
         }
     }
 
-
-    // ---------------------------------------------------------
-    // UPDATE
-    // ---------------------------------------------------------
+    /**
+     * Actualiza un recuerdo existente.
+     */
     public static boolean update(Recuerdo r) throws SQLException {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
 
@@ -294,10 +326,9 @@ public class RecuerdoDAO {
         }
     }
 
-
-    // ---------------------------------------------------------
-    // DELETE
-    // ---------------------------------------------------------
+    /**
+     * Elimina un recuerdo por su ID.
+     */
     public static boolean delete(int idRecuerdo) throws SQLException {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
             ps.setInt(1, idRecuerdo);

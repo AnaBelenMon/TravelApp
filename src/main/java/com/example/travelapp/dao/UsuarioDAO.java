@@ -9,141 +9,172 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO de la entidad Usuario.
+ *
+ * Gestiona el acceso a datos de usuarios en la base de datos.
+ * Permite realizar operaciones CRUD básicas y autenticación (login).
+ *
+ * IMPORTANTE:
+ * - Utiliza ConnectionBD para obtener la conexión.
+ * - No aplica transacciones complejas porque la entidad es simple.
+ */
 public class UsuarioDAO {
-    private final static String SQL_ALL = "SELECT * FROM Usurio";
+
+    private final static String SQL_ALL = "SELECT * FROM Usuario";
     private final static String SQL_FIND_BY_ID = "SELECT * FROM Usuario WHERE id = ?";
     private final static String SQL_FIND_BY_NOMBRE = "SELECT * FROM Usuario WHERE nombre = ?";
     private final static String SQL_FIND_BY_EMAIL = "SELECT * FROM Usuario WHERE email = ?";
     private final static String SQL_LOGIN = "SELECT * FROM Usuario WHERE email = ? AND password = ?";
 
-    private final static String SQL_INSERT = "INSERT INTO Usuario values()";
-    private final static String SQL_UPDATE = "UPDATE Usuario SET ";
+    private final static String SQL_INSERT = "INSERT INTO Usuario (nombre, email, password) VALUES (?, ?, ?)";
+    private final static String SQL_UPDATE = "UPDATE Usuario SET nombre = ?, email = ?, password = ? WHERE id = ?";
     private final static String SQL_DELETE = "DELETE FROM Usuario WHERE id = ?";
 
-    public static List<Usuario> findAll() throws SQLException {
+    public List<Usuario> findAll() throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
-        Usuario usuario =  null;
-        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)){
-            while(rs.next()){
-                String nombre = rs.getString("nombre");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                usuario = new Usuario(nombre, email, password);
-                usuarios.add(usuario);
+
+        try (ResultSet rs = ConnectionBD.getConnection()
+                .createStatement()
+                .executeQuery(SQL_ALL)) {
+
+            while (rs.next()) {
+                usuarios.add(new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                ));
             }
         }
         return usuarios;
     }
 
-    public static Usuario findById(int id) throws SQLException {
-        Usuario usuario = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)){
+    public Usuario findById(int id) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_ID)) {
+
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                String nombre = rs.getString("nombre");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                usuario = new Usuario(nombre, email, password);
+
+            if (rs.next()) {
+                return new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
             }
         }
-        return usuario;
+        return null;
     }
 
-    public static Usuario findByNombre(String nombre) throws SQLException {
-        Usuario usuario = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_NOMBRE)){
+    public Usuario findByNombre(String nombre) throws SQLException {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_NOMBRE)) {
+
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                String nombre2 = rs.getString("nombre");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                usuario = new Usuario(nombre2, email, password);
+
+            if (rs.next()) {
+                return new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
             }
         }
-        return usuario;
+        return null;
     }
 
     public Usuario findByEmail(String email) {
-        Usuario usuario = null;
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_EMAIL)){
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_FIND_BY_EMAIL)) {
+
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                String nombre = rs.getString("nombre");
-                String email2 = rs.getString("email");
-                String password = rs.getString("password");
-                usuario = new Usuario(nombre, email2, password);
+
+            if (rs.next()) {
+                return new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return usuario;
+        return null;
     }
 
-    public Usuario addUsuario(Usuario usuario) throws SQLException {
-        if (usuario != null && findByNombre(usuario.getNombre()) == null) {
-            try(PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)){
-                ps.setString(1, usuario.getNombre());
-                ps.setString(2, usuario.getEmail());
-                ps.executeUpdate();
-            }
-        }else {
-            usuario = null;
-        }
-        return usuario;
-    }
+    public boolean addUsuario(Usuario usuario) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_INSERT)) {
 
-    public static boolean updateUsuario(Usuario usuarioNuevo, Usuario usuarioActual) throws SQLException {
-        boolean updated = false;
-        if (usuarioNuevo != null && findByNombre(usuarioNuevo.getNombre()) == null && usuarioActual != null && findByNombre(usuarioActual.getNombre()) != null) {
-            try(PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)){
-                ps.setString(1, usuarioNuevo.getNombre());
-                ps.setString(2, usuarioActual.getNombre());
-                ps.setString(3, usuarioActual.getEmail());
-                ps.executeUpdate();
-                updated = true;
-            }
-        }
-        return updated;
-    }
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getEmail());
+            ps.setString(3, usuario.getPassword());
 
-    public static boolean deleteUsuario(int idUsuario) throws SQLException {
-        boolean deleted = false;
-        if (findById(idUsuario) != null) {
-            try(PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)){
-                ps.setInt(1, idUsuario);
-                ps.executeUpdate();
-                deleted = true;
-            }
-        }
-        return deleted;
-    }
+            return ps.executeUpdate() > 0;
 
-    public static boolean login(String email, String password) {
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_LOGIN)) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            // Caso 1: el usuario NO existe
-            if (!rs.next()) {
-                return false;
-            }
-
-            String passwordBD = rs.getString("password");
-
-            if (!passwordBD.equals(password)) {
-                return false;
-            }
-            String nombre = rs.getString("nombre");
-            String email2 = rs.getString("email");
-            String password2 = rs.getString("password");
-            new Usuario(nombre, email2, password2);
-            return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
+    public boolean updateUsuario(Usuario usuario) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_UPDATE)) {
+
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getEmail());
+            ps.setString(3, usuario.getPassword());
+            ps.setInt(4, usuario.getIdUsuario());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteUsuario(int idUsuario) {
+        try (PreparedStatement ps = ConnectionBD.getConnection()
+                .prepareStatement(SQL_DELETE)) {
+
+            ps.setInt(1, idUsuario);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Usuario findByEmailAndPassword(String email, String password) {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_LOGIN)) {
+
+            ps.setString(1, email);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -1,6 +1,11 @@
 package com.example.travelapp.model;
 
+/**
+ * Enum que representa los diferentes tipos de viaje disponibles en la aplicación.
+ * Se utiliza para clasificar los viajes según su propósito o experiencia.
+ */
 public enum TipoViaje {
+
     AVENTURA,
     RELAX,
     CULTURAL,
@@ -9,8 +14,9 @@ public enum TipoViaje {
     FAMILIAR;
 
     /**
+     * Devuelve una versión legible del tipo de viaje para la interfaz de usuario.
      *
-     * @return
+     * @return nombre formateado del tipo de viaje
      */
     public String getNombre() {
         return switch (this) {
@@ -23,4 +29,3 @@ public enum TipoViaje {
         };
     }
 }
-

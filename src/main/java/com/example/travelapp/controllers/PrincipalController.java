@@ -17,9 +17,9 @@ public class PrincipalController {
     @FXML private TableColumn<Viaje, LocalDate> colFechaFin;
     @FXML private TableColumn<Viaje, TipoViaje> colTipo;
 
-    @FXML private Button btnNuevoViaje;
-    @FXML private Button btnVerDetalles;
-    @FXML private Button btnCerrarSesion;
+    @FXML private Button botonNuevoViaje;
+    @FXML private Button botonVerDetalles;
+    @FXML private Button botonCerrarSesion;
 
     private ObservableList<Viaje> listaViajes = FXCollections.observableArrayList();
 
@@ -54,7 +54,6 @@ public class PrincipalController {
         System.out.println("Cerrar sesión");
     }
 
-    // Métodos para abrir módulos
     @FXML private void abrirActividades() { System.out.println("Abrir actividades"); }
     @FXML private void abrirAlojamientos() { System.out.println("Abrir alojamientos"); }
     @FXML private void abrirGastos() { System.out.println("Abrir gastos"); }

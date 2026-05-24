@@ -32,13 +32,14 @@ public class ListaObrasController {
         //colAnio.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getAnio()));
 
         // Datos de ejemplo
-        listaObras.addAll(
-                new Obra("La Gioconda","" ,"Leonardo da Vinci", "Una de las pinturas más famosas del mundo"),
+        /*listaObras.addAll(
+                new Obra(idElemento, "La Gioconda","" ,"Leonardo da Vinci", "Una de las pinturas más famosas del mundo"),
 
-                new Obra("La Escuela de Atenas","", "Rafael", "Fresco renacentista ubicado en el Vaticano")
+                new Obra(idElemento, "La Escuela de Atenas","", "Rafael", "Fresco renacentista ubicado en el Vaticano")
         );
 
         tablaObras.setItems(listaObras);
+        */
     }
 
     @FXML

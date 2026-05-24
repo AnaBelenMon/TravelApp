@@ -12,6 +12,12 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+/**
+ * Controlador de la vista de edición de alojamientos.
+ *
+ * Permite crear y editar alojamientos asociados a un viaje,
+ * gestionando validaciones de datos y persistencia en la base de datos.
+ */
 public class EditarAlojamientoController {
 
     @FXML private Label labelTitulo;
@@ -27,21 +33,30 @@ public class EditarAlojamientoController {
     private Alojamiento alojamientoEditar;   // null = crear
     private int idViajeActual;               // recibido desde ListaAlojamientos
 
+    /**
+     * Inicializa la vista cargando datos necesarios en los ComboBox.
+     *
+     * @throws SQLException si ocurre un error al cargar los viajes desde la BD
+     */
     @FXML
     public void initialize() throws SQLException {
 
-        // Valoraciones 0–5
+        // Valoraciones de 0 a 5
         cbValoracion.getItems().addAll(0, 1, 2, 3, 4, 5);
 
-        // Cargar viajes reales
+        // Cargar viajes desde la base de datos
         cbViaje.setItems(FXCollections.observableArrayList(ViajeDAO.findAll()));
     }
 
-    /** Recibe el id del viaje desde ListaAlojamientos */
+    /**
+     * Establece el identificador del viaje actual.
+     *
+     * @param idViaje identificador del viaje
+     */
     public void setIdViaje(int idViaje) {
         this.idViajeActual = idViaje;
 
-        // Seleccionar automáticamente el viaje actual
+        // Seleccionar automáticamente el viaje correspondiente
         for (Viaje v : cbViaje.getItems()) {
             if (v.getIdViaje() == idViaje) {
                 cbViaje.getSelectionModel().select(v);
@@ -50,7 +65,11 @@ public class EditarAlojamientoController {
         }
     }
 
-    /** Cargar datos en modo edición */
+    /**
+     * Carga los datos de un alojamiento en modo edición.
+     *
+     * @param alojamiento alojamiento a editar
+     */
     public void cargarAlojamiento(Alojamiento alojamiento) {
         this.alojamientoEditar = alojamiento;
 
@@ -72,6 +91,12 @@ public class EditarAlojamientoController {
         }
     }
 
+    /**
+     * Guarda el alojamiento en la base de datos.
+     *
+     * Si el objeto es null, se crea un nuevo alojamiento.
+     * Si no, se actualiza el existente.
+     */
     @FXML
     private void guardar() {
 
@@ -161,16 +186,27 @@ public class EditarAlojamientoController {
         }
     }
 
+    /**
+     * Cancela la operación y cierra la ventana.
+     */
     @FXML
     private void cancelar() {
         cerrarVentana();
     }
 
+    /**
+     * Cierra la ventana actual.
+     */
     private void cerrarVentana() {
         Stage stage = (Stage) txtNombre.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Muestra un mensaje de error en un diálogo emergente.
+     *
+     * @param mensaje mensaje de error
+     */
     private void mostrarError(String mensaje) {
         Alert alerta = new Alert(Alert.AlertType.ERROR);
         alerta.setTitle("Error");

@@ -10,7 +10,21 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO de la entidad Transporte.
+ *
+ * Gestiona el acceso a la tabla "transporte" de la base de datos,
+ * permitiendo realizar operaciones CRUD (crear, leer, actualizar y eliminar)
+ * y consultas filtradas por diferentes campos como tipo, fecha o precio.
+ *
+ * Cada transporte está asociado a un viaje mediante el campo idViaje
+ * y puede incluir información adicional como documentos asociados.
+ */
 public class TransporteDAO {
+
+    // =========================================================
+    // CONSULTAS SQL
+    // =========================================================
 
     private final static String SQL_ALL =
             "SELECT * FROM transporte";
@@ -41,10 +55,13 @@ public class TransporteDAO {
     private final static String SQL_DELETE =
             "DELETE FROM transporte WHERE idTransporte = ?";
 
+    // =========================================================
+    // MAPEADOR RESULTSET -> OBJETO
+    // =========================================================
 
-    // ---------------------------------------------------------
-    // MAPEO
-    // ---------------------------------------------------------
+    /**
+     * Convierte una fila del ResultSet en un objeto Transporte.
+     */
     private static Transporte map(ResultSet rs) throws SQLException {
         return new Transporte(
                 rs.getInt("idTransporte"),
@@ -57,10 +74,13 @@ public class TransporteDAO {
         );
     }
 
+    // =========================================================
+    // CONSULTAS SELECT
+    // =========================================================
 
-    // ---------------------------------------------------------
-    // FIND ALL
-    // ---------------------------------------------------------
+    /**
+     * Obtiene todos los transportes registrados.
+     */
     public static List<Transporte> findAll() throws SQLException {
         List<Transporte> lista = new ArrayList<>();
 
@@ -71,103 +91,112 @@ public class TransporteDAO {
                 lista.add(map(rs));
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY ID
-    // ---------------------------------------------------------
+    /**
+     * Busca un transporte por su ID.
+     */
     public static Transporte findById(int id) throws SQLException {
         Transporte t = null;
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                t = map(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    t = map(rs);
+                }
             }
         }
+
         return t;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY ID VIAJE
-    // ---------------------------------------------------------
+    /**
+     * Obtiene todos los transportes de un viaje concreto.
+     */
     public static List<Transporte> findByIdViaje(int idViaje) throws SQLException {
         List<Transporte> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)) {
             ps.setInt(1, idViaje);
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY TIPO
-    // ---------------------------------------------------------
+    /**
+     * Filtra transportes por tipo (bus, tren, avión, etc.).
+     */
     public static List<Transporte> findByTipo(TipoTransporte tipo) throws SQLException {
         List<Transporte> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_TIPO)) {
             ps.setString(1, tipo.toString());
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY FECHA
-    // ---------------------------------------------------------
+    /**
+     * Filtra transportes por fecha.
+     */
     public static List<Transporte> findByFecha(LocalDate fecha) throws SQLException {
         List<Transporte> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHA)) {
             ps.setDate(1, Date.valueOf(fecha));
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
-
-    // ---------------------------------------------------------
-    // FIND BY PRECIO
-    // ---------------------------------------------------------
+    /**
+     * Filtra transportes por precio.
+     */
     public static List<Transporte> findByPrecio(double precio) throws SQLException {
         List<Transporte> lista = new ArrayList<>();
 
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_PRECIO)) {
             ps.setDouble(1, precio);
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                lista.add(map(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(map(rs));
+                }
             }
         }
+
         return lista;
     }
 
+    // =========================================================
+    // INSERT / UPDATE / DELETE
+    // =========================================================
 
-    // ---------------------------------------------------------
-    // INSERT
-    // ---------------------------------------------------------
+    /**
+     * Inserta un nuevo transporte en la base de datos.
+     */
     public static boolean insert(Transporte t) throws SQLException {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
 
@@ -182,10 +211,9 @@ public class TransporteDAO {
         }
     }
 
-
-    // ---------------------------------------------------------
-    // UPDATE
-    // ---------------------------------------------------------
+    /**
+     * Actualiza un transporte existente.
+     */
     public static boolean update(Transporte t) throws SQLException {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
 
@@ -201,10 +229,9 @@ public class TransporteDAO {
         }
     }
 
-
-    // ---------------------------------------------------------
-    // DELETE
-    // ---------------------------------------------------------
+    /**
+     * Elimina un transporte por su ID.
+     */
     public static boolean delete(int idTransporte) throws SQLException {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
             ps.setInt(1, idTransporte);

@@ -4,7 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Application extends javafx.application.Application {
+public class TravelApplication extends javafx.application.Application {
 
     private static Stage stagePrincipal;
 
@@ -17,7 +17,7 @@ public class Application extends javafx.application.Application {
     public static <T> T setRoot(String nombreVista) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    Application.class.getResource("/vista/" + nombreVista + ".fxml")
+                    TravelApplication.class.getResource("/vista/" + nombreVista + ".fxml")
             );
 
             Scene scene = new Scene(loader.load());

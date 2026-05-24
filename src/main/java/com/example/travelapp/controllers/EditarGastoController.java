@@ -30,7 +30,7 @@ public class EditarGastoController {
         lblTitulo.setText("Editar Gasto");
 
         //txtConcepto.setText(g.getConcepto());
-        cmbCategoria.setValue(g.getCategoria());
+        cmbCategoria.setValue(g.getCategoriaGasto());
         dpFecha.setValue(g.getFecha());
         txtImporte.setText(String.valueOf(g.getImporte()));
         //txtDescripcion.setText(g.getDescripcion());

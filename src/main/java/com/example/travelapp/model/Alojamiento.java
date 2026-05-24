@@ -2,17 +2,18 @@ package com.example.travelapp.model;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 
 /**
- * Representa un alojamiento asociado a un viaje dentro de la aplicación.
- * Contiene información básica como nombre, dirección, precio total,
- * fechas de check-in y check-out y una valoración opcional.
- *
- * Esta clase actúa como un POJO sin validaciones internas. Las comprobaciones
- * de datos se realizan en los controladores siguiendo el patrón MVC.
+ * Representa un alojamiento asociado a un viaje.
+ * Contiene información sobre el hotel o alojamiento contratado,
+ * incluyendo fechas de estancia, precio total, dirección y valoración.
+ * Implementa la interfaz Valorable para permitir la valoración
+ * por parte del usuario.
+ * @author Ana Belén Montilla López
+ * @version 1.0
+ * @since 2026-04-30
  */
-public class Alojamiento implements Valorable{
+public class Alojamiento implements Valorable {
     private int idAlojamiento;
     private int idViaje;
     private String nombre;
@@ -23,131 +24,167 @@ public class Alojamiento implements Valorable{
     private int valoracion;
 
     /**
-     * Constructor para crear un alojamiento sin IDs asignados.
-     * Se utiliza al crear un nuevo alojamiento desde la interfaz.
-     * @param nombre nombre del alojamiento
-     * @param direccion dirección del alojamiento
-     * @param precioTotal precio total de la estancia
-     * @param fechaCheckin fecha de entrada
-     * @param fechaCheckout fecha de salida
-     * @param valoracion valoración inicial
+     * Constructor para construir un alojamiento.
      */
-    public Alojamiento(String nombre, String direccion, double precioTotal, LocalDate fechaCheckin, LocalDate fechaCheckout, int valoracion) {
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.precioTotal = precioTotal;
-        this.fechaCheckin = fechaCheckin;
-        this.fechaCheckout = fechaCheckout;
-        this.valoracion = valoracion;
+    public Alojamiento(int idViaje,String nombre, String direccion, double precioTotal, LocalDate fechaCheckin, LocalDate fechaCheckout, int valoracion) {
+        setIdViaje(idViaje);
+        setNombre(nombre);
+        setDireccion(direccion);
+        setPrecioTotal(precioTotal);
+        setFechaCheckin(fechaCheckin);
+        setFechaCheckout(fechaCheckout);
+        setValoracion(valoracion);
     }
 
     /**
-     * Constructor completo con IDs. Se utiliza al cargar datos desde la base de datos.
-     *
-     * @param idAlojamiento identificador del alojamiento
-     * @param idViaje identificador del viaje asociado
-     * @param nombre nombre del alojamiento
-     * @param direccion dirección del alojamiento
-     * @param precioTotal precio total de la estancia
-     * @param fechaCheckin fecha de entrada
-     * @param fechaCheckout fecha de salida
-     * @param valoracion valoración del alojamiento
+     * Constructor completo.
      */
     public Alojamiento(int idAlojamiento, int idViaje, String nombre, String direccion, double precioTotal, LocalDate fechaCheckin, LocalDate fechaCheckout, int valoracion) {
-        this.idAlojamiento = idAlojamiento;
-        this.idViaje = idViaje;
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.precioTotal = precioTotal;
-        this.fechaCheckin = fechaCheckin;
-        this.fechaCheckout = fechaCheckout;
-        this.valoracion = valoracion;
+        setIdAlojamiento(idAlojamiento);
+        setIdViaje(idViaje);
+        setNombre(nombre);
+        setDireccion(direccion);
+        setPrecioTotal(precioTotal);
+        setFechaCheckin(fechaCheckin);
+        setFechaCheckout(fechaCheckout);
+        setValoracion(valoracion);
     }
 
-    /** @return id del alojamiento */
+    /**
+     * Obtiene el identificador del alojamiento.
+     * @return id del alojamiento
+     */
     public int getIdAlojamiento() {
         return idAlojamiento;
     }
 
-    /** @param idAlojamiento nuevo id */
+    /**
+     * Establece el identificador del alojamiento.
+     * @param idAlojamiento identificador único
+     */
     public void setIdAlojamiento(int idAlojamiento) {
         this.idAlojamiento = idAlojamiento;
     }
 
-    /** @return id del viaje asociado */
+    /**
+     * Obtiene el identificador del viaje asociado.
+     * @return id del viaje
+     */
     public int getIdViaje() {
         return idViaje;
     }
 
-    /** @param idViaje nuevo id de viaje */
+    /**
+     * Establece el identificador del viaje asociado.
+     * @param idViaje identificador del viaje
+     */
     public void setIdViaje(int idViaje) {
         this.idViaje = idViaje;
     }
 
-    /** @return nombre del alojamiento */
+    /**
+     * Obtiene el nombre del alojamiento.
+     * @return nombre
+     */
     public String getNombre() {
         return nombre;
     }
 
-    /** @param nombre nuevo nombre */
+    /**
+     * Establece el nombre del alojamiento.
+     * @param nombre nombre del alojamiento
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    /** @return dirección del alojamiento */
+    /**
+     * Obtiene la dirección del alojamiento.
+     * @return dirección
+     */
     public String getDireccion() {
         return direccion;
     }
 
-    /** @param direccion nueva dirección */
+    /**
+     * Establece la dirección del alojamiento.
+     * @param direccion dirección del alojamiento
+     */
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
 
-    /** @return precio total de la estancia */
+    /**
+     * Obtiene el precio total de la estancia.
+     * @return precio total
+     */
     public double getPrecioTotal() {
         return precioTotal;
     }
 
-    /** @param precioTotal nuevo precio total */
+    /**
+     * Establece el precio total de la estancia.
+     * @param precioTotal precio total en euros
+     */
     public void setPrecioTotal(double precioTotal) {
+        if (precioTotal < 0){
+            throw new IllegalArgumentException("El precio no puede ser negativo");
+        }
         this.precioTotal = precioTotal;
     }
 
-    /** @return fecha de check-in */
+
+    /**
+     * Obtiene la fecha de entrada.
+     * @return check-in
+     */
     public LocalDate getFechaCheckin() {
         return fechaCheckin;
     }
 
-    /** @param fechaCheckin nueva fecha de entrada */
+    /**
+     * Establece la fecha de entrada.
+     * @param fechaCheckin fecha de check-in
+     */
     public void setFechaCheckin(LocalDate fechaCheckin) {
         this.fechaCheckin = fechaCheckin;
     }
 
-    /** @return fecha de check-out */
+    /**
+     * Obtiene la fecha de salida.
+     * @return check-out
+     */
     public LocalDate getFechaCheckout() {
         return fechaCheckout;
     }
 
-    /** @param fechaCheckout nueva fecha de salida */
+    /**
+     * Establece la fecha de salida.
+     * @param fechaCheckout fecha de check-out
+     */
     public void setFechaCheckout(LocalDate fechaCheckout) {
         this.fechaCheckout = fechaCheckout;
     }
 
-    /** @return valoración del alojamiento */
+    /**
+     * Obtiene la valoración del alojamiento.
+     * @return valoración (0-5)
+     */
     public int getValoracion() {
         return valoracion;
     }
 
-    /** @param valoracion nueva valoración */
+    /**
+     * Establece la valoración del alojamiento.
+     * @param valoracion puntuación del usuario
+     */
     public void setValoracion(int valoracion) {
         this.valoracion = valoracion;
     }
 
     /**
-     * Calcula el número total de noches entre check-in y check-out.
-     *
-     * @return número de noches
+     * Calcula el número de noches de la estancia.
+     * @return número de días entre check-in y check-out
      */
     public int getNumeroNoches() {
         return (int) ChronoUnit.DAYS.between(fechaCheckin, fechaCheckout);
@@ -155,8 +192,7 @@ public class Alojamiento implements Valorable{
 
     /**
      * Calcula el precio por noche.
-     *
-     * @return precio dividido entre número de noches
+     * @return precio medio por noche
      */
     public double getPrecioPorNoche() {
         return precioTotal / getNumeroNoches();
@@ -164,17 +200,15 @@ public class Alojamiento implements Valorable{
 
     /**
      * Indica si el alojamiento es gratuito.
-     *
-     * @return true si el precio total es 0
+     * @return true si el precio es 0
      */
     public boolean esGratuito() {
         return precioTotal == 0;
     }
 
     /**
-     * Indica si el alojamiento tiene una dirección válida.
-     *
-     * @return true si la dirección no está vacía
+     * Indica si el alojamiento tiene dirección válida.
+     * @return true si la dirección no es nula ni vacía
      */
     public boolean tieneDireccion() {
         return direccion != null && !direccion.isBlank();
@@ -182,7 +216,6 @@ public class Alojamiento implements Valorable{
 
     /**
      * Asigna una valoración al alojamiento.
-     *
      * @param puntuacion valor entre 1 y 5
      */
     @Override
@@ -190,7 +223,9 @@ public class Alojamiento implements Valorable{
         setValoracion(puntuacion);
     }
 
-    /** Elimina la valoración del alojamiento. */
+    /**
+     * Elimina la valoración del alojamiento.
+     */
     @Override
     public void limpiarValoracion() {
         this.valoracion = 0;
@@ -198,7 +233,7 @@ public class Alojamiento implements Valorable{
 
     /**
      * Representación en texto del alojamiento.
-     * @return cadena descriptiva
+     * @return información completa del alojamiento
      */
     @Override
     public String toString() {
