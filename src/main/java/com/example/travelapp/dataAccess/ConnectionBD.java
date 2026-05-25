@@ -6,38 +6,31 @@ import java.sql.SQLException;
 
 /**
  * Gestión centralizada de la conexión a la base de datos.
- * Versión estable para proyecto académico.
  */
 public class ConnectionBD {
+    private static final String FILE = "connection.xml";
+    private static Connection con;
+    //1. crear una instancia de la propia clase
+    private static ConnectionBD _instance;
 
-    private static final String URL =
-            "jdbc:mysql://localhost:3306/travelapp?useSSL=false&serverTimezone=UTC";
+    //2. Constructor privado
+    private ConnectionBD() {
+        //leo del connection.xml los datos para la conexion
+        ConnectionProperties properties = XMLManager.readXML(new ConnectionProperties(), FILE);
+        try{
+            con = DriverManager.getConnection(properties.getURL(), properties.getUser(), properties.getPassword());
+        }catch(SQLException e){
+            e.printStackTrace();
+            con=null;
+        }
+    }
 
-    private static final String USER = "root";
-    private static final String PASSWORD = "";
-
-    private static Connection connection;
-
-    private ConnectionBD() {}
+    //3. metodo publico que me devuelve la instancia ya creada, si la primera vez la crea
 
     public static Connection getConnection() {
-
-        try {
-            if (connection == null || connection.isClosed()) {
-
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
-
-                System.out.println("✅ Conexión a la BD establecida correctamente");
-            }
-
-        } catch (SQLException e) {
-
-            System.out.println("❌ ERROR: No se pudo conectar a la base de datos");
-            e.printStackTrace();
-
-            connection = null;
+        if(_instance==null){
+            _instance = new ConnectionBD();
         }
-
-        return connection;
+        return con;
     }
 }
