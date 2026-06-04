@@ -19,7 +19,7 @@ import java.util.List;
  * - Utiliza ConnectionBD para obtener la conexión.
  * - No aplica transacciones complejas porque la entidad es simple.
  */
-public class UsuarioDAO {
+public class UsuarioDAO implements GenericDAO<Usuario> {
 
     private final static String SQL_ALL = "SELECT * FROM Usuario";
     private final static String SQL_FIND_BY_ID = "SELECT * FROM Usuario WHERE id = ?";
@@ -31,7 +31,7 @@ public class UsuarioDAO {
     private final static String SQL_UPDATE = "UPDATE Usuario SET nombre = ?, email = ?, password = ? WHERE id = ?";
     private final static String SQL_DELETE = "DELETE FROM Usuario WHERE id = ?";
 
-    public List<Usuario> findAll() throws SQLException {
+    public List<Usuario> findAll() {
         List<Usuario> usuarios = new ArrayList<>();
 
         try (ResultSet rs = ConnectionBD.getConnection()
@@ -46,11 +46,13 @@ public class UsuarioDAO {
                         rs.getString("password")
                 ));
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
         return usuarios;
     }
 
-    public Usuario findById(int id) throws SQLException {
+    public Usuario findById(int id) {
         try (PreparedStatement ps = ConnectionBD.getConnection()
                 .prepareStatement(SQL_FIND_BY_ID)) {
 
@@ -65,11 +67,13 @@ public class UsuarioDAO {
                         rs.getString("password")
                 );
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
         return null;
     }
 
-    public Usuario findByNombre(String nombre) throws SQLException {
+    public Usuario findByNombre(String nombre) {
         try (PreparedStatement ps = ConnectionBD.getConnection()
                 .prepareStatement(SQL_FIND_BY_NOMBRE)) {
 
@@ -84,6 +88,8 @@ public class UsuarioDAO {
                         rs.getString("password")
                 );
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
         return null;
     }
@@ -109,23 +115,21 @@ public class UsuarioDAO {
         return null;
     }
 
-    public boolean addUsuario(Usuario usuario) {
-        try (PreparedStatement ps = ConnectionBD.getConnection()
-                .prepareStatement(SQL_INSERT)) {
+    public Usuario add(Usuario usuario) {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
 
             ps.setString(1, usuario.getNombre());
             ps.setString(2, usuario.getEmail());
             ps.setString(3, usuario.getPassword());
-
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return usuario;
     }
 
-    public boolean updateUsuario(Usuario usuario) {
+    public boolean update(Usuario usuario) {
         try (PreparedStatement ps = ConnectionBD.getConnection()
                 .prepareStatement(SQL_UPDATE)) {
 
@@ -142,11 +146,11 @@ public class UsuarioDAO {
         }
     }
 
-    public boolean deleteUsuario(int idUsuario) {
+    public boolean delete(int id) {
         try (PreparedStatement ps = ConnectionBD.getConnection()
                 .prepareStatement(SQL_DELETE)) {
 
-            ps.setInt(1, idUsuario);
+            ps.setInt(1, id);
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -155,7 +159,7 @@ public class UsuarioDAO {
         }
     }
 
-    public Usuario findByEmailAndPassword(String email, String password) {
+    public boolean login(String email, String password) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_LOGIN)) {
 
             ps.setString(1, email);
@@ -164,17 +168,12 @@ public class UsuarioDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return new Usuario(
-                        rs.getInt("id"),
-                        rs.getString("nombre"),
-                        rs.getString("email"),
-                        rs.getString("password")
-                );
+                return true;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return false;
     }
 }

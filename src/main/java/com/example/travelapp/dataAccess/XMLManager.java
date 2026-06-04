@@ -50,17 +50,15 @@ public class XMLManager {
      */
     public static <T> T readXML(T c, String filename) {
         T result = c;
+        JAXBContext context;
 
-        try {
-            JAXBContext context = JAXBContext.newInstance(c.getClass());
+        try{
+            context = JAXBContext.newInstance(c.getClass());
             Unmarshaller um = context.createUnmarshaller();
-
             result = (T) um.unmarshal(new File(filename));
-
-        } catch (JAXBException e) {
+        }catch (JAXBException e){
             e.printStackTrace();
         }
-
         return result;
     }
 }

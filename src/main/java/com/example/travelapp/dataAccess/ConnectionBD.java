@@ -15,7 +15,7 @@ public class ConnectionBD {
 
     //2. Constructor privado
     private ConnectionBD() {
-        //leo del connection.xml los datos para la conexion
+        //leo del connection.xml los datos para la conexión
         ConnectionProperties properties = XMLManager.readXML(new ConnectionProperties(), FILE);
         try{
             con = DriverManager.getConnection(properties.getURL(), properties.getUser(), properties.getPassword());
@@ -25,7 +25,7 @@ public class ConnectionBD {
         }
     }
 
-    //3. metodo publico que me devuelve la instancia ya creada, si la primera vez la crea
+    //3. método publico que me devuelve la instancia ya creada, si la primera vez la crea
 
     public static Connection getConnection() {
         if(_instance==null){

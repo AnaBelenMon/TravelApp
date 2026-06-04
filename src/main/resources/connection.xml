@@ -2,7 +2,7 @@
 <connection>
     <server></server>
     <port></port>
-    <database></database>
-    <username></username>
+    <dataBase></dataBase>
+    <user></user>
     <password></password>
 </connection>

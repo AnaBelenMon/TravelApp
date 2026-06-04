@@ -3,26 +3,16 @@ package com.example.travelapp.model;
 import java.util.Objects;
 
 /**
- * Clase que representa un usuario del sistema.
- * Contiene información básica como nombre, email y contraseña.
+ * Representa un usuario dentro de la aplicación TravelApp.
  */
 public class Usuario {
-
-    /** Identificador único del usuario */
     private int idUsuario;
-
-    /** Nombre del usuario */
     private String nombre;
-
-    /** Email del usuario */
     private String email;
-
-    /** Contraseña del usuario */
     private String password;
 
     /**
      * Constructor básico para creación de usuario sin ID.
-     *
      * @param nombre nombre del usuario
      * @param email email del usuario
      * @param password contraseña del usuario
@@ -94,6 +84,8 @@ public class Usuario {
 
     /** @param email establece el email del usuario */
     public void setEmail(String email) {
+        if (!email.contains("@") || !email.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$"))
+            throw new IllegalArgumentException("El email no es válido.");
         this.email = email;
     }
 
@@ -106,10 +98,6 @@ public class Usuario {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    // =========================
-    // VALIDACIONES
-    // =========================
 
     /**
      * Comprueba si el nombre es válido.
@@ -131,10 +119,6 @@ public class Usuario {
     public boolean passwordValido() {
         return password != null && password.length() > 5;
     }
-
-    // =========================
-    // OBJECT METHODS
-    // =========================
 
     /**
      * Dos usuarios son iguales si tienen el mismo id.

@@ -12,24 +12,14 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "connection")
 public class ConnectionProperties implements Serializable {
-
-    /** Servidor de la base de datos */
     private String server;
-
-    /** Puerto de conexión */
     private String port;
-
-    /** Nombre de la base de datos */
     private String dataBase;
-
-    /** Usuario de la base de datos */
     private String user;
-
-    /** Contraseña del usuario */
     private String password;
 
     /**
-     * Constructor vacío necesario para la deserialización XML (JAXB).
+     * Constructor vacío requerido por JAXB para la deserialización del XML.
      */
     public ConnectionProperties() {}
 
@@ -50,26 +40,27 @@ public class ConnectionProperties implements Serializable {
         this.password = password;
     }
 
-    /** @return usuario de la base de datos */
+    /**
+     * Métodos getters para acceder a las propiedades de conexión.
+     * @return
+     */
     public String getUser() {
         return user;
     }
 
-    /** @return contraseña del usuario */
+    /**
+     * Método para obtener la contraseña de la base de datos.
+     * @return
+     */
     public String getPassword() {
         return password;
     }
 
     /**
-     * Construye la URL de conexión JDBC.
-     *
-     * @return URL de conexión a MySQL
+     * Método para construir la URL de conexión a la base de datos utilizando el formato JDBC.
+     * @return
      */
-    public String getURL() {
-        if (server == null || port == null || dataBase == null) {
-            throw new RuntimeException("ConnectionProperties incompleto (null values)");
-        }
-
-        return "jdbc:mysql://" + server + ":" + port + "/" + dataBase;
+    public String getURL(){
+        return "jdbc:mysql://"+server+":"+port+"/"+dataBase;
     }
 }

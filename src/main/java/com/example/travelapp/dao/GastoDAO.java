@@ -1,8 +1,11 @@
 package com.example.travelapp.dao;
 
 import com.example.travelapp.dataAccess.ConnectionBD;
-import com.example.travelapp.model.CategoriaGasto;
+import com.example.travelapp.model.enums.CategoriaGasto;
 import com.example.travelapp.model.Gasto;
+import com.example.travelapp.model.Viaje;
+import com.example.travelapp.model.enums.EstadoGasto;
+import com.example.travelapp.model.enums.MetodoPago;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -15,42 +18,21 @@ import java.util.List;
  * Permite realizar operaciones CRUD y consultas específicas sobre la tabla
  * gasto de la base de datos.
  */
-public class GastoDAO {
-
-    // =========================
-    // CONSULTAS SQL
-    // =========================
-
-    /** Obtiene todos los gastos */
+public class GastoDAO implements GenericDAO<Gasto> {
     private final static String SQL_ALL = "SELECT * FROM gasto";
-
-    /** Busca un gasto por su ID */
     private final static String SQL_FIND_BY_ID = "SELECT * FROM gasto WHERE idGasto = ?";
-
-    /** Busca gastos por viaje */
-    private final static String SQL_FIND_BY_IDVIAJE = "SELECT * FROM gasto WHERE idViaje = ?";
-
-    /** Busca gastos por categoría */
+    private final static String SQL_FIND_BY_VIAJE = "SELECT * FROM gasto WHERE idViaje = ?";
+    private final static String SQL_FIND_BY_CONCEPTO =  "SELECT * FROM gasto WHERE concepto = ?";
     private final static String SQL_FIND_BY_CATEGORIA = "SELECT * FROM gasto WHERE categoria = ?";
-
-    /** Busca gastos por fecha */
+    private final static String SQL_FIND_BY_IMPORTE = "SELECT * FROM gasto WHERE importe = ?";
     private final static String SQL_FIND_BY_FECHA = "SELECT * FROM gasto WHERE fecha = ?";
-
-    /** Inserta un nuevo gasto */
-    private final static String SQL_INSERT =
-            "INSERT INTO gasto (idViaje, categoria, fecha, importe, notas) VALUES (?, ?, ?, ?, ?)";
-
-    /** Actualiza un gasto existente */
-    private final static String SQL_UPDATE =
-            "UPDATE gasto SET idViaje=?, categoria=?, fecha=?, importe=?, notas=? WHERE idGasto=?";
-
-    /** Elimina un gasto por ID */
+    private final static String SQL_FIND_BY_LUGAR = "SELECT * FROM gasto WHERE lugar = ?";
+    private final static String SQL_FIND_BY_METODO_PAGO = "SELECT * FROM gasto WHERE metodoPago = ?";
+    private final static String SQL_FIND_BY_ESTADO = "SELECT * FROM gasto WHERE estado = ?";
+    private final static String SQL_INSERT = "INSERT INTO gasto (viaje,concepto, categoria, importe,fecha,lugar, metodoPago, estado, notas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final static String SQL_UPDATE = "UPDATE gasto SET viaje=?, concepto=?, categoria=?, importe=?, fecha=?, lugar=?, metodoPago=?, estado=?, notas=? WHERE idGasto=?";
     private final static String SQL_DELETE = "DELETE FROM gasto WHERE idGasto=?";
 
-
-    // =========================
-    // CONSULTAS (SELECT)
-    // =========================
 
     /**
      * Obtiene todos los gastos almacenados en la base de datos.
@@ -58,38 +40,61 @@ public class GastoDAO {
      * @return lista de gastos
      * @throws SQLException si ocurre un error en la consulta
      */
-    public static List<Gasto> findAll() throws SQLException {
-        List<Gasto> lista = new ArrayList<>();
+    public List<Gasto> findAll() {
+        List<Gasto> gastos = new ArrayList<>();
+        Gasto gasto = null;
 
         try (Statement st = ConnectionBD.getConnection().createStatement();
              ResultSet rs = st.executeQuery(SQL_ALL)) {
-
             while (rs.next()) {
-                lista.add(map(rs));
+                int idGasto = rs.getInt("idGasto");
+                Viaje viaje = rs.getObject("viaje", Viaje.class);
+                String concepto = rs.getString("concepto");
+                CategoriaGasto categoriaGasto = rs.getObject("categoria", CategoriaGasto.class);
+                double importe = rs.getDouble("importe");
+                LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                String lugar = rs.getString("lugar");
+                MetodoPago metodoPago = rs.getObject("metodoPago", MetodoPago.class);
+                EstadoGasto estado = rs.getObject("estado", EstadoGasto.class);
+                String notas = rs.getString("notas");
+                gasto = new Gasto(idGasto, viaje,concepto, categoriaGasto, importe,fecha, lugar, metodoPago, estado, notas);
+                gastos.add(gasto);
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
-        return lista;
+        return gastos;
     }
 
     /**
      * Busca un gasto por su identificador.
      *
-     * @param idGasto identificador del gasto
+     * @param id identificador del gasto
      * @return gasto encontrado o null si no existe
      * @throws SQLException si ocurre un error en la consulta
      */
-    public static Gasto findById(int idGasto) throws SQLException {
+    public Gasto findById(int id) {
         Gasto gasto = null;
-
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
-
-            ps.setInt(1, idGasto);
+            ps.setInt(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    gasto = map(rs);
+                    int idGasto = rs.getInt("idGasto");
+                    Viaje viaje = rs.getObject("viaje", Viaje.class);
+                    String concepto = rs.getString("concepto");
+                    CategoriaGasto categoriaGasto = rs.getObject("categoria", CategoriaGasto.class);
+                    double importe = rs.getDouble("importe");
+                    LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                    String lugar = rs.getString("lugar");
+                    MetodoPago metodoPago = rs.getObject("metodoPago", MetodoPago.class);
+                    EstadoGasto estado = rs.getObject("estado", EstadoGasto.class);
+                    String notas = rs.getString("notas");
+                    gasto = new Gasto(idGasto, viaje,concepto, categoriaGasto, importe,fecha, lugar, metodoPago, estado, notas);
                 }
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
         return gasto;
     }
@@ -97,24 +102,38 @@ public class GastoDAO {
     /**
      * Busca todos los gastos asociados a un viaje.
      *
-     * @param idViaje identificador del viaje
+     * @param viaje viaje del cual se quieren obtener los gastos
      * @return lista de gastos del viaje
      * @throws SQLException si ocurre un error en la consulta
      */
-    public static List<Gasto> findByIdViaje(int idViaje) throws SQLException {
-        List<Gasto> lista = new ArrayList<>();
+    public static List<Gasto> findByViaje(Viaje viaje) {
+        List<Gasto> gastos = new ArrayList<>();
+        Gasto gasto = null;
 
-        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_IDVIAJE)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_VIAJE)) {
 
-            ps.setInt(1, idViaje);
+            ps.setObject(1, viaje);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    lista.add(map(rs));
+                    int idGasto = rs.getInt("idGasto");
+                    Viaje viaje2 = rs.getObject("viaje", Viaje.class);
+                    String concepto = rs.getString("concepto");
+                    CategoriaGasto categoriaGasto = rs.getObject("categoria", CategoriaGasto.class);
+                    double importe = rs.getDouble("importe");
+                    LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                    String lugar = rs.getString("lugar");
+                    MetodoPago metodoPago = rs.getObject("metodoPago", MetodoPago.class);
+                    EstadoGasto estado = rs.getObject("estado", EstadoGasto.class);
+                    String notas = rs.getString("notas");
+                    gasto = new Gasto(idGasto, viaje2,concepto, categoriaGasto, importe,fecha, lugar, metodoPago, estado, notas);
+                    gastos.add(gasto);
                 }
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
-        return lista;
+        return gastos;
     }
 
     /**
@@ -124,20 +143,33 @@ public class GastoDAO {
      * @return lista de gastos filtrados
      * @throws SQLException si ocurre un error en la consulta
      */
-    public static List<Gasto> findByCategoria(CategoriaGasto categoria) throws SQLException {
-        List<Gasto> lista = new ArrayList<>();
-
+    public static List<Gasto> findByCategoria(CategoriaGasto categoria) {
+        List<Gasto> gastos = new ArrayList<>();
+        Gasto gasto = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_CATEGORIA)) {
 
             ps.setString(1, categoria.name());
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    lista.add(map(rs));
+                    int idGasto = rs.getInt("idGasto");
+                    Viaje viaje = rs.getObject("viaje", Viaje.class);
+                    String concepto = rs.getString("concepto");
+                    CategoriaGasto categoriaGasto = rs.getObject("categoria", CategoriaGasto.class);
+                    double importe = rs.getDouble("importe");
+                    LocalDate fecha = LocalDate.parse(rs.getString("fecha"));
+                    String lugar = rs.getString("lugar");
+                    MetodoPago metodoPago = rs.getObject("metodoPago", MetodoPago.class);
+                    EstadoGasto estado = rs.getObject("estado", EstadoGasto.class);
+                    String notas = rs.getString("notas");
+                    gasto = new Gasto(idGasto, viaje,concepto, categoriaGasto, importe,fecha, lugar, metodoPago, estado, notas);
+                    gastos.add(gasto);
                 }
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
-        return lista;
+        return gastos;
     }
 
     /**
@@ -147,45 +179,57 @@ public class GastoDAO {
      * @return lista de gastos en esa fecha
      * @throws SQLException si ocurre un error en la consulta
      */
-    public static List<Gasto> findByFecha(LocalDate fecha) throws SQLException {
-        List<Gasto> lista = new ArrayList<>();
-
+    public static List<Gasto> findByFecha(LocalDate fecha) {
+        List<Gasto> gastos = new ArrayList<>();
+        Gasto gasto = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_FECHA)) {
 
             ps.setString(1, fecha.toString());
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    lista.add(map(rs));
+                    int idGasto = rs.getInt("idGasto");
+                    Viaje viaje = rs.getObject("viaje", Viaje.class);
+                    String concepto = rs.getString("concepto");
+                    CategoriaGasto categoriaGasto = rs.getObject("categoria", CategoriaGasto.class);
+                    double importe = rs.getDouble("importe");
+                    LocalDate fecha2 = LocalDate.parse(rs.getString("fecha"));
+                    String lugar = rs.getString("lugar");
+                    MetodoPago metodoPago = rs.getObject("metodoPago", MetodoPago.class);
+                    EstadoGasto estado = rs.getObject("estado", EstadoGasto.class);
+                    String notas = rs.getString("notas");
+                    gasto = new Gasto(idGasto, viaje,concepto, categoriaGasto, importe,fecha2, lugar, metodoPago, estado, notas);
+                    gastos.add(gasto);
                 }
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
-        return lista;
+        return gastos;
     }
-
-
-    // =========================
-    // CRUD (INSERT / UPDATE / DELETE)
-    // =========================
 
     /**
      * Inserta un nuevo gasto en la base de datos.
      *
      * @param gasto objeto a insertar
      * @return true si se insertó correctamente
-     * @throws SQLException si ocurre un error en la base de datos
      */
-    public static boolean insert(Gasto gasto) throws SQLException {
+    public Gasto add(Gasto gasto) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
-
-            ps.setInt(1, gasto.getIdViaje());
-            ps.setString(2, gasto.getCategoriaGasto().name());
-            ps.setString(3, gasto.getFecha().toString());
-            ps.setDouble(4, gasto.getImporte());
-            ps.setString(5, gasto.getNotas());
-
-            return ps.executeUpdate() > 0;
+            ps.setInt(1, gasto.getIdGasto());
+            ps.setString(2, gasto.getViaje().getNombre());
+            ps.setString(3, gasto.getConcepto());
+            ps.setString(4, gasto.getCategoria().name());
+            ps.setDouble(5, gasto.getImporte());
+            ps.setString(6, gasto.getFecha().toString());
+            ps.setString(7, gasto.getLugar());
+            ps.setString(8, gasto.getMetodoPago().name());
+            ps.setString(9, gasto.getEstado().name());
+            ps.setString(10, gasto.getNotas());
+        }catch (SQLException e){
+            e.printStackTrace();
         }
+        return gasto;
     }
 
     /**
@@ -193,20 +237,24 @@ public class GastoDAO {
      *
      * @param gasto objeto con los nuevos datos
      * @return true si se actualizó correctamente
-     * @throws SQLException si ocurre un error en la base de datos
      */
-    public static boolean update(Gasto gasto) throws SQLException {
+    public boolean update(Gasto gasto) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
-
-            ps.setInt(1, gasto.getIdViaje());
-            ps.setString(2, gasto.getCategoriaGasto().name());
-            ps.setString(3, gasto.getFecha().toString());
-            ps.setDouble(4, gasto.getImporte());
-            ps.setString(5, gasto.getNotas());
-            ps.setInt(6, gasto.getIdGasto());
-
-            return ps.executeUpdate() > 0;
+            ps.setInt(1, gasto.getIdGasto());
+            ps.setString(2, gasto.getViaje().getNombre());
+            ps.setString(3, gasto.getConcepto());
+            ps.setString(4, gasto.getCategoria().name());
+            ps.setDouble(5, gasto.getImporte());
+            ps.setString(6, gasto.getFecha().toString());
+            ps.setString(7, gasto.getLugar());
+            ps.setString(8, gasto.getMetodoPago().name());
+            ps.setString(9, gasto.getEstado().name());
+            ps.setString(10, gasto.getNotas());
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
         }
+        return false;
     }
 
     /**
@@ -216,35 +264,13 @@ public class GastoDAO {
      * @return true si se eliminó correctamente
      * @throws SQLException si ocurre un error en la base de datos
      */
-    public static boolean delete(int idGasto) throws SQLException {
+    public boolean delete(int idGasto) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
-
             ps.setInt(1, idGasto);
-
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
         }
-    }
-
-
-    // =========================
-    // MAPEADOR (RESULTSET → OBJETO)
-    // =========================
-
-    /**
-     * Convierte un ResultSet en un objeto Gasto.
-     *
-     * @param rs resultado de la consulta
-     * @return objeto Gasto construido
-     * @throws SQLException si ocurre un error al leer datos
-     */
-    private static Gasto map(ResultSet rs) throws SQLException {
-        return new Gasto(
-                rs.getInt("idGasto"),
-                rs.getInt("idViaje"),
-                CategoriaGasto.valueOf(rs.getString("categoria")),
-                LocalDate.parse(rs.getString("fecha")),
-                rs.getDouble("importe"),
-                rs.getString("notas")
-        );
+        return true;
     }
 }
