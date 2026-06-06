@@ -1,74 +1,126 @@
 package com.example.travelapp.controllers;
 
+import com.example.travelapp.TravelApplication;
+import com.example.travelapp.dao.ViajeDAO;
+import com.example.travelapp.model.Usuario;
+import com.example.travelapp.model.Viaje;
+import com.example.travelapp.utils.SessionManager;
+import com.example.travelapp.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
-import com.example.travelapp.model.Viaje;
-import com.example.travelapp.model.TipoViaje;
-
-import java.time.LocalDate;
+import java.util.List;
 
 public class ListaViajesController {
 
+
+    // TABLA
     @FXML private TableView<Viaje> tablaViajes;
 
-    @FXML private TableColumn<Viaje, Integer> colId;
     @FXML private TableColumn<Viaje, String> colNombre;
-    @FXML private TableColumn<Viaje, LocalDate> colFechaInicio;
-    @FXML private TableColumn<Viaje, LocalDate> colFechaFin;
-    @FXML private TableColumn<Viaje, TipoViaje> colTipo;
-    @FXML private TableColumn<Viaje, String> colCiudad;
-    @FXML private TableColumn<Viaje, String> colPais;
+    @FXML private TableColumn<Viaje, String> colDestino;
+    @FXML private TableColumn<Viaje, String> colFechaInicio;
+    @FXML private TableColumn<Viaje, String> colFechaFin;
+    @FXML private TableColumn<Viaje, Double> colPresupuesto;
+    @FXML private TableColumn<Viaje, String> colNotas;
+    @FXML private TableColumn<Viaje, String> colTipo;
+    public TableColumn colAlojamiento;
 
-    @FXML private Button btnNuevo;
-    @FXML private Button btnEditar;
-    @FXML private Button btnEliminar;
-    @FXML private Button btnVolver;
+    // BOTONES
+    @FXML private Button botonNuevoViaje;
+    @FXML private Button botonEditarViaje;
+    @FXML private Button botonEliminar;
+    @FXML private Button btnDetalles;
+    @FXML private Button botonVolver;
 
-    private ObservableList<Viaje> listaViajes = FXCollections.observableArrayList();
+    private final ViajeDAO viajeDAO = new ViajeDAO();
 
     @FXML
     public void initialize() {
-
-        colId.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getIdViaje()));
-        colNombre.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getNombre()));
-        colFechaInicio.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getFechaInicio()));
-        colFechaFin.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getFechaFin()));
-        colTipo.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getTipoViaje()));
-        colCiudad.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getDestinoCiudad()));
-        colPais.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getDestinoPais()));
-
-        // Datos de ejemplo (puedes quitarlos cuando conectes la BD)
-        listaViajes.addAll(
-                new Viaje("París", LocalDate.of(2026, 4, 12), LocalDate.of(2026, 4, 20),
-                        TipoViaje.CULTURAL, null, "", 1200, "Francia", "París"),
-
-                new Viaje("Roma", LocalDate.of(2026, 5, 1), LocalDate.of(2026, 5, 7),
-                        TipoViaje.ROMANTICO, null, "", 900, "Italia", "Roma")
-        );
-
-        tablaViajes.setItems(listaViajes);
+        configurarTabla();
+        cargarViajes();
     }
+
+    private void configurarTabla() {
+        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colDestino.setCellValueFactory(new PropertyValueFactory<>("destino"));
+        colFechaInicio.setCellValueFactory(new PropertyValueFactory<>("fechaInicio"));
+        colFechaFin.setCellValueFactory(new PropertyValueFactory<>("fechaFin"));
+        colPresupuesto.setCellValueFactory(new PropertyValueFactory<>("presupuesto"));
+        colNotas.setCellValueFactory(new PropertyValueFactory<>("notas"));
+        colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        colAlojamiento.setCellValueFactory(new PropertyValueFactory<>("alojamiento"));
+    }
+
+    private void cargarViajes() {
+        tablaViajes.getItems().clear();
+
+        // Obtener solo los viajes del usuario actual
+        int idUsuario = SessionManager.getIdUsuarioActual();
+        List<Viaje> lista = viajeDAO.findByIdUsuario(idUsuario);
+
+        tablaViajes.getItems().addAll(lista);
+    }
+
+    // -----------------------------
+    // BOTONES CRUD
+    // -----------------------------
 
     @FXML
     private void nuevoViaje() {
-        System.out.println("Crear nuevo viaje");
+        TravelApplication.setRoot("EditarViaje");
     }
 
     @FXML
     private void editarViaje() {
-        System.out.println("Editar viaje seleccionado");
+        Viaje seleccionado = tablaViajes.getSelectionModel().getSelectedItem();
+        if (seleccionado == null){
+            Utils.mostrarWarning("Debes seleccionar un viaje para poder editarlo");
+            return;
+        }
+
+        EditarViajeController controller = TravelApplication.setRoot("EditarViaje");
+        controller.setViaje(seleccionado);
     }
 
     @FXML
     private void eliminarViaje() {
-        System.out.println("Eliminar viaje seleccionado");
+        Viaje seleccionado = tablaViajes.getSelectionModel().getSelectedItem();
+        if (seleccionado == null){
+            Utils.mostrarWarning("Debes seleccionar un viaje para eliminar un viaje");
+            return;
+        }
+
+        viajeDAO.delete(seleccionado);
+        cargarViajes();
+    }
+
+    @FXML
+    private void verDetalles() {
+        Viaje seleccionado = tablaViajes.getSelectionModel().getSelectedItem();
+        if (seleccionado == null){
+            Utils.mostrarWarning("Debes seleccionar un viaje para ver sus detalles");
+            return;
+        }
+
+        VerDetallesViajeController controller = TravelApplication.setRoot("VerDetallesViaje");
+        controller.setViaje(seleccionado);
+    }
+    @FXML
+    private void cerrarSesion() {
+        SessionManager.limpiarSesion();  // ← AGREGAR ESTO
+        TravelApplication.setRoot("Login");
+    }
+
+    private Usuario usuarioActual;
+    public void setUsuario(Usuario usuario) {
+        this.usuarioActual = usuario;
     }
 
     @FXML
     private void volver() {
-        System.out.println("Volver a pantalla principal");
+        TravelApplication.setRoot("Principal");
     }
 }

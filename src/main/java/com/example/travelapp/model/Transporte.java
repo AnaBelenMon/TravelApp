@@ -38,6 +38,8 @@ public class Transporte {
         setEstado(estado);
     }
 
+    public Transporte() {}
+
     public int getIdTransporte() {
         return idTransporte;
     }

@@ -1,238 +1,132 @@
 package com.example.travelapp.controllers;
 
-import com.example.travelapp.dao.DocumentoDAO;
-import com.example.travelapp.dao.TransporteDAO;
-import com.example.travelapp.model.Documento;
-import com.example.travelapp.model.TipoDocumento;
-import com.example.travelapp.model.TipoViaje;
-import com.example.travelapp.model.Transporte;
+import com.example.travelapp.TravelApplication;
+import com.example.travelapp.dao.ViajeDAO;
+import com.example.travelapp.model.enums.TipoViaje;
 import com.example.travelapp.model.Viaje;
+import com.example.travelapp.utils.SessionManager;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import java.awt.Desktop;
-import javafx.scene.control.*;
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 
 public class EditarViajeController {
 
     @FXML private Label labelTitulo;
 
     @FXML private TextField textNombre;
+    @FXML private TextField textDestino;
     @FXML private DatePicker fechaInicio;
     @FXML private DatePicker fechaFin;
     @FXML private ComboBox<TipoViaje> comboTipoViaje;
-    @FXML private TextField textPais;
-    @FXML private TextField textCiudad;
     @FXML private TextField textPresupuesto;
-    @FXML private TextField textImagen;
     @FXML private TextArea textNotas;
 
-    // DOCUMENTOS
-    @FXML private ListView<Documento> listaDocumentos;
+    @FXML private Button botonGuardar;
+    @FXML private Button botonCancelar;
 
-    // TRANSPORTES
-    @FXML private ListView<Transporte> listaTransportes;
+    private final ViajeDAO viajeDAO = new ViajeDAO();
 
-    private Viaje viaje; // null = crear, no null = editar
+    private Viaje viajeActual = null; // null = crear, no null = editar
 
-    // ---------------------------------------------------------
-    // INICIALIZACIÓN
-    // ---------------------------------------------------------
     @FXML
     public void initialize() {
         comboTipoViaje.getItems().setAll(TipoViaje.values());
     }
 
     // ---------------------------------------------------------
-    // CARGAR VIAJE (EDITAR)
+    // RECIBIR VIAJE DESDE ListaViajes o VerDetallesViaje
     // ---------------------------------------------------------
-    public void cargarViaje(Viaje v) {
-        this.viaje = v;
+    public void setViaje(Viaje viaje) {
+        this.viajeActual = viaje;
+
         labelTitulo.setText("Editar Viaje");
 
-        textNombre.setText(v.getNombre());
-        fechaInicio.setValue(v.getFechaInicio());
-        fechaFin.setValue(v.getFechaFin());
-        comboTipoViaje.setValue(v.getTipoViaje());
-        textPais.setText(v.getDestinoPais());
-        textCiudad.setText(v.getDestinoCiudad());
-        textPresupuesto.setText(String.valueOf(v.getPresupuestoEstimado()));
-        textImagen.setText(v.getImagenPortada());
-        textNotas.setText(v.getNotasGenerales());
-
-        cargarDocumentos();
-        cargarTransportes();
+        textNombre.setText(viaje.getNombre());
+        textDestino.setText(viaje.getDestino());
+        fechaInicio.setValue(viaje.getFechaInicio());
+        fechaFin.setValue(viaje.getFechaFin());
+        comboTipoViaje.setValue(viaje.getTipo());
+        textPresupuesto.setText(String.valueOf(viaje.getPresupuesto()));
+        textNotas.setText(viaje.getNotas());
     }
 
     // ---------------------------------------------------------
-    // DOCUMENTOS
-    // ---------------------------------------------------------
-    private void cargarDocumentos() {
-        if (viaje == null) return;
-
-        try {
-            listaDocumentos.getItems().setAll(
-                    DocumentoDAO.findByIdViaje(viaje.getIdViaje())
-            );
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void añadirDocumento() {
-        if (viaje == null) return;
-
-        FileChooser fc = new FileChooser();
-        File archivo = fc.showOpenDialog(null);
-
-        if (archivo != null) {
-            TipoDocumento tipo = archivo.getName().toLowerCase().endsWith(".pdf")
-                    ? TipoDocumento.PDF
-                    : TipoDocumento.IMAGEN;
-
-            Documento doc = new Documento(
-                    archivo.getName(),
-                    tipo,
-                    archivo.getAbsolutePath()
-            );
-            doc.setIdViaje(viaje.getIdViaje());
-
-            try {
-                DocumentoDAO.insert(doc);
-                cargarDocumentos();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @FXML
-    private void verDocumento() {
-        Documento seleccionado = listaDocumentos.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) return;
-
-        try {
-            Desktop.getDesktop().open(new File(seleccionado.getRutaArchivo()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void eliminarDocumento() {
-        Documento seleccionado = listaDocumentos.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) return;
-
-        try {
-            DocumentoDAO.delete(seleccionado.getIdDocumento());
-            cargarDocumentos();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // ---------------------------------------------------------
-    // TRANSPORTES
-    // ---------------------------------------------------------
-    private void cargarTransportes() {
-        if (viaje == null) return;
-
-        try {
-            listaTransportes.getItems().setAll(
-                    TransporteDAO.findByIdViaje(viaje.getIdViaje())
-            );
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void añadirTransporte() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/travelapp/views/EditarTransporte.fxml"));
-            Parent root = loader.load();
-
-            EditarTransporteController controller = loader.getController();
-            controller.setIdViaje(viaje.getIdViaje());
-
-            Stage stage = new Stage();
-            stage.setTitle("Añadir Transporte");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-            cargarTransportes();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void editarTransporte() {
-        Transporte seleccionado = listaTransportes.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) return;
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/travelapp/views/EditarTransporte.fxml"));
-            Parent root = loader.load();
-
-            EditarTransporteController controller = loader.getController();
-            controller.cargarTransporte(seleccionado);
-
-            Stage stage = new Stage();
-            stage.setTitle("Editar Transporte");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-            cargarTransportes();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void eliminarTransporte() {
-        Transporte seleccionado = listaTransportes.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) return;
-
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setHeaderText(null);
-        confirm.setContentText("¿Eliminar este transporte?");
-
-        if (confirm.showAndWait().get() == ButtonType.OK) {
-            try {
-                TransporteDAO.delete(seleccionado.getIdTransporte());
-                cargarTransportes();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // ---------------------------------------------------------
-    // GUARDAR VIAJE
+    // GUARDAR (INSERT o UPDATE)
     // ---------------------------------------------------------
     @FXML
     private void guardar() {
-        System.out.println("Guardando viaje…");
-        // Aquí conectas ViajeDAO cuando quieras
+
+        // Validaciones básicas
+        if (textNombre.getText().isEmpty() ||
+                textDestino.getText().isEmpty() ||
+                fechaInicio.getValue() == null ||
+                fechaFin.getValue() == null ||
+                comboTipoViaje.getValue() == null) {
+
+            mostrarAlerta("Faltan campos obligatorios.");
+            return;
+        }
+
+        double presupuesto = 0;
+        try {
+            presupuesto = Double.parseDouble(textPresupuesto.getText());
+        } catch (Exception e) {
+            mostrarAlerta("El presupuesto debe ser un número.");
+            return;
+        }
+
+// Si es un viaje nuevo
+        if (viajeActual == null) {
+            viajeActual = new Viaje();
+            // asignar el usuario logueado
+            viajeActual.setUsuario(SessionManager.getUsuarioActual());
+        }
+
+        // Rellenar datos
+        viajeActual.setNombre(textNombre.getText());
+        viajeActual.setDestino(textDestino.getText());
+        viajeActual.setFechaInicio(fechaInicio.getValue());
+        viajeActual.setFechaFin(fechaFin.getValue());
+        viajeActual.setTipo(comboTipoViaje.getValue());
+        viajeActual.setPresupuesto(presupuesto);
+        viajeActual.setNotas(textNotas.getText());
+
+        // Antes de insertar, por seguridad:
+        if (viajeActual.getUsuario() == null) {
+            mostrarAlerta("No se ha podido determinar el usuario del viaje. Reinicia sesión e inténtalo de nuevo.");
+            return;
+        }
+        // INSERT o UPDATE
+        if (viajeActual.getIdViaje() == 0) {
+            viajeDAO.add(viajeActual);
+        } else {
+            viajeDAO.update(viajeActual);
+        }
+
+        TravelApplication.setRoot("ListaViajes");
     }
 
+    // ---------------------------------------------------------
+    // CANCELAR
+    // ---------------------------------------------------------
     @FXML
     private void cancelar() {
-        Stage stage = (Stage) labelTitulo.getScene().getWindow();
+        TravelApplication.setRoot("ListaViajes");
+    }
+
+    private void cerrarVentana() {
+        Stage stage = (Stage) botonCancelar.getScene().getWindow();
         stage.close();
     }
+
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
 }
+/**
+ * Mejorar las alertas y las comprobaciones
+ * Las notas no es obligatorio escribir una nota para crear un viaje
+ */

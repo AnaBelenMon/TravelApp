@@ -46,6 +46,8 @@ public class Gasto {
         setNotas(notas);
     }
 
+    public Gasto() {}
+
     public int getIdGasto() {
         return idGasto;
     }

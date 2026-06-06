@@ -1,217 +1,156 @@
 package com.example.travelapp.controllers;
 
+import com.example.travelapp.TravelApplication;
 import com.example.travelapp.dao.AlojamientoDAO;
 import com.example.travelapp.dao.ViajeDAO;
 import com.example.travelapp.model.Alojamiento;
 import com.example.travelapp.model.Viaje;
-import javafx.collections.FXCollections;
+import com.example.travelapp.model.enums.TipoAlojamiento;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
-import java.sql.SQLException;
-import java.time.LocalDate;
-
-/**
- * Controlador de la vista de edición de alojamientos.
- *
- * Permite crear y editar alojamientos asociados a un viaje,
- * gestionando validaciones de datos y persistencia en la base de datos.
- */
 public class EditarAlojamientoController {
 
     @FXML private Label labelTitulo;
 
     @FXML private TextField txtNombre;
-    @FXML private TextField txtDireccion;
-    @FXML private DatePicker dpEntrada;
-    @FXML private DatePicker dpSalida;
-    @FXML private TextField txtPrecio;
-    @FXML private ComboBox<Integer> cbValoracion;
-    @FXML private ComboBox<Viaje> cbViaje;
+    @FXML private ComboBox<TipoAlojamiento> cmbtipo;
+    @FXML private TextField txtdireccion;
+    @FXML private TextField txtciudad;
+    @FXML private TextField txtpais;
 
-    private Alojamiento alojamientoEditar;   // null = crear
-    private int idViajeActual;               // recibido desde ListaAlojamientos
+    @FXML private Button botonGuardar;
+    @FXML private Button botonCancelar;
+    @FXML private Button botonEliminar;
 
-    /**
-     * Inicializa la vista cargando datos necesarios en los ComboBox.
-     *
-     * @throws SQLException si ocurre un error al cargar los viajes desde la BD
-     */
+    private final AlojamientoDAO alojamientoDAO = new AlojamientoDAO();
+    private final ViajeDAO viajeDAO = new ViajeDAO();
+
+    private Viaje viajeActual;
+    private Alojamiento alojamientoActual;
+
     @FXML
-    public void initialize() throws SQLException {
-
-        // Valoraciones de 0 a 5
-        cbValoracion.getItems().addAll(0, 1, 2, 3, 4, 5);
-
-        // Cargar viajes desde la base de datos
-        cbViaje.setItems(FXCollections.observableArrayList(ViajeDAO.findAll()));
+    public void initialize() {
+        cmbtipo.getItems().setAll(TipoAlojamiento.values());
+        botonEliminar.setVisible(false);
     }
 
-    /**
-     * Establece el identificador del viaje actual.
-     *
-     * @param idViaje identificador del viaje
-     */
-    public void setIdViaje(int idViaje) {
-        this.idViajeActual = idViaje;
+    // ============================================================
+    // RECIBIR VIAJE Y ALOJAMIENTO
+    // ============================================================
+    public void setViaje(Viaje viaje) {
+        this.viajeActual = viaje;
+    }
 
-        // Seleccionar automáticamente el viaje correspondiente
-        for (Viaje v : cbViaje.getItems()) {
-            if (v.getIdViaje() == idViaje) {
-                cbViaje.getSelectionModel().select(v);
-                break;
-            }
+    public void setAlojamiento(Alojamiento alojamiento) {
+        this.alojamientoActual = alojamiento;
+
+        if (alojamiento == null) {
+            labelTitulo.setText("Crear Alojamiento");
+            botonEliminar.setVisible(false);
+        } else {
+            labelTitulo.setText("Editar Alojamiento");
+            cargarDatos();
+            botonEliminar.setVisible(true);
         }
     }
 
-    /**
-     * Carga los datos de un alojamiento en modo edición.
-     *
-     * @param alojamiento alojamiento a editar
-     */
-    public void cargarAlojamiento(Alojamiento alojamiento) {
-        this.alojamientoEditar = alojamiento;
-
-        labelTitulo.setText("Editar Alojamiento");
-
-        txtNombre.setText(alojamiento.getNombre());
-        txtDireccion.setText(alojamiento.getDireccion());
-        dpEntrada.setValue(alojamiento.getFechaCheckin());
-        dpSalida.setValue(alojamiento.getFechaCheckout());
-        txtPrecio.setText(String.valueOf(alojamiento.getPrecioTotal()));
-        cbValoracion.setValue(alojamiento.getValoracion());
-
-        // Seleccionar viaje correspondiente
-        for (Viaje v : cbViaje.getItems()) {
-            if (v.getIdViaje() == alojamiento.getIdViaje()) {
-                cbViaje.getSelectionModel().select(v);
-                break;
-            }
-        }
+    private void cargarDatos() {
+        txtNombre.setText(alojamientoActual.getNombre());
+        cmbtipo.setValue(alojamientoActual.getTipo());
+        txtdireccion.setText(alojamientoActual.getDireccion());
+        txtciudad.setText(alojamientoActual.getCiudad());
+        txtpais.setText(alojamientoActual.getPais());
     }
 
-    /**
-     * Guarda el alojamiento en la base de datos.
-     *
-     * Si el objeto es null, se crea un nuevo alojamiento.
-     * Si no, se actualiza el existente.
-     */
+    // ============================================================
+    // GUARDAR
+    // ============================================================
     @FXML
     private void guardar() {
 
-        // VALIDACIONES
-        if (txtNombre.getText().isEmpty()) {
-            mostrarError("El nombre es obligatorio.");
+        if (txtNombre.getText().isEmpty() ||
+                cmbtipo.getValue() == null ||
+                txtdireccion.getText().isEmpty() ||
+                txtciudad.getText().isEmpty() ||
+                txtpais.getText().isEmpty()) {
+
+            mostrarAlerta("Faltan campos obligatorios.");
             return;
         }
 
-        if (txtDireccion.getText().isEmpty()) {
-            mostrarError("La dirección es obligatoria.");
+        if (alojamientoActual == null) {
+            alojamientoActual = new Alojamiento();
+        }
+
+        alojamientoActual.setNombre(txtNombre.getText());
+        alojamientoActual.setTipo(cmbtipo.getValue());
+        alojamientoActual.setDireccion(txtdireccion.getText());
+        alojamientoActual.setCiudad(txtciudad.getText());
+        alojamientoActual.setPais(txtpais.getText());
+
+        // Guardar en BD
+        if (alojamientoActual.getIdAlojamiento() == 0) {
+            alojamientoDAO.add(alojamientoActual);
+        } else {
+            alojamientoDAO.update(alojamientoActual);
+        }
+
+        // Asignar al viaje
+        viajeActual.setAlojamiento(alojamientoActual);
+        viajeDAO.update(viajeActual);
+
+        volverADetalles();
+    }
+
+    // ============================================================
+    // ELIMINAR
+    // ============================================================
+    @FXML
+    private void eliminar() {
+
+        if (alojamientoActual == null) {
+            mostrarAlerta("No se puede eliminar un alojamiento inexistente.");
             return;
         }
 
-        LocalDate entrada = dpEntrada.getValue();
-        LocalDate salida = dpSalida.getValue();
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setHeaderText("¿Eliminar alojamiento?");
+        confirm.setContentText("Esta acción no se puede deshacer.");
+        confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
-        if (entrada == null || salida == null) {
-            mostrarError("Debes seleccionar las fechas de entrada y salida.");
-            return;
-        }
+        if (confirm.showAndWait().get() == ButtonType.YES) {
 
-        if (!salida.isAfter(entrada)) {
-            mostrarError("La fecha de salida debe ser posterior a la de entrada.");
-            return;
-        }
+            alojamientoDAO.delete(alojamientoActual);
 
-        double precio;
-        try {
-            precio = Double.parseDouble(txtPrecio.getText());
-            if (precio <= 0) {
-                mostrarError("El precio debe ser mayor que 0.");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            mostrarError("El precio debe ser un número válido.");
-            return;
-        }
+            viajeActual.setAlojamiento(null);
+            viajeDAO.update(viajeActual);
 
-        if (cbValoracion.getValue() == null) {
-            mostrarError("Debes seleccionar una valoración.");
-            return;
-        }
-
-        if (cbViaje.getValue() == null) {
-            mostrarError("Debes seleccionar un viaje.");
-            return;
-        }
-
-        // GUARDAR EN BD
-        try {
-            if (alojamientoEditar == null) {
-
-                // CREAR
-                Alojamiento nuevo = new Alojamiento(
-                        0,
-                        cbViaje.getValue().getIdViaje(),
-                        txtNombre.getText(),
-                        txtDireccion.getText(),
-                        precio,
-                        entrada,
-                        salida,
-                        cbValoracion.getValue()
-                );
-
-                AlojamientoDAO.addAlojamiento(nuevo);
-
-            } else {
-
-                // EDITAR
-                alojamientoEditar.setNombre(txtNombre.getText());
-                alojamientoEditar.setDireccion(txtDireccion.getText());
-                alojamientoEditar.setFechaCheckin(entrada);
-                alojamientoEditar.setFechaCheckout(salida);
-                alojamientoEditar.setPrecioTotal(precio);
-                alojamientoEditar.setValoracion(cbValoracion.getValue());
-                alojamientoEditar.setIdViaje(cbViaje.getValue().getIdViaje());
-
-                AlojamientoDAO.updateAlojamiento(alojamientoEditar);
-            }
-
-            cerrarVentana();
-
-        } catch (SQLException e) {
-            mostrarError("Error al guardar en la base de datos.");
-            e.printStackTrace();
+            volverADetalles();
         }
     }
 
-    /**
-     * Cancela la operación y cierra la ventana.
-     */
+    // ============================================================
+    // CANCELAR
+    // ============================================================
     @FXML
     private void cancelar() {
-        cerrarVentana();
+        volverADetalles();
     }
 
-    /**
-     * Cierra la ventana actual.
-     */
-    private void cerrarVentana() {
-        Stage stage = (Stage) txtNombre.getScene().getWindow();
-        stage.close();
+    // ============================================================
+    // VOLVER A VER DETALLES
+    // ============================================================
+    private void volverADetalles() {
+        VerDetallesViajeController controller =
+                TravelApplication.setRoot("VerDetallesViaje");
+        controller.setViaje(viajeActual);
     }
 
-    /**
-     * Muestra un mensaje de error en un diálogo emergente.
-     *
-     * @param mensaje mensaje de error
-     */
-    private void mostrarError(String mensaje) {
-        Alert alerta = new Alert(Alert.AlertType.ERROR);
-        alerta.setTitle("Error");
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

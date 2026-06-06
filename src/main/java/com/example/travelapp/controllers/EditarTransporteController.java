@@ -1,157 +1,175 @@
 package com.example.travelapp.controllers;
 
+import com.example.travelapp.TravelApplication;
 import com.example.travelapp.dao.TransporteDAO;
-import com.example.travelapp.model.TipoDocumento;
-import com.example.travelapp.model.TipoTransporte;
+import com.example.travelapp.dao.ViajeTransporteDAO;
 import com.example.travelapp.model.Transporte;
+import com.example.travelapp.model.Viaje;
+import com.example.travelapp.model.enums.EstadoTransporte;
+import com.example.travelapp.model.enums.TipoTransporte;
+import com.example.travelapp.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
-import java.io.File;
-import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class EditarTransporteController {
 
     @FXML private Label lblTitulo;
 
-    @FXML private ComboBox<TipoTransporte> cmbTipoTransporte;
-    @FXML private DatePicker dpFecha;
+    @FXML private ComboBox<TipoTransporte> cmbTipo;
+    @FXML private TextField txtOrigen;
+    @FXML private TextField txtDestino;
+    @FXML private DatePicker dpSalida;
+    @FXML private DatePicker dpLlegada;
     @FXML private TextField txtPrecio;
+    @FXML private ComboBox<EstadoTransporte> cmbEstado;
 
-    @FXML private Label lblDocumento;
+    @FXML private Button btnGuardar;
+    @FXML private Button btnCancelar;
+    @FXML private Button botonEliminar;
 
-    private String rutaDocumento;
-    private TipoDocumento tipoDocumento;
+    private final TransporteDAO transporteDAO = new TransporteDAO();
+    private ViajeTransporteDAO viajeTransporteDAO;
 
-    private Transporte transporte;   // null = crear, no null = editar
-    private int idViaje;             // necesario para asignarlo al transporte
+    private Viaje viajeActual;
+    private Transporte transporteActual;
 
-    // ---------------------------------------------------------
-    // INICIALIZACIÓN
-    // ---------------------------------------------------------
     @FXML
     public void initialize() {
-        cmbTipoTransporte.getItems().setAll(TipoTransporte.values());
+        cmbTipo.getItems().setAll(TipoTransporte.values());
+        cmbEstado.getItems().setAll(EstadoTransporte.values());
+
+        botonEliminar.setVisible(false);
     }
 
-    // ---------------------------------------------------------
-    // CARGAR TRANSPORTE (EDITAR)
-    // ---------------------------------------------------------
-    public void cargarTransporte(Transporte t) {
-        this.transporte = t;
-        lblTitulo.setText("Editar Transporte");
-
-        cmbTipoTransporte.setValue(t.getTipo());
-        dpFecha.setValue(t.getFecha());
-        txtPrecio.setText(String.valueOf(t.getPrecio()));
-
-        rutaDocumento = t.getRutaDocumento();
-        tipoDocumento = t.getTipoDocumento();
-
-        lblDocumento.setText(rutaDocumento == null || rutaDocumento.isBlank()
-                ? "Ninguno"
-                : new File(rutaDocumento).getName());
+    // ============================================================
+    // RECIBIR VIAJE Y TRANSPORTE
+    // ============================================================
+    public void setViaje(Viaje viaje) {
+        this.viajeActual = viaje;
     }
 
-    // ---------------------------------------------------------
-    // RECIBIR ID DEL VIAJE (AL CREAR)
-    // ---------------------------------------------------------
-    public void setIdViaje(int idViaje) {
-        this.idViaje = idViaje;
-    }
+    public void setTransporte(Transporte transporte) {
+        this.transporteActual = transporte;
 
-    // ---------------------------------------------------------
-    // SELECCIONAR DOCUMENTO
-    // ---------------------------------------------------------
-    @FXML
-    private void seleccionarDocumento() {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Seleccionar documento");
-
-        File archivo = fc.showOpenDialog(null);
-
-        if (archivo != null) {
-            rutaDocumento = archivo.getAbsolutePath();
-            tipoDocumento = archivo.getName().toLowerCase().endsWith(".pdf")
-                    ? TipoDocumento.PDF
-                    : TipoDocumento.IMAGEN;
-
-            lblDocumento.setText(archivo.getName());
+        if (transporte == null) {
+            lblTitulo.setText("Añadir Transporte");
+            botonEliminar.setVisible(false);
+        } else {
+            lblTitulo.setText("Editar Transporte");
+            cargarDatos();
+            botonEliminar.setVisible(true);
         }
     }
 
-    // ---------------------------------------------------------
+    public void setViajeTransporteDAO(ViajeTransporteDAO dao) {
+        this.viajeTransporteDAO = dao;
+    }
+
+    private void cargarDatos() {
+        cmbTipo.setValue(transporteActual.getTipo());
+        txtOrigen.setText(transporteActual.getOrigen());
+        txtDestino.setText(transporteActual.getDestino());
+        dpSalida.setValue(LocalDate.from(transporteActual.getFechaSalida()));
+        dpLlegada.setValue(LocalDate.from(transporteActual.getFechaLlegada()));
+        txtPrecio.setText(String.valueOf(transporteActual.getPrecio()));
+        cmbEstado.setValue(transporteActual.getEstado());
+    }
+
+    // ============================================================
     // GUARDAR
-    // ---------------------------------------------------------
+    // ============================================================
     @FXML
     private void guardar() {
+
+        if (cmbTipo.getValue() == null ||
+                txtOrigen.getText().isEmpty() ||
+                txtDestino.getText().isEmpty() ||
+                dpSalida.getValue() == null ||
+                dpLlegada.getValue() == null ||
+                txtPrecio.getText().isEmpty() ||
+                cmbEstado.getValue() == null) {
+
+            Utils.mostrarWarning("Rellena todos los campos.");
+            return;
+        }
+
+        if (transporteActual == null) {
+            transporteActual = new Transporte();
+        }
+
+        double precio;
         try {
-            TipoTransporte tipo = cmbTipoTransporte.getValue();
-            LocalDate fecha = dpFecha.getValue();
-            double precio = Double.parseDouble(txtPrecio.getText());
+            precio = Double.parseDouble(txtPrecio.getText().trim());
+        } catch (NumberFormatException ex) {
+            Utils.mostrarWarning("Precio inválido. Introduce un número.");
+            return;
+        }
 
-            if (tipo == null || fecha == null) {
-                mostrarError("Debes completar todos los campos obligatorios.");
-                return;
-            }
+        try {
+            transporteActual.setTipo(cmbTipo.getValue());
+            transporteActual.setOrigen(txtOrigen.getText());
+            transporteActual.setDestino(txtDestino.getText());
+            transporteActual.setFechaSalida(dpSalida.getValue().atStartOfDay());
+            transporteActual.setFechaLlegada(dpLlegada.getValue().atStartOfDay());
+            transporteActual.setPrecio(precio);
+            transporteActual.setEstado(cmbEstado.getValue());
+        } catch (IllegalArgumentException ex) {
+            Utils.mostrarWarning(ex.getMessage());
+            return;
+        }
 
-            if (transporte == null) {
-                // CREAR
-                transporte = new Transporte(
-                        tipo,
-                        fecha,
-                        precio,
-                        tipoDocumento,
-                        rutaDocumento
-                );
-                transporte.setIdViaje(idViaje);
+        if (transporteActual.getIdTransporte() == 0) {
+            transporteDAO.add(transporteActual);
+            viajeTransporteDAO.insert(viajeActual, transporteActual);
+        } else {
+            transporteDAO.update(transporteActual);
+        }
 
-                TransporteDAO.insert(transporte);
+        VerDetallesViajeController controller = TravelApplication.setRoot("VerDetallesViaje");
+        controller.setViaje(viajeActual);
+    }
 
-            } else {
-                // EDITAR
-                transporte.setTipo(tipo);
-                transporte.setFecha(fecha);
-                transporte.setPrecio(precio);
-                transporte.setTipoDocumento(tipoDocumento);
-                transporte.setRutaDocumento(rutaDocumento);
+    // ============================================================
+    // ELIMINAR
+    // ============================================================
+    @FXML
+    private void eliminar() {
 
-                TransporteDAO.update(transporte);
-            }
+        if (transporteActual == null) {
+            Utils.mostrarWarning("No se puede eliminar un transporte inexistente.");
+            return;
+        }
 
-            cerrarVentana();
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setHeaderText("¿Eliminar transporte?");
+        confirm.setContentText("Esta acción no se puede deshacer.");
+        confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
-        } catch (NumberFormatException e) {
-            mostrarError("El precio debe ser un número válido.");
-        } catch (SQLException e) {
-            mostrarError("Error al guardar el transporte.");
-            e.printStackTrace();
+        if (confirm.showAndWait().get() == ButtonType.YES) {
+
+            viajeTransporteDAO.delete(viajeActual, transporteActual);
+            transporteDAO.delete(transporteActual);
+
+            volverADetalles();
         }
     }
 
-    // ---------------------------------------------------------
+    // ============================================================
     // CANCELAR
-    // ---------------------------------------------------------
+    // ============================================================
     @FXML
     private void cancelar() {
-        cerrarVentana();
+        volverADetalles();
     }
 
-    // ---------------------------------------------------------
-    // UTILIDADES
-    // ---------------------------------------------------------
-    private void cerrarVentana() {
-        Stage stage = (Stage) lblTitulo.getScene().getWindow();
-        stage.close();
-    }
-
-    private void mostrarError(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+    // ============================================================
+    // VOLVER A VER DETALLES
+    // ============================================================
+    private void volverADetalles() {
+        VerDetallesViajeController controller = TravelApplication.setRoot("VerDetallesViaje");
+        controller.setViaje(viajeActual);
     }
 }

@@ -28,6 +28,8 @@ public class Alojamiento {
         setPais(pais);
     }
 
+    public Alojamiento() {}
+
     public int getIdAlojamiento() {
         return idAlojamiento;
     }

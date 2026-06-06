@@ -8,14 +8,26 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.travelapp.controllers.ListaViajesController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.travelapp.controllers.ListaViajesController">
    <top>
       <VBox spacing="5.0" BorderPane.alignment="CENTER">
-            <Label text="Mis Viajes" />
+         <HBox prefHeight="0.0" prefWidth="610.0">
+            <children>
+                  <Label text="Mis Viajes">
+                  <font>
+                     <Font size="18.0" />
+                  </font>
+                  </Label>
+                <Button fx:id="btnCerrarSesion" onAction="#cerrarSesion" text="Cerrar Sesión">
+                  <HBox.margin>
+                     <Insets left="445.0" />
+                  </HBox.margin>
+               </Button>
+            </children>
+         </HBox>
             <Separator />
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -25,23 +37,33 @@
    <center>
       <VBox spacing="15.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox spacing="10.0">
+            <HBox alignment="CENTER" spacing="10.0">
                <children>
-                  <Button fx:id="botonNuevoViaje" mnemonicParsing="false" onAction="#nuevoViaje" text="Nuevo Viaje" />
-                  <Button fx:id="botonEditarViaje" mnemonicParsing="false" onAction="#editarViaje" text="Editar Viaje" />
-                  <Button fx:id="botonEliminar" mnemonicParsing="false" onAction="#editarViaje" text="Elimininar Viaje" />
-                  <Pane HBox.hgrow="ALWAYS" />
-                  <Button fx:id="botonVolver" mnemonicParsing="false" onAction="#volver" text="Volver" />
+                  <Button fx:id="botonNuevoViaje" mnemonicParsing="false" onAction="#nuevoViaje" text="Nuevo Viaje">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin></Button>
+                  <Button fx:id="botonEditarViaje" mnemonicParsing="false" onAction="#editarViaje" text="Editar Viaje">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin></Button>
+                  <Button fx:id="botonEliminar" mnemonicParsing="false" onAction="#eliminarViaje" text="Eliminar Viaje">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin></Button>
+                   <Button fx:id="btnDetalles" mnemonicParsing="false" onAction="#verDetalles" text="Ver detalles" />
                </children>
             </HBox>
             <TableView fx:id="tablaViajes">
               <columns>
                 <TableColumn fx:id="colNombre" minWidth="-1.0" prefWidth="75.0" text="Nombre" />
-                <TableColumn fx:id="colFechaInicio" minWidth="-1.0" prefWidth="75.0" text="Fecha inicio" />
-                  <TableColumn fx:id="colFechaFin" minWidth="-1.0" prefWidth="75.0" text="Fecha fin" />
+                <TableColumn fx:id="colDestino" minWidth="-1.0" prefWidth="75.0" text="Destino" />
+                  <TableColumn fx:id="colFechaInicio" minWidth="-1.0" prefWidth="75.0" text="Fecha Inicio" />
+                  <TableColumn fx:id="colFechaFin" minWidth="-1.0" prefWidth="75.0" text="Fecha Fin" />
+                  <TableColumn fx:id="colPresupuesto" minWidth="-1.0" prefWidth="75.0" text="Presupuesto" />
+                  <TableColumn fx:id="colNotas" minWidth="-1.0" prefWidth="75.0" text="Notas" />
                   <TableColumn fx:id="colTipo" minWidth="-1.0" prefWidth="75.0" text="Tipo" />
-                  <TableColumn fx:id="colCiudad" minWidth="-1.0" prefWidth="75.0" text="Ciudad" />
-                  <TableColumn fx:id="colPais" minWidth="-1.0" prefWidth="75.0" text="Pais" />
+                  <TableColumn fx:id="colAlojamiento" minWidth="-1.0" prefWidth="75.0" text="Alojamiento" />
               </columns>
             </TableView>
          </children>
