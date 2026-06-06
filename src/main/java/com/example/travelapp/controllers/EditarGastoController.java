@@ -78,7 +78,6 @@ public class EditarGastoController {
     // ============================================================
     @FXML
     private void guardar() {
-
         if (txtConcepto.getText().isEmpty() ||
                 cmbCategoria.getValue() == null ||
                 txtImporte.getText().isEmpty() ||
@@ -91,6 +90,13 @@ public class EditarGastoController {
             return;
         }
 
+        // Validar importe usando Utils.toDouble para aceptar coma/punto
+        Double importe = Utils.toDouble(txtImporte.getText());
+        if (importe == null) {
+            Utils.mostrarWarning("Importe inválido. Introduce un número (ej: 12.50 o 12,50).");
+            return;
+        }
+
         if (gastoActual == null) {
             gastoActual = new Gasto();
             gastoActual.setViaje(viajeActual);
@@ -98,17 +104,23 @@ public class EditarGastoController {
 
         gastoActual.setConcepto(txtConcepto.getText());
         gastoActual.setCategoria(cmbCategoria.getValue());
-        gastoActual.setImporte(Double.parseDouble(txtImporte.getText()));
+        gastoActual.setImporte(importe);
         gastoActual.setFecha(dpFecha.getValue());
         gastoActual.setLugar(txtLugar.getText());
         gastoActual.setMetodoPago(cmbMetodoPago.getValue());
         gastoActual.setEstado(cmbEstado.getValue());
         gastoActual.setNotas(txtNotas.getText());
 
-        if (gastoActual.getIdGasto() == 0) {
-            gastoDAO.add(gastoActual);
-        } else {
-            gastoDAO.update(gastoActual);
+        try {
+            if (gastoActual.getIdGasto() == 0) {
+                gastoDAO.add(gastoActual);
+            } else {
+                gastoDAO.update(gastoActual);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Utils.mostrarError("Error al guardar el gasto: " + ex.getMessage());
+            return;
         }
 
         volverADetalles();
