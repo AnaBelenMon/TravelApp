@@ -25,14 +25,8 @@ import java.sql.SQLException;
  * queda establecida como <code>null</code>.
  */
 public class ConnectionBD {
-
-    /** Nombre del archivo XML que contiene los datos de conexión. */
     private static final String FILE = "connection.xml";
-
-    /** Conexión única compartida por toda la aplicación. */
     private static Connection con;
-
-    /** Instancia única de la clase (patrón Singleton). */
     private static ConnectionBD _instance;
 
     /**

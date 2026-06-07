@@ -16,7 +16,6 @@ import java.util.Objects;
  * en la interfaz de usuario.
  */
 public class Alojamiento implements Valorable {
-
     private int idAlojamiento;
     private String nombre;
     private TipoAlojamiento tipo;

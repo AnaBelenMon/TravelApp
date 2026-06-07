@@ -13,7 +13,6 @@ import java.util.Objects;
  * con otros elementos como alojamiento, actividades, gastos y transporte.
  */
 public class Viaje {
-
     private int idViaje;
     private Usuario usuario;
     private Alojamiento alojamiento;

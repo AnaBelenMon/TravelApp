@@ -28,7 +28,6 @@ import javafx.scene.control.*;
  */
 public class EditarGastoController {
     @FXML private Label labelTitulo;
-
     @FXML private TextField txtConcepto;
     @FXML private ComboBox<CategoriaGasto> cmbCategoria;
     @FXML private TextField txtImporte;

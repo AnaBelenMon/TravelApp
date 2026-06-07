@@ -16,7 +16,6 @@ import java.util.Objects;
  * o ejecución del mismo.
  */
 public class Gasto {
-
     private int idGasto;
     private Viaje viaje;
     private String concepto;

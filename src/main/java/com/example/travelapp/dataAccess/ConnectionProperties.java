@@ -25,20 +25,10 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "connection")
 public class ConnectionProperties implements Serializable {
-
-    /** Dirección del servidor de la base de datos. */
     private String server;
-
-    /** Puerto de conexión del servidor. */
     private String port;
-
-    /** Nombre de la base de datos. */
     private String dataBase;
-
-    /** Usuario con permisos de acceso. */
     private String user;
-
-    /** Contraseña del usuario. */
     private String password;
 
     /**

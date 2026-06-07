@@ -1,0 +1,695 @@
+@startuml
+class com.example.travelapp.controllers.EditarTransporteController {
+- Label lblTitulo
+- ComboBox<TipoTransporte> cmbTipo
+- TextField txtOrigen
+- TextField txtDestino
+- DatePicker dpSalida
+- DatePicker dpLlegada
+- TextField txtPrecio
+- ComboBox<EstadoTransporte> cmbEstado
+- Button botonEliminar
+- TransporteDAO transporteDAO
+- ViajeTransporteDAO viajeTransporteDAO
+- Viaje viajeActual
+- Transporte transporteActual
++ void initialize()
++ void setViaje(Viaje)
++ void setTransporte(Transporte)
++ void setViajeTransporteDAO(ViajeTransporteDAO)
+- void cargarDatos()
+- void guardar()
+- void eliminar()
+- void cancelar()
+- void volverADetalles()
+}
+
+
+class com.example.travelapp.controllers.EditarAlojamientoController {
+- Label labelTitulo
+- TextField txtNombre
+- ComboBox<TipoAlojamiento> cmbtipo
+- TextField txtdireccion
+- TextField txtciudad
+- TextField txtpais
+- ComboBox<Integer> cmbValoracion
+- Button botonEliminar
+- AlojamientoDAO alojamientoDAO
+- ViajeDAO viajeDAO
+- Viaje viajeActual
+- Alojamiento alojamientoActual
++ void initialize()
++ void setViaje(Viaje)
++ void setAlojamiento(Alojamiento)
+- void cargarDatos()
+- void guardar()
+- void eliminar()
+- void cancelar()
+- void volverADetalles()
+}
+
+
+class com.example.travelapp.controllers.EditarViajeController {
+- Label labelTitulo
+- TextField textNombre
+- TextField textDestino
+- DatePicker fechaInicio
+- DatePicker fechaFin
+- ComboBox<TipoViaje> comboTipoViaje
+- TextField textPresupuesto
+- TextArea textNotas
+- ViajeDAO viajeDAO
+- Viaje viajeActual
++ void initialize()
++ void setViaje(Viaje)
+- void guardar()
+- void cancelar()
+}
+
+
+class com.example.travelapp.controllers.ListaViajesController {
+- TableView<Viaje> tablaViajes
+- TableColumn<Viaje,String> colNombre
+- TableColumn<Viaje,String> colDestino
+- TableColumn<Viaje,String> colFechaInicio
+- TableColumn<Viaje,String> colFechaFin
+- TableColumn<Viaje,Double> colPresupuesto
+- TableColumn<Viaje,String> colNotas
+- TableColumn<Viaje,String> colTipo
++ TableColumn<Viaje,String> colAlojamiento
+- ViajeDAO viajeDAO
+- Usuario usuarioActual
++ void initialize()
+- void configurarTabla()
+- void cargarViajes()
+- void nuevoViaje()
+- void editarViaje()
+- void eliminarViaje()
+- void verDetalles()
+- void cerrarSesion()
++ void setUsuario(Usuario)
+}
+
+
+class com.example.travelapp.controllers.EditarGastoController {
+- Label labelTitulo
+- TextField txtConcepto
+- ComboBox<CategoriaGasto> cmbCategoria
+- TextField txtImporte
+- DatePicker dpFecha
+- TextField txtLugar
+- ComboBox<MetodoPago> cmbMetodoPago
+- ComboBox<EstadoGasto> cmbEstado
+- TextField txtNotas
+- Button botonEliminar
+- GastoDAO gastoDAO
+- Viaje viajeActual
+- Gasto gastoActual
++ void initialize()
++ void setViaje(Viaje)
++ void setGasto(Gasto)
+- void cargarDatos()
+- void guardar()
+- void eliminar()
+- void cancelar()
+- void volverADetalles()
+}
+
+
+class com.example.travelapp.controllers.VerDetallesViajeController {
+- Label lblNombre
+- Label lblDestino
+- Label lblFechaInicio
+- Label lblFechaFin
+- Label lblPresupuesto
+- Label lblTipo
+- Label lblNotas
+- Label lblNombreAlojamiento
+- Label lblTipoAlojamiento
+- Label lblDireccionAlojamiento
+- Label lblCiudadAlojamiento
+- Label lblPaisAlojamiento
+- Label lblPuntuacionAlojamiento
+- TableView<Transporte> tablaTransportes
+- TableColumn<Transporte,String> colTipoTransporte
+- TableColumn<Transporte,String> colOrigenTransporte
+- TableColumn<Transporte,String> colDestinoTransporte
+- TableColumn<Transporte,String> colSalidaTransporte
+- TableColumn<Transporte,String> colLlegadaTransporte
+- TableColumn<Transporte,Double> colPrecioTransporte
+- TableColumn<Transporte,String> colEstadoTransporte
+- TableView<Gasto> tablaGastos
+- TableColumn<Gasto,String> colConceptoGasto
+- TableColumn<Gasto,String> colCategoriaGasto
+- TableColumn<Gasto,Double> colImporteGasto
+- TableColumn<Gasto,String> colFechaGasto
+- TableColumn<Gasto,String> colLugarGasto
+- TableColumn<Gasto,String> colMetodoPagoGasto
+- TableColumn<Gasto,String> colEstadoGasto
+- TableColumn<Gasto,String> colNotasGasto
+- ViajeDAO viajeDAO
+- GastoDAO gastoDAO
+- ViajeTransporteDAO viajeTransporteDAO
+- Viaje viajeActual
++ void initialize()
++ void setViaje(Viaje)
+- void cargarDatosViaje()
+- void cargarAlojamiento()
+- void cargarTransportes()
+- void cargarGastos()
++ void editarViaje()
++ void crearAlojamiento()
++ void editarAlojamiento()
++ void eliminarAlojamiento()
++ void crearTransporte()
++ void editarTransporte()
++ void eliminarTransporte()
++ void crearGasto()
++ void editarGasto()
++ void eliminarGasto()
++ void volver()
+}
+
+
+class com.example.travelapp.controllers.LoginController {
+- TextField txtemail
+- PasswordField txtPassword
+- UsuarioDAO usuarioDAO
+- void login()
+- void irRegistro()
+- void irPantallaPrincipal(Usuario)
+}
+
+
+class com.example.travelapp.controllers.RegistroController {
+- TextField txtemail
+- PasswordField txtPassword
+- UsuarioDAO usuarioDAO
++ void registrar()
++ void volverLogin()
+}
+
+class com.example.travelapp.dao.ViajeTransporteDAO {
+- {static} String SQL_ALL
+- {static} String SQL_FIND_BY_ID
+- {static} String SQL_FIND_BY_VIAJE
+- {static} String SQL_INSERT
+- {static} String SQL_UPDATE
+- {static} String SQL_DELETE
+- ViajeDAO viajeDAO
+- TransporteDAO transporteDAO
++ List<ViajeTransporte> findAll()
++ ViajeTransporte findById(int)
++ List<ViajeTransporte> findByViaje(Viaje)
++ ViajeTransporte add(ViajeTransporte)
++ boolean update(ViajeTransporte)
++ boolean delete(Viaje,Transporte)
++ void insert(Viaje,Transporte)
+}
+
+
+class com.example.travelapp.dao.AlojamientoDAO {
+- {static} String SQL_ALL
+- {static} String SQL_FIND_BY_ID
+- {static} String SQL_FIND_BY_NOMBRE
+- {static} String SQL_FIND_BY_TIPO
+- {static} String SQL_FIND_BY_DIRECCION
+- {static} String SQL_FIND_BY_CIUDAD
+- {static} String SQL_FIND_BY_PAIS
+- {static} String SQL_INSERT
+- {static} String SQL_UPDATE
+- {static} String SQL_DELETE
++ List<Alojamiento> findAll()
++ Alojamiento findById(int)
++ List<Alojamiento> findByNombre(String)
++ Alojamiento add(Alojamiento)
++ boolean update(Alojamiento)
++ boolean delete(Alojamiento)
+}
+
+
+class com.example.travelapp.dao.UsuarioDAO {
+- {static} String SQL_ALL
+- {static} String SQL_FIND_BY_ID
+- {static} String SQL_FIND_BY_NOMBRE
+- {static} String SQL_FIND_BY_EMAIL
+- {static} String SQL_LOGIN
+- {static} String SQL_INSERT
+- {static} String SQL_UPDATE
+- {static} String SQL_DELETE
++ List<Usuario> findAll()
++ Usuario findById(int)
++ Usuario findByNombre(String)
++ Usuario findByEmail(String)
++ Usuario add(Usuario)
++ boolean update(Usuario)
++ boolean delete(Usuario)
++ Usuario login(String,String)
+}
+
+
+class com.example.travelapp.dao.TransporteDAO {
+- {static} String SQL_ALL
+- {static} String SQL_FIND_BY_ID
+- {static} String SQL_INSERT
+- {static} String SQL_UPDATE
+- {static} String SQL_DELETE
++ List<Transporte> findAll()
++ Transporte findById(int)
++ Transporte add(Transporte)
++ boolean update(Transporte)
++ boolean delete(Transporte)
+}
+
+
+class com.example.travelapp.dao.ViajeDAO {
+- {static} String SQL_ALL
+- {static} String SQL_FIND_BY_ID
+- {static} String SQL_FIND_BY_USUARIO
+- {static} String SQL_INSERT
+- {static} String SQL_UPDATE
+- {static} String SQL_DELETE
+- UsuarioDAO usuarioDAO
+- AlojamientoDAO alojamientoDAO
++ List<Viaje> findAll()
++ Viaje findById(int)
++ List<Viaje> findByIdUsuario(int)
++ Viaje add(Viaje)
++ boolean update(Viaje)
++ boolean delete(Viaje)
+}
+
+
+class com.example.travelapp.dao.GastoDAO {
+- {static} String SQL_ALL
+- {static} String SQL_FIND_BY_ID
+- {static} String SQL_FIND_BY_VIAJE
+- {static} String SQL_FIND_BY_CATEGORIA
+- {static} String SQL_INSERT
+- {static} String SQL_UPDATE
+- {static} String SQL_DELETE
+- ViajeDAO viajeDAO
++ List<Gasto> findAll()
++ Gasto findById(int)
++ List<Gasto> findByViaje(Viaje)
++ Gasto add(Gasto)
++ boolean update(Gasto)
++ boolean delete(Gasto)
+}
+
+
+interface com.example.travelapp.dao.GenericDAO {
+~ List<T> findAll()
+~ T findById(int)
+~ T add(T)
+~ boolean update(T)
+~ boolean delete(T)
+}
+
+
+
+com.example.travelapp.dao.GenericDAO <|.. com.example.travelapp.dao.AlojamientoDAO
+com.example.travelapp.dao.GenericDAO <|.. com.example.travelapp.dao.UsuarioDAO
+com.example.travelapp.dao.GenericDAO <|.. com.example.travelapp.dao.TransporteDAO
+com.example.travelapp.dao.GenericDAO <|.. com.example.travelapp.dao.ViajeDAO
+com.example.travelapp.dao.GenericDAO <|.. com.example.travelapp.dao.GastoDAO
+
+
+class com.example.travelapp.dataAccess.ConnectionProperties {
+- String server
+- String port
+- String dataBase
+- String user
+- String password
++ String getUser()
++ String getPassword()
++ String getURL()
+}
+
+
+class com.example.travelapp.dataAccess.XMLManager {
++ {static} boolean writeXML(T,String)
++ {static} T readXML(T,String)
+}
+
+class com.example.travelapp.dataAccess.ConnectionBD {
+- {static} String FILE
+- {static} Connection con
+- {static} ConnectionBD _instance
++ {static} Connection getConnection()
+}
+java.io.Serializable <|.. com.example.travelapp.dataAccess.ConnectionProperties
+
+
+enum com.example.travelapp.model.enums.EstadoGasto {
++  PENDIENTE
++  PAGADO
++  CANCELADO
++  REEMBOLSADO
+- String nombre
++ String getNombre()
++ String toString()
+}
+
+
+enum com.example.travelapp.model.enums.MetodoPago {
++  EFECTIVO
++  TARJETA
++  BIZUM
++  TRANSFERENCIA
+- String nombre
++ String getNombre()
++ String toString()
+}
+
+
+enum com.example.travelapp.model.enums.CategoriaGasto {
++  COMIDA
++  TRANSPORTE
++  ALOJAMIENTO
++  OCIO
++  COMPRAS
++  OTROS
+- String nombre
++ String getNombre()
++ String toString()
+}
+
+
+enum com.example.travelapp.model.enums.TipoViaje {
++  AVENTURA
++  RELAX
++  CULTURAL
++  NEGOCIOS
++  ROMANTICO
++  FAMILIAR
++  OTROS
+- String nombre
++ String getNombre()
++ String toString()
+}
+
+
+enum com.example.travelapp.model.enums.TipoTransporte {
++  AVION
++  TREN
++  AUTOBUS
++  COCHE
++  BARCO
+- String nombre
+- String icono
++ String getNombre()
++ String toString()
+}
+
+
+enum com.example.travelapp.model.enums.EstadoTransporte {
++  PENDIENTE
++  CONFIRMADO
++  CANCELADO
+- String nombre
++ String getNombre()
++ String toString()
+}
+
+
+enum com.example.travelapp.model.enums.TipoAlojamiento {
++  HOTEL
++  HOSTAL
++  APARTAMENTO
++  CASA_RURAL
++  CAMPING
++  OTRO
+- String nombre
++ String getNombre()
++ String toString()
+}
+
+interface com.example.travelapp.model.interfaces.Valorable {
+~ void valorar(int)
+}
+
+
+class com.example.travelapp.model.Alojamiento {
+- int idAlojamiento
+- String nombre
+- TipoAlojamiento tipo
+- String direccion
+- String ciudad
+- String pais
+- int valoracion
++ int getIdAlojamiento()
++ void setIdAlojamiento(int)
++ String getNombre()
++ void setNombre(String)
++ TipoAlojamiento getTipo()
++ void setTipo(TipoAlojamiento)
++ String getDireccion()
++ void setDireccion(String)
++ String getCiudad()
++ void setCiudad(String)
++ String getPais()
++ void setPais(String)
++ int getValoracion()
++ void valorar(int)
++ boolean equals(Object o)
++ int hashCode()
++ String toString()
+}
+com.example.travelapp.model.interfaces.Valorable <|.. com.example.travelapp.model.Alojamiento
+
+class com.example.travelapp.model.Gasto {
+- int idGasto
+- Viaje viaje
+- String concepto
+- CategoriaGasto categoria
+- double importe
+- LocalDate fecha
+- String lugar
+- MetodoPago metodoPago
+- EstadoGasto estado
+- String notas
++ int getIdGasto()
++ void setIdGasto(int)
++ Viaje getViaje()
++ void setViaje(Viaje)
++ String getConcepto()
++ void setConcepto(String)
++ CategoriaGasto getCategoria()
++ void setCategoria(CategoriaGasto)
++ double getImporte()
++ void setImporte(double)
++ LocalDate getFecha()
++ void setFecha(LocalDate)
++ String getLugar()
++ void setLugar(String)
++ MetodoPago getMetodoPago()
++ void setMetodoPago(MetodoPago)
++ EstadoGasto getEstado()
++ void setEstado(EstadoGasto)
++ String getNotas()
++ void setNotas(String)
++ String toString()
++ boolean equals(Object o)
++ int hashCode()
+}
+
+class com.example.travelapp.model.Transporte {
+- int idTransporte
+- TipoTransporte tipo
+- String origen
+- String destino
+- LocalDateTime fechaSalida
+- LocalDateTime fechaLlegada
+- double precio
+- EstadoTransporte estado
++ int getIdTransporte()
++ void setIdTransporte(int)
++ TipoTransporte getTipo()
++ void setTipo(TipoTransporte)
++ String getOrigen()
++ void setOrigen(String)
++ String getDestino()
++ void setDestino(String)
++ LocalDateTime getFechaSalida()
++ void setFechaSalida(LocalDateTime)
++ LocalDateTime getFechaLlegada()
++ void setFechaLlegada(LocalDateTime)
++ double getPrecio()
++ void setPrecio(double)
++ EstadoTransporte getEstado()
++ void setEstado(EstadoTransporte)
++ String toString()
++ boolean equals(Object o)
++ int hashCode()
+}
+class com.example.travelapp.model.Usuario {
+- int idUsuario
+- String nombre
+- String email
+- String password
++ int getIdUsuario()
++ void setIdUsuario(int)
++ String getNombre()
++ void setNombre(String)
++ String getEmail()
++ String getPassword()
++ boolean equals(Object o)
++ int hashCode()
++ String toString()
+}
+
+class com.example.travelapp.model.Viaje {
+- int idViaje
+- Usuario usuario
+- Alojamiento alojamiento
+- String nombre
+- String destino
+- LocalDate fechaInicio
+- LocalDate fechaFin
+- double presupuesto
+- String notas
+- TipoViaje tipo
+- String imagen
++ int getIdViaje()
++ void setIdViaje(int)
++ Usuario getUsuario()
++ void setUsuario(Usuario)
++ Alojamiento getAlojamiento()
++ void setAlojamiento(Alojamiento)
++ String getNombre()
++ void setNombre(String)
++ String getDestino()
++ void setDestino(String)
++ LocalDate getFechaInicio()
++ void setFechaInicio(LocalDate)
++ LocalDate getFechaFin()
++ void setFechaFin(LocalDate)
++ TipoViaje getTipo()
++ void setTipo(TipoViaje)
++ double getPresupuesto()
++ void setPresupuesto(double)
++ String getImagen()
++ void setImagen(String)
++ String getNotas()
++ void setNotas(String)
++ boolean equals(Object o)
++ int hashCode()
++ String toString()
+}
+class com.example.travelapp.model.ViajeTransporte {
+- int idViajeTransporte
+- Viaje viaje
+- Transporte transporte
+- String notas
++ int getIdViajeTransporte()
++ void setIdViajeTransporte(int)
++ Viaje getViaje()
++ void setViaje(Viaje)
++ Transporte getTransporte()
++ void setTransporte(Transporte)
++ String getNotas()
++ void setNotas(String)
++ String toString()
+}
+
+class com.example.travelapp.utils.SessionUtils {
+- {static} Usuario usuarioActual
++ {static} void setUsuarioActual(Usuario)
++ {static} Usuario getUsuarioActual()
++ {static} int getIdUsuarioActual()
++ {static} void limpiarSesion()
+}
+
+
+class com.example.travelapp.utils.Utils {
++ {static} boolean esNumero(String)
++ {static} void mostrarInfo(String)
++ {static} void mostrarWarning(String)
++ {static} void mostrarError(String)
++ {static} String formatearFecha(LocalDate)
++ {static} String formatearFechaHora(LocalDateTime)
++ {static} Double toDouble(String)
+}
+
+
+class com.example.travelapp.Launcher {
++ {static} void main(String[])
+}
+
+class com.example.travelapp.TravelApplication {
+- {static} Stage stagePrincipal
++ void start(Stage)
++ {static} T setRoot(String)
+}
+
+
+' Usuario 1:N Viajes
+Usuario "1" --> "0..*" Viaje : tiene >
+
+' Viaje 1:1 Alojamiento
+Viaje "1..*" --> "0..1" Alojamiento : alojamiento >
+
+' Viaje 1:N Gastos
+Viaje "1" --> "1..*" Gasto : gastos >
+
+' Viaje N:M Transporte (vía tabla intermedia)
+Viaje "1" --> "0..*" ViajeTransporte
+Transporte "1" --> "0..*" ViajeTransporte
+
+Viaje --> TipoViaje
+Gasto --> CategoriaGasto
+Transporte --> TipoTransporte
+Alojamiento --> TipoAlojamiento
+Gasto --> MetodoPago
+Gasto --> EstadoGasto
+Transporte --> EstadoTransporte
+
+
+EditarAlojamientoController --> AlojamientoDAO
+EditarAlojamientoController --> ViajeDAO
+EditarAlojamientoController --> Viaje
+EditarAlojamientoController --> Alojamiento
+
+
+EditarGastoController --> GastoDAO
+EditarGastoController --> Viaje
+EditarGastoController --> Gasto
+
+
+EditarTransporteController --> TransporteDAO
+EditarTransporteController --> ViajeTransporteDAO
+EditarTransporteController --> Viaje
+EditarTransporteController --> Transporte
+
+
+EditarViajeController --> ViajeDAO
+EditarViajeController --> Viaje
+
+
+ListaViajesController --> ViajeDAO
+ListaViajesController --> Usuario
+
+
+LoginController --> UsuarioDAO
+
+
+RegistroController --> UsuarioDAO
+
+VerDetallesViajeController --> ViajeDAO
+VerDetallesViajeController --> GastoDAO
+VerDetallesViajeController --> ViajeTransporteDAO
+VerDetallesViajeController --> Viaje
+
+
+GastoDAO --> ViajeDAO
+
+ViajeDAO --> UsuarioDAO
+ViajeDAO --> AlojamientoDAO
+
+
+ViajeTransporteDAO --> ViajeDAO
+ViajeTransporteDAO --> TransporteDAO
+
+com.example.travelapp.utils.SessionUtils --> Usuario
+@enduml

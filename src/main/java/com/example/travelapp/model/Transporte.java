@@ -14,7 +14,6 @@ import java.util.Objects;
  * vuelos, trenes, autobuses, barcos o cualquier otro tipo de transporte.
  */
 public class Transporte {
-
     private int idTransporte;
     private TipoTransporte tipo;
     private String origen;
