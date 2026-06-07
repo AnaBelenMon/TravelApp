@@ -11,10 +11,25 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO encargado de gestionar las operaciones CRUD relacionadas con la entidad
+ * {@link Viaje}. Utiliza JDBC para interactuar con la base de datos y
+ * convierte los registros obtenidos en objetos del modelo.
+ *
+ * Este DAO implementa la interfaz {@link GenericDAO} y proporciona métodos
+ * adicionales de búsqueda por usuario.
+ *
+ * Cada método utiliza consultas preparadas para garantizar seguridad,
+ * evitar inyecciones SQL y asegurar un acceso eficiente a la base de datos.
+ *
+ * Además, este DAO colabora con {@link UsuarioDAO} y {@link AlojamientoDAO}
+ * para reconstruir completamente las relaciones del modelo.
+ */
 public class ViajeDAO implements GenericDAO<Viaje> {
     private final static String SQL_ALL = "SELECT * FROM viaje";
     private final static String SQL_FIND_BY_ID = "SELECT * FROM viaje WHERE idViaje = ?";
     private final static String SQL_FIND_BY_USUARIO = "SELECT * FROM viaje WHERE idUsuario = ?";
+
     private final static String SQL_INSERT = "INSERT INTO viaje (idUsuario, idAlojamiento, nombre, destino, fechaInicio, fechaFin, presupuesto, notas, tipo, imagen) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final static String SQL_UPDATE = "UPDATE viaje SET idUsuario=?, idAlojamiento=?, nombre=?, destino=?, fechaInicio=?, fechaFin=?, presupuesto=?, notas=?, tipo=?, imagen=? " + "WHERE idViaje=?";
     private final static String SQL_DELETE = "DELETE FROM viaje WHERE idViaje=?";
@@ -22,6 +37,11 @@ public class ViajeDAO implements GenericDAO<Viaje> {
     private UsuarioDAO usuarioDAO = new UsuarioDAO();
     private AlojamientoDAO alojamientoDAO = new AlojamientoDAO();
 
+    /**
+     * Obtiene todos los viajes registrados en la base de datos.
+     *
+     * @return lista de viajes
+     */
     @Override
     public List<Viaje> findAll() {
         List<Viaje> viajes = new ArrayList<>();
@@ -50,6 +70,12 @@ public class ViajeDAO implements GenericDAO<Viaje> {
         return viajes;
     }
 
+    /**
+     * Busca un viaje por su identificador único.
+     *
+     * @param id identificador del viaje
+     * @return viaje encontrado o null si no existe
+     */
     @Override
     public Viaje findById(int id) {
         Viaje viaje = null;
@@ -77,7 +103,13 @@ public class ViajeDAO implements GenericDAO<Viaje> {
         }
         return viaje;
     }
-    // Buscar viajes de un usuario específico
+
+    /**
+     * Busca todos los viajes asociados a un usuario concreto.
+     *
+     * @param idUsuario identificador del usuario
+     * @return lista de viajes del usuario
+     */
     public List<Viaje> findByIdUsuario(int idUsuario) {
         List<Viaje> viajes = new ArrayList<>();
         Viaje viaje = null;
@@ -108,16 +140,21 @@ public class ViajeDAO implements GenericDAO<Viaje> {
         return viajes;
     }
 
+    /**
+     * Inserta un nuevo viaje en la base de datos.
+     * Tras la inserción, se recupera el ID generado automáticamente.
+     *
+     * @param v viaje a insertar
+     * @return viaje con su ID actualizado
+     */
     @Override
     public Viaje add(Viaje v) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
-            // usuario: no puede ser null, mejor comprobar y lanzar una excepción informativa
             if (v.getUsuario() == null) {
                 throw new IllegalArgumentException("El viaje debe tener un usuario asignado antes de insertarlo.");
             }
             ps.setInt(1, v.getUsuario().getIdUsuario());
 
-            // idAlojamiento puede ser null -> usar setNull o setObject con Types.INTEGER
             if (v.getAlojamiento() != null) {
                 ps.setInt(2, v.getAlojamiento().getIdAlojamiento());
             } else {
@@ -145,10 +182,15 @@ public class ViajeDAO implements GenericDAO<Viaje> {
         return v;
     }
 
+    /**
+     * Actualiza los datos de un viaje existente.
+     *
+     * @param v viaje con los datos actualizados
+     * @return true si la actualización fue exitosa, false en caso contrario
+     */
     @Override
     public boolean update(Viaje v) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
-            // usuario obligatorio
             if (v.getUsuario() == null) {
                 throw new IllegalArgumentException("El viaje debe tener un usuario asignado antes de actualizarlo.");
             }
@@ -176,6 +218,12 @@ public class ViajeDAO implements GenericDAO<Viaje> {
         return false;
     }
 
+    /**
+     * Elimina un viaje de la base de datos.
+     *
+     * @param viaje viaje a eliminar
+     * @return true si la eliminación fue exitosa, false en caso contrario
+     */
     @Override
     public boolean delete(Viaje viaje) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {

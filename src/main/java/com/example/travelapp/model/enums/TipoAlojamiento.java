@@ -1,52 +1,65 @@
 package com.example.travelapp.model.enums;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Enum que representa los tipos de alojamiento disponibles dentro de un viaje.
- * Cada tipo incluye un nombre legible para mostrar en la interfaz.
- *
- * Se utiliza para clasificar alojamientos y facilitar su organización,
- * filtrado y análisis dentro de la aplicación.
+ * Cada tipo incluye un nombre legible para mostrar en la interfaz de usuario.
+ * Este enum permite clasificar los alojamientos y facilita su organización,
+ * filtrado y análisis dentro de la aplicación TravelApp.
+ * Se utiliza directamente en la clase {@link com.example.travelapp.model.Alojamiento}.
+ * Incluye métodos utilitarios para conversión y obtención de nombres.
  *
  * @author Ana
  * @version 1.0
  * @since 2026-04-30
  */
 public enum TipoAlojamiento {
+
+    /** Alojamiento en un hotel. */
     HOTEL("Hotel"),
+
+    /** Alojamiento en un hostal. */
     HOSTAL("Hostal"),
+
+    /** Alojamiento en un apartamento turístico. */
     APARTAMENTO("Apartamento"),
+
+    /** Alojamiento en una casa rural. */
     CASA_RURAL("Casa rural"),
+
+    /** Alojamiento en un camping. */
     CAMPING("Camping"),
+
+    /** Otro tipo de alojamiento no especificado. */
     OTRO("Otro");
 
     private final String nombre;
 
+    /**
+     * Constructor del enum que asigna un nombre legible al tipo de alojamiento.
+     *
+     * @param nombre nombre visible para el usuario
+     */
     TipoAlojamiento(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * Obtiene el nombre legible del tipo de alojamiento.
+     *
+     * @return nombre del tipo de alojamiento
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Devuelve la representación en texto del tipo de alojamiento,
+     * utilizada en interfaces gráficas y listados.
+     *
+     * @return nombre legible del tipo
+     */
     @Override
     public String toString() {
         return nombre;
-    }
-
-    public static TipoAlojamiento fromNombre(String nombre) {
-        for (TipoAlojamiento t : values()) {
-            if (t.nombre.equalsIgnoreCase(nombre)) return t;
-        }
-        throw new IllegalArgumentException("Tipo de alojamiento no válido: " + nombre);
-    }
-
-    public static List<String> nombres() {
-        return Arrays.stream(values())
-                .map(TipoAlojamiento::getNombre)
-                .toList();
     }
 }

@@ -4,19 +4,31 @@ import com.example.travelapp.TravelApplication;
 import com.example.travelapp.dao.ViajeDAO;
 import com.example.travelapp.model.Usuario;
 import com.example.travelapp.model.Viaje;
-import com.example.travelapp.utils.SessionManager;
+import com.example.travelapp.utils.SessionUtils;
 import com.example.travelapp.utils.Utils;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
 import java.util.List;
 
+/**
+ * Controlador encargado de gestionar la vista de lista de viajes del usuario.
+ * Permite:
+ * <ul>
+ *     <li>Visualizar todos los viajes del usuario en sesión.</li>
+ *     <li>Crear un nuevo viaje.</li>
+ *     <li>Editar un viaje existente.</li>
+ *     <li>Eliminar un viaje.</li>
+ *     <li>Acceder a la vista de detalles de un viaje.</li>
+ *     <li>Cerrar sesión y volver al menú principal.</li>
+ * </ul>
+ *
+ * Este controlador se comunica con {@link ViajeDAO} para obtener y manipular
+ * los datos almacenados en la base de datos.
+ */
 public class ListaViajesController {
-
-
-    // TABLA
     @FXML private TableView<Viaje> tablaViajes;
 
     @FXML private TableColumn<Viaje, String> colNombre;
@@ -26,53 +38,63 @@ public class ListaViajesController {
     @FXML private TableColumn<Viaje, Double> colPresupuesto;
     @FXML private TableColumn<Viaje, String> colNotas;
     @FXML private TableColumn<Viaje, String> colTipo;
-    public TableColumn colAlojamiento;
-
-    // BOTONES
-    @FXML private Button botonNuevoViaje;
-    @FXML private Button botonEditarViaje;
-    @FXML private Button botonEliminar;
-    @FXML private Button btnDetalles;
-    @FXML private Button botonVolver;
+    @FXML public TableColumn<Viaje, String> colAlojamiento;
 
     private final ViajeDAO viajeDAO = new ViajeDAO();
 
+    private Usuario usuarioActual;
+
+    /**
+     * Inicializa la vista configurando la tabla y cargando los viajes del usuario.
+     */
     @FXML
     public void initialize() {
         configurarTabla();
         cargarViajes();
     }
 
+    /**
+     * Configura las columnas de la tabla para que muestren las propiedades del modelo {@link Viaje}.
+     */
     private void configurarTabla() {
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colDestino.setCellValueFactory(new PropertyValueFactory<>("destino"));
-        colFechaInicio.setCellValueFactory(new PropertyValueFactory<>("fechaInicio"));
-        colFechaFin.setCellValueFactory(new PropertyValueFactory<>("fechaFin"));
+        colFechaInicio.setCellValueFactory(cell -> new ReadOnlyStringWrapper(Utils.formatearFecha(cell.getValue().getFechaInicio())));
+        colFechaFin.setCellValueFactory(cell -> new ReadOnlyStringWrapper(Utils.formatearFecha(cell.getValue().getFechaFin())));
         colPresupuesto.setCellValueFactory(new PropertyValueFactory<>("presupuesto"));
         colNotas.setCellValueFactory(new PropertyValueFactory<>("notas"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
-        colAlojamiento.setCellValueFactory(new PropertyValueFactory<>("alojamiento"));
+        colAlojamiento.setCellValueFactory(cell -> {
+            var alo = cell.getValue().getAlojamiento();
+            return new ReadOnlyStringWrapper(alo == null ? "—" : alo.getNombre());
+        });
+
     }
 
+    /**
+     * Carga en la tabla únicamente los viajes pertenecientes al usuario en sesión.
+     */
     private void cargarViajes() {
         tablaViajes.getItems().clear();
 
-        // Obtener solo los viajes del usuario actual
-        int idUsuario = SessionManager.getIdUsuarioActual();
+        int idUsuario = SessionUtils.getIdUsuarioActual();
         List<Viaje> lista = viajeDAO.findByIdUsuario(idUsuario);
 
         tablaViajes.getItems().addAll(lista);
     }
 
-    // -----------------------------
-    // BOTONES CRUD
-    // -----------------------------
-
+    /**
+     * Abre la vista para crear un nuevo viaje.
+     */
     @FXML
     private void nuevoViaje() {
         TravelApplication.setRoot("EditarViaje");
     }
 
+    /**
+     * Abre la vista de edición para el viaje seleccionado.
+     * Muestra una advertencia si no hay selección.
+     */
     @FXML
     private void editarViaje() {
         Viaje seleccionado = tablaViajes.getSelectionModel().getSelectedItem();
@@ -82,21 +104,41 @@ public class ListaViajesController {
         }
 
         EditarViajeController controller = TravelApplication.setRoot("EditarViaje");
-        controller.setViaje(seleccionado);
+        if (controller != null) {
+            controller.setViaje(seleccionado);
+        }
     }
 
+    /**
+     * Elimina el viaje seleccionado tras confirmación.
+     * Muestra una advertencia si no hay selección.
+     */
     @FXML
     private void eliminarViaje() {
         Viaje seleccionado = tablaViajes.getSelectionModel().getSelectedItem();
         if (seleccionado == null){
-            Utils.mostrarWarning("Debes seleccionar un viaje para eliminar un viaje");
+            Utils.mostrarWarning("Debes seleccionar un viaje para eliminarlo.");
             return;
         }
 
-        viajeDAO.delete(seleccionado);
-        cargarViajes();
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setHeaderText("¿Eliminar viaje?");
+        confirm.setContentText("Esta acción no se puede deshacer.");
+        confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        var resultado = confirm.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.YES) {
+            viajeDAO.delete(seleccionado);
+            cargarViajes();
+        }
     }
 
+
+    /**
+     * Abre la vista de detalles del viaje seleccionado.
+     * Muestra una advertencia si no hay selección.
+     */
     @FXML
     private void verDetalles() {
         Viaje seleccionado = tablaViajes.getSelectionModel().getSelectedItem();
@@ -106,21 +148,26 @@ public class ListaViajesController {
         }
 
         VerDetallesViajeController controller = TravelApplication.setRoot("VerDetallesViaje");
-        controller.setViaje(seleccionado);
+        if (controller != null) {
+            controller.setViaje(seleccionado);
+        }
     }
+
+    /**
+     * Cierra la sesión del usuario y vuelve a la pantalla de login.
+     */
     @FXML
     private void cerrarSesion() {
-        SessionManager.limpiarSesion();  // ← AGREGAR ESTO
+        SessionUtils.limpiarSesion();
         TravelApplication.setRoot("Login");
     }
 
-    private Usuario usuarioActual;
+    /**
+     * Establece el usuario actual (opcional, por si se requiere en el futuro).
+     *
+     * @param usuario usuario logueado
+     */
     public void setUsuario(Usuario usuario) {
         this.usuarioActual = usuario;
-    }
-
-    @FXML
-    private void volver() {
-        TravelApplication.setRoot("Principal");
     }
 }

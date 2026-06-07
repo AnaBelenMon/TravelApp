@@ -6,16 +6,39 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
- * Clase que representa la configuración de conexión a la base de datos.
- * Se utiliza para leer los datos desde un archivo XML mediante JAXB.
+ * Clase que representa la configuración necesaria para establecer la conexión
+ * con la base de datos. Sus atributos se cargan desde un archivo XML mediante JAXB,
+ * permitiendo separar la configuración del código fuente.
+ *
+ * Esta clase actúa como contenedor de datos (DTO) para:
+ * <ul>
+ *     <li>Servidor</li>
+ *     <li>Puerto</li>
+ *     <li>Nombre de la base de datos</li>
+ *     <li>Usuario</li>
+ *     <li>Contraseña</li>
+ * </ul>
+ *
+ * Se utiliza directamente en {@link ConnectionBD} para construir la URL JDBC
+ * y establecer la conexión con MySQL.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "connection")
 public class ConnectionProperties implements Serializable {
+
+    /** Dirección del servidor de la base de datos. */
     private String server;
+
+    /** Puerto de conexión del servidor. */
     private String port;
+
+    /** Nombre de la base de datos. */
     private String dataBase;
+
+    /** Usuario con permisos de acceso. */
     private String user;
+
+    /** Contraseña del usuario. */
     private String password;
 
     /**
@@ -26,10 +49,10 @@ public class ConnectionProperties implements Serializable {
     /**
      * Constructor completo para inicializar todos los parámetros de conexión.
      *
-     * @param server servidor de la base de datos
-     * @param port puerto de conexión
+     * @param server   servidor de la base de datos
+     * @param port     puerto de conexión
      * @param dataBase nombre de la base de datos
-     * @param user usuario de la base de datos
+     * @param user     usuario de acceso
      * @param password contraseña del usuario
      */
     public ConnectionProperties(String server, String port, String dataBase, String user, String password) {
@@ -41,26 +64,33 @@ public class ConnectionProperties implements Serializable {
     }
 
     /**
-     * Métodos getters para acceder a las propiedades de conexión.
-     * @return
+     * Obtiene el usuario configurado para la conexión.
+     *
+     * @return usuario de la base de datos
      */
     public String getUser() {
         return user;
     }
 
     /**
-     * Método para obtener la contraseña de la base de datos.
-     * @return
+     * Obtiene la contraseña configurada para la conexión.
+     *
+     * @return contraseña del usuario
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * Método para construir la URL de conexión a la base de datos utilizando el formato JDBC.
-     * @return
+     * Construye la URL JDBC necesaria para conectar con MySQL.
+     * El formato generado es:
+     * <pre>
+     * jdbc:mysql://servidor:puerto/baseDeDatos
+     * </pre>
+     *
+     * @return URL de conexión JDBC
      */
-    public String getURL(){
-        return "jdbc:mysql://"+server+":"+port+"/"+dataBase;
+    public String getURL() {
+        return "jdbc:mysql://" + server + ":" + port + "/" + dataBase;
     }
 }

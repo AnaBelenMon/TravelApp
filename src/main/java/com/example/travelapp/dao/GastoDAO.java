@@ -12,17 +12,34 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO encargado de gestionar las operaciones CRUD relacionadas con la entidad
+ * {@link Gasto}. Utiliza JDBC para interactuar con la base de datos y
+ * convierte los registros obtenidos en objetos del modelo.
+ *
+ * Este DAO implementa la interfaz {@link GenericDAO} y proporciona métodos
+ * específicos de búsqueda por viaje y categoría.
+ *
+ * Cada método utiliza consultas preparadas para evitar inyecciones SQL y
+ * garantizar un acceso seguro y eficiente a la base de datos.
+ */
 public class GastoDAO implements GenericDAO<Gasto> {
     private final static String SQL_ALL = "SELECT * FROM gasto";
     private final static String SQL_FIND_BY_ID = "SELECT * FROM gasto WHERE idGasto = ?";
     private final static String SQL_FIND_BY_VIAJE = "SELECT * FROM gasto WHERE idViaje = ?";
     private final static String SQL_FIND_BY_CATEGORIA = "SELECT * FROM gasto WHERE categoria = ?";
-    private final static String SQL_INSERT = "INSERT INTO gasto (idViaje, concepto, categoria, importe, fecha, lugar, metodoPago, estado, notas)\n" + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private final static String SQL_INSERT = "INSERT INTO gasto (idViaje, concepto, categoria, importe, fecha, lugar, metodoPago, estado, notas) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final static String SQL_UPDATE = "UPDATE gasto SET idViaje=?, concepto=?, categoria=?, importe=?, fecha=?, lugar=?, metodoPago=?, estado=?, notas=? " + "WHERE idGasto=?";
     private final static String SQL_DELETE = "DELETE FROM gasto WHERE idGasto=?";
 
     private ViajeDAO viajeDAO = new ViajeDAO();
 
+    /**
+     * Obtiene todos los gastos registrados en la base de datos.
+     *
+     * @return lista de gastos
+     */
     public List<Gasto> findAll() {
         List<Gasto> gastos = new ArrayList<>();
         Gasto gasto = null;
@@ -50,6 +67,12 @@ public class GastoDAO implements GenericDAO<Gasto> {
         return gastos;
     }
 
+    /**
+     * Busca un gasto por su identificador único.
+     *
+     * @param id identificador del gasto
+     * @return gasto encontrado o null si no existe
+     */
     public Gasto findById(int id) {
         Gasto gasto = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
@@ -75,6 +98,12 @@ public class GastoDAO implements GenericDAO<Gasto> {
         return gasto;
     }
 
+    /**
+     * Busca todos los gastos asociados a un viaje concreto.
+     *
+     * @param viaje viaje del que se desean obtener los gastos
+     * @return lista de gastos del viaje
+     */
     public List<Gasto> findByViaje(Viaje viaje) {
         List<Gasto> gastos = new ArrayList<>();
         Gasto gasto = null;
@@ -103,6 +132,13 @@ public class GastoDAO implements GenericDAO<Gasto> {
         return gastos;
     }
 
+    /**
+     * Inserta un nuevo gasto en la base de datos.
+     * Tras la inserción, se recupera el ID generado automáticamente.
+     *
+     * @param gasto gasto a insertar
+     * @return gasto con su ID actualizado
+     */
     public Gasto add(Gasto gasto) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, gasto.getViaje().getIdViaje());
@@ -126,6 +162,12 @@ public class GastoDAO implements GenericDAO<Gasto> {
         return gasto;
     }
 
+    /**
+     * Actualiza los datos de un gasto existente.
+     *
+     * @param gasto gasto con los datos actualizados
+     * @return true si la actualización fue exitosa, false en caso contrario
+     */
     public boolean update(Gasto gasto) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
             ps.setInt(1, gasto.getViaje().getIdViaje());
@@ -145,6 +187,12 @@ public class GastoDAO implements GenericDAO<Gasto> {
         return false;
     }
 
+    /**
+     * Elimina un gasto de la base de datos.
+     *
+     * @param gasto gasto a eliminar
+     * @return true si la eliminación fue exitosa, false en caso contrario
+     */
     public boolean delete(Gasto gasto) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
             ps.setInt(1, gasto.getIdGasto());

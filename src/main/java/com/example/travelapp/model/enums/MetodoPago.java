@@ -1,51 +1,62 @@
 package com.example.travelapp.model.enums;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Enum que representa los métodos de pago disponibles para registrar gastos
  * dentro de un viaje. Cada método incluye un nombre legible para mostrar
  * en la interfaz de usuario.
- *
- * Permite clasificar los gastos según cómo fueron pagados y facilita
- * el filtrado, análisis y organización dentro de la aplicación.
+ * Este enum permite clasificar los gastos según cómo fueron pagados,
+ * facilitando su filtrado, análisis y organización dentro de la aplicación.
+ * Se utiliza directamente en la clase {@link com.example.travelapp.model.Gasto}.
+ * Incluye métodos utilitarios para conversión y obtención de nombres.
  *
  * @author Ana
  * @version 1.0
  * @since 2026-04-30
  */
 public enum MetodoPago {
+
+    /** Pago realizado en efectivo. */
     EFECTIVO("Efectivo"),
+
+    /** Pago realizado con tarjeta bancaria. */
     TARJETA("Tarjeta"),
+
+    /** Pago realizado mediante Bizum. */
     BIZUM("Bizum"),
+
+    /**
+     * Pago realizado mediante transferencia bancaria.
+     */
     TRANSFERENCIA("Transferencia");
 
     private final String nombre;
 
+    /**
+     * Constructor del enum que asigna un nombre legible al método de pago.
+     *
+     * @param nombre nombre visible para el usuario
+     */
     MetodoPago(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * Obtiene el nombre legible del método de pago.
+     *
+     * @return nombre del método
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Devuelve la representación en texto del método de pago,
+     * utilizada en interfaces gráficas y listados.
+     *
+     * @return nombre legible del método
+     */
     @Override
     public String toString() {
         return nombre;
-    }
-
-    public static MetodoPago fromNombre(String nombre) {
-        for (MetodoPago m : values()) {
-            if (m.nombre.equalsIgnoreCase(nombre)) return m;
-        }
-        throw new IllegalArgumentException("Método de pago no válido: " + nombre);
-    }
-
-    public static List<String> nombres() {
-        return Arrays.stream(values())
-                .map(MetodoPago::getNombre)
-                .toList();
     }
 }

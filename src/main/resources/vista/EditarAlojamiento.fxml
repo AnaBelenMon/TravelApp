@@ -61,7 +61,11 @@
 
                     <Label text="Pais:" GridPane.rowIndex="4" />
                     <TextField fx:id="txtpais" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               <Label text="Puntuación:" GridPane.rowIndex="6" />
+               <ComboBox fx:id="cmbValoracion" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
                   <RowConstraints />
                   <RowConstraints />
                   <RowConstraints />
@@ -82,7 +86,7 @@
             <children>
                 <Button fx:id="botonGuardar" onAction="#guardar" text="Guardar" />
                 <Button fx:id="botonCancelar" onAction="#cancelar" text="Cancelar" />
-                <Button fx:id="botonEliminar" onAction="#eliminar"  text="Eliminar"/>
+                <Button fx:id="botonEliminar" onAction="#eliminar" text="Eliminar"/>
             </children>
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

@@ -4,13 +4,25 @@ import com.example.travelapp.TravelApplication;
 import com.example.travelapp.dao.ViajeDAO;
 import com.example.travelapp.model.enums.TipoViaje;
 import com.example.travelapp.model.Viaje;
-import com.example.travelapp.utils.SessionManager;
+import com.example.travelapp.utils.SessionUtils;
+import com.example.travelapp.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
+/**
+ * Controlador encargado de gestionar la creación y edición de viajes dentro
+ * de la aplicación TravelApp.
+ * Permite:
+ * <ul>
+ *     <li>Crear un nuevo viaje asignado al usuario en sesión.</li>
+ *     <li>Editar un viaje existente.</li>
+ *     <li>Validar campos obligatorios y coherencia de datos.</li>
+ *     <li>Persistir los cambios en la base de datos mediante {@link ViajeDAO}.</li>
+ * </ul>
+ *
+ * Este controlador se utiliza desde las vistas ListaViajes y VerDetallesViaje.
+ */
 public class EditarViajeController {
-
     @FXML private Label labelTitulo;
 
     @FXML private TextField textNombre;
@@ -21,21 +33,25 @@ public class EditarViajeController {
     @FXML private TextField textPresupuesto;
     @FXML private TextArea textNotas;
 
-    @FXML private Button botonGuardar;
-    @FXML private Button botonCancelar;
-
     private final ViajeDAO viajeDAO = new ViajeDAO();
 
-    private Viaje viajeActual = null; // null = crear, no null = editar
+    private Viaje viajeActual = null;
 
+    /**
+     * Inicializa los componentes de la vista.
+     * Carga los tipos de viaje disponibles.
+     */
     @FXML
     public void initialize() {
         comboTipoViaje.getItems().setAll(TipoViaje.values());
     }
 
-    // ---------------------------------------------------------
-    // RECIBIR VIAJE DESDE ListaViajes o VerDetallesViaje
-    // ---------------------------------------------------------
+    /**
+     * Establece el viaje a editar.
+     * Si se llama a este método, significa que el usuario está editando un viaje existente.
+     *
+     * @param viaje viaje existente
+     */
     public void setViaje(Viaje viaje) {
         this.viajeActual = viaje;
 
@@ -50,53 +66,49 @@ public class EditarViajeController {
         textNotas.setText(viaje.getNotas());
     }
 
-    // ---------------------------------------------------------
-    // GUARDAR (INSERT o UPDATE)
-    // ---------------------------------------------------------
+    /**
+     * Válida los campos, crea o actualiza el viaje y lo guarda en la base de datos.
+     * Si el viaje es nuevo, se asigna automáticamente al usuario en sesión.
+     */
     @FXML
     private void guardar() {
-
-        // Validaciones básicas
-        if (textNombre.getText().isEmpty() ||
-                textDestino.getText().isEmpty() ||
+        if (textNombre.getText().isBlank() ||
+                textDestino.getText().isBlank() ||
                 fechaInicio.getValue() == null ||
                 fechaFin.getValue() == null ||
                 comboTipoViaje.getValue() == null) {
 
-            mostrarAlerta("Faltan campos obligatorios.");
+            Utils.mostrarWarning("Faltan campos obligatorios.");
             return;
         }
 
-        double presupuesto = 0;
-        try {
-            presupuesto = Double.parseDouble(textPresupuesto.getText());
-        } catch (Exception e) {
-            mostrarAlerta("El presupuesto debe ser un número.");
+        Double presupuesto = Utils.toDouble(textPresupuesto.getText());
+        if (presupuesto == null || presupuesto < 0) {
+            Utils.mostrarWarning("El presupuesto debe ser un número positivo.");
             return;
         }
 
-// Si es un viaje nuevo
+        if (fechaInicio.getValue().isAfter(fechaFin.getValue())) {
+            Utils.mostrarWarning("La fecha de inicio debe ser anterior a la fecha de fin.");
+            return;
+        }
+
         if (viajeActual == null) {
             viajeActual = new Viaje();
-            // asignar el usuario logueado
-            viajeActual.setUsuario(SessionManager.getUsuarioActual());
+            viajeActual.setUsuario(SessionUtils.getUsuarioActual());
         }
-
-        // Rellenar datos
-        viajeActual.setNombre(textNombre.getText());
-        viajeActual.setDestino(textDestino.getText());
+        viajeActual.setNombre(textNombre.getText().trim());
+        viajeActual.setDestino(textDestino.getText().trim());
         viajeActual.setFechaInicio(fechaInicio.getValue());
         viajeActual.setFechaFin(fechaFin.getValue());
         viajeActual.setTipo(comboTipoViaje.getValue());
         viajeActual.setPresupuesto(presupuesto);
-        viajeActual.setNotas(textNotas.getText());
+        viajeActual.setNotas(textNotas.getText().trim());
 
-        // Antes de insertar, por seguridad:
         if (viajeActual.getUsuario() == null) {
-            mostrarAlerta("No se ha podido determinar el usuario del viaje. Reinicia sesión e inténtalo de nuevo.");
+            Utils.mostrarWarning("No se ha podido determinar el usuario del viaje. Reinicia sesión e inténtalo de nuevo.");
             return;
         }
-        // INSERT o UPDATE
         if (viajeActual.getIdViaje() == 0) {
             viajeDAO.add(viajeActual);
         } else {
@@ -106,27 +118,11 @@ public class EditarViajeController {
         TravelApplication.setRoot("ListaViajes");
     }
 
-    // ---------------------------------------------------------
-    // CANCELAR
-    // ---------------------------------------------------------
+    /**
+     * Cancela la operación y vuelve a la lista de viajes.
+     */
     @FXML
     private void cancelar() {
         TravelApplication.setRoot("ListaViajes");
     }
-
-    private void cerrarVentana() {
-        Stage stage = (Stage) botonCancelar.getScene().getWindow();
-        stage.close();
-    }
-
-    private void mostrarAlerta(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
 }
-/**
- * Mejorar las alertas y las comprobaciones
- * Las notas no es obligatorio escribir una nota para crear un viaje
- */

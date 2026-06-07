@@ -10,6 +10,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO encargado de gestionar las operaciones CRUD relacionadas con la entidad
+ * {@link Transporte}. Utiliza JDBC para interactuar con la base de datos y
+ * convierte los registros obtenidos en objetos del modelo.
+ *
+ * Este DAO implementa la interfaz {@link GenericDAO} y proporciona métodos
+ * para obtener, insertar, actualizar y eliminar transportes.
+ *
+ * Cada método utiliza consultas preparadas para garantizar seguridad,
+ * evitar inyecciones SQL y asegurar un acceso eficiente a la base de datos.
+ */
 public class TransporteDAO implements GenericDAO<Transporte> {
     private final static String SQL_ALL = "SELECT * FROM transporte";
     private final static String SQL_FIND_BY_ID = "SELECT * FROM transporte WHERE idTransporte = ?";
@@ -18,6 +29,11 @@ public class TransporteDAO implements GenericDAO<Transporte> {
     private final static String SQL_UPDATE = "UPDATE transporte SET tipo=?, origen=?, destino=?, fechaSalida=?, fechaLlegada=?, precio=?, estado=? " + "WHERE idTransporte=?";
     private final static String SQL_DELETE = "DELETE FROM transporte WHERE idTransporte = ?";
 
+    /**
+     * Obtiene todos los transportes registrados en la base de datos.
+     *
+     * @return lista de transportes
+     */
     @Override
     public List<Transporte> findAll() {
         List<Transporte> transportes = new ArrayList<>();
@@ -41,6 +57,12 @@ public class TransporteDAO implements GenericDAO<Transporte> {
         return transportes;
     }
 
+    /**
+     * Busca un transporte por su identificador único.
+     *
+     * @param id identificador del transporte
+     * @return transporte encontrado o null si no existe
+     */
     @Override
     public Transporte findById(int id) {
         Transporte transporte = null;
@@ -64,6 +86,13 @@ public class TransporteDAO implements GenericDAO<Transporte> {
         return transporte;
     }
 
+    /**
+     * Inserta un nuevo transporte en la base de datos.
+     * Tras la inserción, se recupera el ID generado automáticamente.
+     *
+     * @param t transporte a insertar
+     * @return transporte con su ID actualizado
+     */
     @Override
     public Transporte add(Transporte t) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
@@ -86,7 +115,12 @@ public class TransporteDAO implements GenericDAO<Transporte> {
         return t;
     }
 
-
+    /**
+     * Actualiza los datos de un transporte existente.
+     *
+     * @param t transporte con los datos actualizados
+     * @return true si la actualización fue exitosa, false en caso contrario
+     */
     @Override
     public boolean update(Transporte t) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
@@ -105,6 +139,12 @@ public class TransporteDAO implements GenericDAO<Transporte> {
         return false;
     }
 
+    /**
+     * Elimina un transporte de la base de datos.
+     *
+     * @param transporte transporte a eliminar
+     * @return true si la eliminación fue exitosa, false en caso contrario
+     */
     @Override
     public boolean delete(Transporte transporte) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {

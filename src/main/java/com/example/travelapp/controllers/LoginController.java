@@ -3,79 +3,86 @@ package com.example.travelapp.controllers;
 import com.example.travelapp.TravelApplication;
 import com.example.travelapp.dao.UsuarioDAO;
 import com.example.travelapp.model.Usuario;
-import com.example.travelapp.utils.SessionManager;
+import com.example.travelapp.utils.SessionUtils;
 import com.example.travelapp.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+/**
+ * Controlador encargado de gestionar el inicio de sesión en la aplicación.
+ *
+ * Funcionalidades:
+ * <ul>
+ *     <li>Validar campos de email y contraseña.</li>
+ *     <li>Comprobar si el email existe en la base de datos.</li>
+ *     <li>Verificar si la contraseña introducida coincide con la almacenada.</li>
+ *     <li>Iniciar sesión y redirigir a la lista de viajes.</li>
+ *     <li>Navegar a la pantalla de registro.</li>
+ * </ul>
+ *
+ * Este controlador se comunica con {@link UsuarioDAO} para validar credenciales
+ * y con {@link SessionUtils} para almacenar el usuario en sesión.
+ */
 public class LoginController {
+
     @FXML private TextField txtemail;
     @FXML private PasswordField txtPassword;
 
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-    // ---------------------------------------------------------
-    // LOGIN
-    // ---------------------------------------------------------
+    /**
+     * Válida los campos, comprueba las credenciales del usuario
+     * y, si son correctas, inicia sesión y navega a la pantalla principal.
+     */
     @FXML
     private void login() {
-
-        String email = txtemail.getText().trim();
+        String email = txtemail.getText().trim().toLowerCase();
         String password = txtPassword.getText().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Utils.mostrarWarning("Debes introducir email y contraseña.");
+        if (email.isEmpty()) {
+            Utils.mostrarWarning("Debes introducir el email.");
             return;
         }
 
-        Usuario usuario = usuarioDAO.login(email, password);
+        if (password.isEmpty()) {
+            Utils.mostrarWarning("Debes introducir la contraseña.");
+            return;
+        }
+
+        Usuario usuario = usuarioDAO.findByEmail(email);
 
         if (usuario == null) {
-            Utils.mostrarWarning("Email o contraseña incorrectos.");
+            Utils.mostrarWarning("Error: este email no está registrado.\nSi deseas registrarte, pulsa 'Crear Cuenta'.");
             return;
         }
+
+        if (!usuario.getPassword().equals(password)) {
+            Utils.mostrarWarning("Error: la contraseña no es correcta.");
+            return;
+        }
+
+        Utils.mostrarInfo("Iniciando sesión…");
         irPantallaPrincipal(usuario);
     }
 
-    // ---------------------------------------------------------
-    // IR A REGISTRO
-    // ---------------------------------------------------------
+    /**
+     * Navega a la pantalla de registro.
+     */
     @FXML
     private void irRegistro() {
         TravelApplication.setRoot("registro");
     }
-    // ---------------------------------------------------------
-    // ABRIR PANTALLA PRINCIPAL
-    // ---------------------------------------------------------
+
+    /**
+     * Guarda el usuario en sesión y navega a la lista de viajes.
+     *
+     * @param usuario usuario autenticado
+     */
     private void irPantallaPrincipal(Usuario usuario) {
-        SessionManager.setUsuarioActual(usuario);  // ← AGREGAR ESTO
+        SessionUtils.setUsuarioActual(usuario);
         ListaViajesController controller = TravelApplication.setRoot("ListaViajes");
-        controller.setUsuario(usuario);
+        if (controller != null) {
+            controller.setUsuario(usuario);
+        }
     }
 }
-
-/**
- * Primero se rellena el TextField email, después el PasswordField contraseña.
- * Cuando se realicen todas esas acciones se debe activar el Button inicioSesion y cuando se le pulse al Button inicioSesion se debera comprobar:
- * -si el email existe.
- * -si la contraseña existe.
- * -si el email y la contraseña existen y son correctos mandar un mensaje"Iniciando Sesión" y además me deberan llevar a la principal_view.
- * Si no existe el email se debera mandar un mensaje de error "Error, este email no esta registrado, si desea registrarse pulse el boton de Crear Cuenta".
- * Si no existe o no esta registrada con ese email del usuario la contraseña se debera mandar por pantalla un mensaje de error "Error, la contraseña no es correcta"
- * Si no existe o no es correcta ni la contraseña ni el email mandar un mensaje de error "Error, email y contraseña incorrectos".
- */
-
-/**
- * Quiero que si solo has introducido la contraseña o email mande una alerta que por ejemplo si el campo de rellenar el email esta vacio mande una alerta diciendo que debe introducir el email
- * El login debe:
- * Buscar el usuario por email
- * Recuperar su contraseña almacenada (idealmente hasheada)
- * Comparar la contraseña introducida con la almacenada
- *
- *Email y contraseña correctos
- * → Login exitoso
- * → Mensaje:
- * “Iniciando sesión…”
- * → Navegar a la pantalla principal
- *
- */

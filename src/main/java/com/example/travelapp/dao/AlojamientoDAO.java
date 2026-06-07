@@ -10,6 +10,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO encargado de gestionar las operaciones CRUD relacionadas con la entidad
+ * {@link Alojamiento}. Utiliza JDBC para interactuar con la base de datos y
+ * convierte los registros obtenidos en objetos del modelo.
+ * Este DAO implementa la interfaz {@link GenericDAO} y proporciona métodos
+ * específicos de búsqueda por nombre, tipo, dirección, ciudad y país.
+ * Cada método utiliza consultas preparadas para evitar inyecciones SQL y
+ * garantizar un acceso seguro y eficiente a la base de datos.
+ */
 public class AlojamientoDAO implements GenericDAO<Alojamiento> {
     private final static String SQL_ALL = "SELECT * FROM alojamiento";
     private final static String SQL_FIND_BY_ID = "SELECT * FROM alojamiento WHERE idAlojamiento = ?";
@@ -23,6 +32,11 @@ public class AlojamientoDAO implements GenericDAO<Alojamiento> {
     private final static String SQL_UPDATE = "UPDATE alojamiento SET nombre=?, tipo=?, direccion=?, ciudad=?, pais=? WHERE idAlojamiento=?";
     private final static String SQL_DELETE = "DELETE FROM alojamiento WHERE idAlojamiento=?";
 
+    /**
+     * Obtiene todos los alojamientos registrados en la base de datos.
+     *
+     * @return lista de alojamientos
+     */
     public List<Alojamiento> findAll() {
         List<Alojamiento> alojamientos = new ArrayList<>();
         Alojamiento alojamiento = null;
@@ -34,7 +48,8 @@ public class AlojamientoDAO implements GenericDAO<Alojamiento> {
                 String direccion = rs.getString("direccion");
                 String ciudad = rs.getString("ciudad");
                 String pais = rs.getString("pais");
-                alojamiento = new Alojamiento(idAlojamiento, nombre, tipo, direccion, ciudad, pais);
+                int valoracion = rs.getInt("valoracion");
+                alojamiento = new Alojamiento(idAlojamiento, nombre, tipo, direccion, ciudad, pais, valoracion);
                 alojamientos.add(alojamiento);
             }
         } catch (SQLException e) {
@@ -43,6 +58,12 @@ public class AlojamientoDAO implements GenericDAO<Alojamiento> {
         return alojamientos;
     }
 
+    /**
+     * Busca un alojamiento por su identificador único.
+     *
+     * @param id identificador del alojamiento
+     * @return alojamiento encontrado o null si no existe
+     */
     public Alojamiento findById(int id) {
         Alojamiento alojamiento = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
@@ -55,7 +76,8 @@ public class AlojamientoDAO implements GenericDAO<Alojamiento> {
                 String direccion = rs.getString("direccion");
                 String ciudad = rs.getString("ciudad");
                 String pais = rs.getString("pais");
-                alojamiento = new Alojamiento(idAlojamiento, nombre, tipo, direccion, ciudad, pais);
+                int valoracion = rs.getInt("valoracion");
+                alojamiento = new Alojamiento(idAlojamiento, nombre, tipo, direccion, ciudad, pais, valoracion);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,6 +85,12 @@ public class AlojamientoDAO implements GenericDAO<Alojamiento> {
         return alojamiento;
     }
 
+    /**
+     * Busca alojamientos cuyo nombre coincida con el proporcionado.
+     *
+     * @param nombre nombre del alojamiento
+     * @return lista de alojamientos coincidentes
+     */
     public List<Alojamiento> findByNombre(String nombre) {
         List<Alojamiento> alojamientos = new ArrayList<>();
         Alojamiento alojamiento = null;
@@ -76,7 +104,8 @@ public class AlojamientoDAO implements GenericDAO<Alojamiento> {
                 String direccion = rs.getString("direccion");
                 String ciudad = rs.getString("ciudad");
                 String pais = rs.getString("pais");
-                alojamiento = new Alojamiento(idAlojamiento, nombre2, tipo, direccion, ciudad, pais);
+                int valoracion = rs.getInt("valoracion");
+                alojamiento = new Alojamiento(idAlojamiento, nombre2, tipo, direccion, ciudad, pais, valoracion);
                 alojamientos.add(alojamiento);
             }
         } catch (SQLException e) {
@@ -85,6 +114,13 @@ public class AlojamientoDAO implements GenericDAO<Alojamiento> {
         return alojamientos;
     }
 
+    /**
+     * Inserta un nuevo alojamiento en la base de datos.
+     * Tras la inserción, se recupera el ID generado automáticamente.
+     *
+     * @param alojamiento alojamiento a insertar
+     * @return alojamiento con su ID actualizado
+     */
     public Alojamiento add(Alojamiento alojamiento) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, alojamiento.getNombre());
@@ -104,7 +140,12 @@ public class AlojamientoDAO implements GenericDAO<Alojamiento> {
         return alojamiento;
     }
 
-
+    /**
+     * Actualiza los datos de un alojamiento existente.
+     *
+     * @param alojamiento alojamiento con los datos actualizados
+     * @return true si la actualización fue exitosa, false en caso contrario
+     */
     public boolean update(Alojamiento alojamiento) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
             ps.setString(1, alojamiento.getNombre());
@@ -120,6 +161,12 @@ public class AlojamientoDAO implements GenericDAO<Alojamiento> {
         return false;
     }
 
+    /**
+     * Elimina un alojamiento de la base de datos.
+     *
+     * @param alojamiento alojamiento a eliminar
+     * @return true si la eliminación fue exitosa, false en caso contrario
+     */
     public boolean delete(Alojamiento alojamiento) {
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
             ps.setInt(1, alojamiento.getIdAlojamiento());

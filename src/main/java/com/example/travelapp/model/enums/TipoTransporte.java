@@ -1,27 +1,50 @@
 package com.example.travelapp.model.enums;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Enum que representa los diferentes tipos de transporte disponibles en la aplicación.
- * Cada transporte tiene un nombre legible y un icono asociado para su representación visual.
+ * Cada tipo incluye un nombre legible y un icono asociado para su representación visual
+ * dentro de la interfaz de usuario.
+ * Este enum se utiliza directamente en la clase
+ * {@link com.example.travelapp.model.Transporte} y permite clasificar los transportes
+ * según su naturaleza (aéreo, terrestre, marítimo, público, privado…).
+ * Incluye métodos utilitarios para conversión desde texto y obtención de nombres.
+ * También incorpora métodos semánticos que facilitan la lógica de negocio.
+ * Ejemplos de uso:
+ * - Mostrar iconos en listas de transporte.
+ * - Filtrar transportes por tipo (público, privado, internacional…).
+ * - Validar reglas según el tipo (si requiere billete, si es aéreo, etc.).
+ *
+ * @author Ana
+ * @version 1.0
+ * @since 2026-04-30
  */
 public enum TipoTransporte {
+
+    /** Transporte aéreo mediante avión. */
     AVION("Avión", "✈️"),
+
+    /** Transporte ferroviario mediante tren. */
     TREN("Tren", "🚆"),
+
+    /** Transporte público por carretera mediante autobús. */
     AUTOBUS("Autobús", "🚌"),
+
+    /** Transporte privado mediante coche. */
     COCHE("Coche", "🚗"),
+
+    /**
+     * Transporte marítimo mediante barco.
+     * */
     BARCO("Barco", "🚢");
 
     private final String nombre;
     private final String icono;
 
     /**
-     * Constructor del enum.
+     * Constructor del enum que asigna un nombre legible y un icono representativo.
      *
-     * @param nombre nombre legible del transporte
-     * @param icono icono representativo del transporte
+     * @param nombre nombre visible para el usuario
+     * @param icono  icono asociado al tipo de transporte
      */
     TipoTransporte(String nombre, String icono) {
         this.nombre = nombre;
@@ -37,77 +60,6 @@ public enum TipoTransporte {
         return nombre;
     }
 
-    /**
-     * Obtiene el icono representativo del transporte.
-     *
-     * @return icono del transporte
-     */
-    public String getIcono() {
-        return icono;
-    }
-
-    /**
-     * Indica si el transporte es aéreo.
-     *
-     * @return true si es avión
-     */
-    public boolean esAereo() {
-        return this == AVION;
-    }
-
-    /**
-     * Indica si el transporte es marítimo.
-     *
-     * @return true si es barco
-     */
-    public boolean esMaritimo() {
-        return this == BARCO;
-    }
-
-    /**
-     * Indica si el transporte es terrestre.
-     *
-     * @return true si es tren, autobús o coche
-     */
-    public boolean esTerrestre() {
-        return this == TREN || this == AUTOBUS || this == COCHE;
-    }
-
-    /**
-     * Indica si requiere billete para su uso.
-     *
-     * @return true si requiere billete
-     */
-    public boolean requiereBillete() {
-        return this == AVION || this == TREN;
-    }
-
-    /**
-     * Indica si es un transporte público.
-     *
-     * @return true si es tren o autobús
-     */
-    public boolean esPublico() {
-        return this == TREN || this == AUTOBUS;
-    }
-
-    /**
-     * Indica si es un transporte privado.
-     *
-     * @return true si es coche
-     */
-    public boolean esPrivado() {
-        return this == COCHE;
-    }
-
-    /**
-     * Indica si puede utilizarse en trayectos internacionales.
-     *
-     * @return true si es avión o barco
-     */
-    public boolean puedeSerInternacional() {
-        return this == AVION || this == BARCO;
-    }
 
     /**
      * Devuelve una representación en texto del transporte,
@@ -118,18 +70,5 @@ public enum TipoTransporte {
     @Override
     public String toString() {
         return icono + " " + nombre;
-    }
-
-    public static TipoTransporte fromNombre(String nombre) {
-        for (TipoTransporte t : values()) {
-            if (t.nombre.equalsIgnoreCase(nombre)) return t;
-        }
-        throw new IllegalArgumentException("Tipo de transporte no válido: " + nombre);
-    }
-
-    public static List<String> nombres() {
-        return Arrays.stream(values())
-                .map(TipoTransporte::getNombre)
-                .toList();
     }
 }

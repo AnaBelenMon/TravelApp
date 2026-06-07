@@ -1,14 +1,14 @@
 package com.example.travelapp.model.enums;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Enum que representa las categorías de gasto dentro de un viaje.
- * Se utiliza para clasificar los gastos del usuario y facilitar
- * su organización, filtrado y análisis dentro de la aplicación.
- * Cada categoría tiene un nombre legible para su visualización
- * en la interfaz de usuario.
+ * Se utiliza para clasificar los gastos del usuario y facilitar su
+ * organización, filtrado y análisis dentro de la aplicación.
+ * Cada categoría incluye un nombre legible que se muestra en la interfaz
+ * de usuario, permitiendo una experiencia más clara e intuitiva.
+ * Este enum forma parte del modelo financiero de TravelApp y se utiliza
+ * directamente en la clase {@link com.example.travelapp.model.Gasto}.
+ *
  * @author Ana Belén Montilla López
  * @version 1.0
  * @since 2026-04-30
@@ -24,7 +24,8 @@ public enum CategoriaGasto {
     private final String nombre;
 
     /**
-     * Constructor del enum con el nombre legible de la categoría.
+     * Constructor del enum que asigna un nombre legible a la categoría.
+     *
      * @param nombre nombre visible para el usuario
      */
     CategoriaGasto(String nombre) {
@@ -33,6 +34,7 @@ public enum CategoriaGasto {
 
     /**
      * Obtiene el nombre legible de la categoría de gasto.
+     *
      * @return nombre de la categoría
      */
     public String getNombre() {
@@ -40,25 +42,13 @@ public enum CategoriaGasto {
     }
 
     /**
-     * Representación en texto de la categoría.
-     * @return nombre legible del gasto
+     * Devuelve la representación en texto de la categoría,
+     * utilizada en interfaces gráficas y listados.
+     *
+     * @return nombre legible de la categoría
      */
     @Override
     public String toString() {
         return nombre;
     }
-
-    public static CategoriaGasto fromNombre(String nombre) {
-        for (CategoriaGasto c : values()) {
-            if (c.nombre.equalsIgnoreCase(nombre)) return c;
-        }
-        throw new IllegalArgumentException("Categoría no válida: " + nombre);
-    }
-
-    public static List<String> nombres() {
-        return Arrays.stream(values())
-                .map(CategoriaGasto::getNombre)
-                .toList();
-    }
-
 }

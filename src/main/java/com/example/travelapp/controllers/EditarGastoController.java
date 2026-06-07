@@ -11,8 +11,22 @@ import com.example.travelapp.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+/**
+ * Controlador encargado de gestionar la creación, edición y eliminación
+ * de gastos asociados a un viaje dentro de la aplicación TravelApp.
+ * Permite:
+ * <ul>
+ *     <li>Crear un nuevo gasto.</li>
+ *     <li>Editar un gasto existente.</li>
+ *     <li>Eliminar un gasto.</li>
+ *     <li>Validar datos numéricos y fechas.</li>
+ * </ul>
+ *
+ * Este controlador se comunica con {@link GastoDAO} para persistir los cambios
+ * en la base de datos y con {@link VerDetallesViajeController} para actualizar
+ * la vista de detalles del viaje.
+ */
 public class EditarGastoController {
-
     @FXML private Label labelTitulo;
 
     @FXML private TextField txtConcepto;
@@ -24,8 +38,6 @@ public class EditarGastoController {
     @FXML private ComboBox<EstadoGasto> cmbEstado;
     @FXML private TextField txtNotas;
 
-    @FXML private Button botonGuardar;
-    @FXML private Button botonCancelar;
     @FXML private Button botonEliminar;
 
     private final GastoDAO gastoDAO = new GastoDAO();
@@ -33,6 +45,11 @@ public class EditarGastoController {
     private Viaje viajeActual;
     private Gasto gastoActual;
 
+    /**
+     * Inicializa los componentes de la vista.
+     * Carga las categorías, métodos de pago y estados disponibles.
+     * Oculta el botón de eliminar hasta que haya un gasto cargado.
+     */
     @FXML
     public void initialize() {
         cmbCategoria.getItems().setAll(CategoriaGasto.values());
@@ -42,13 +59,21 @@ public class EditarGastoController {
         botonEliminar.setVisible(false);
     }
 
-    // ============================================================
-    // RECIBIR VIAJE Y GASTO
-    // ============================================================
+    /**
+     * Establece el viaje al que pertenece el gasto.
+     *
+     * @param viaje viaje actual
+     */
     public void setViaje(Viaje viaje) {
         this.viajeActual = viaje;
     }
 
+    /**
+     * Establece el gasto a editar.
+     * Si es null, el formulario se prepara para crear uno nuevo.
+     *
+     * @param gasto gasto existente o null
+     */
     public void setGasto(Gasto gasto) {
         this.gastoActual = gasto;
 
@@ -62,6 +87,9 @@ public class EditarGastoController {
         }
     }
 
+    /**
+     * Carga los datos del gasto en los campos del formulario.
+     */
     private void cargarDatos() {
         txtConcepto.setText(gastoActual.getConcepto());
         cmbCategoria.setValue(gastoActual.getCategoria());
@@ -73,16 +101,18 @@ public class EditarGastoController {
         txtNotas.setText(gastoActual.getNotas());
     }
 
-    // ============================================================
-    // GUARDAR
-    // ============================================================
+    /**
+     * Válida los campos, guarda o actualiza el gasto,
+     * y persiste los cambios en la base de datos.
+     */
     @FXML
     private void guardar() {
-        if (txtConcepto.getText().isEmpty() ||
+
+        if (txtConcepto.getText().isBlank() ||
                 cmbCategoria.getValue() == null ||
-                txtImporte.getText().isEmpty() ||
+                txtImporte.getText().isBlank() ||
                 dpFecha.getValue() == null ||
-                txtLugar.getText().isEmpty() ||
+                txtLugar.getText().isBlank() ||
                 cmbMetodoPago.getValue() == null ||
                 cmbEstado.getValue() == null) {
 
@@ -90,10 +120,9 @@ public class EditarGastoController {
             return;
         }
 
-        // Validar importe usando Utils.toDouble para aceptar coma/punto
         Double importe = Utils.toDouble(txtImporte.getText());
-        if (importe == null) {
-            Utils.mostrarWarning("Importe inválido. Introduce un número (ej: 12.50 o 12,50).");
+        if (importe == null || importe < 0) {
+            Utils.mostrarWarning("Importe inválido. Introduce un número positivo.");
             return;
         }
 
@@ -102,33 +131,32 @@ public class EditarGastoController {
             gastoActual.setViaje(viajeActual);
         }
 
-        gastoActual.setConcepto(txtConcepto.getText());
+        gastoActual.setConcepto(txtConcepto.getText().trim());
         gastoActual.setCategoria(cmbCategoria.getValue());
         gastoActual.setImporte(importe);
         gastoActual.setFecha(dpFecha.getValue());
-        gastoActual.setLugar(txtLugar.getText());
+        gastoActual.setLugar(txtLugar.getText().trim());
         gastoActual.setMetodoPago(cmbMetodoPago.getValue());
         gastoActual.setEstado(cmbEstado.getValue());
-        gastoActual.setNotas(txtNotas.getText());
-
+        gastoActual.setNotas(txtNotas.getText().trim());
         try {
             if (gastoActual.getIdGasto() == 0) {
                 gastoDAO.add(gastoActual);
             } else {
                 gastoDAO.update(gastoActual);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Utils.mostrarError("Error al guardar el gasto: " + ex.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Utils.mostrarError("Error al guardar el gasto: " + e.getMessage());
             return;
         }
 
         volverADetalles();
     }
 
-    // ============================================================
-    // ELIMINAR
-    // ============================================================
+    /**
+     * Elimina el gasto actual tras confirmación del usuario.
+     */
     @FXML
     private void eliminar() {
 
@@ -142,26 +170,31 @@ public class EditarGastoController {
         confirm.setContentText("Esta acción no se puede deshacer.");
         confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
-        if (confirm.showAndWait().get() == ButtonType.YES) {
+        var resultado = confirm.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.YES) {
             gastoDAO.delete(gastoActual);
             volverADetalles();
         }
     }
 
-    // ============================================================
-    // CANCELAR
-    // ============================================================
+
+    /**
+     * Cancela la operación y vuelve a la pantalla de detalles del viaje.
+     */
     @FXML
     private void cancelar() {
         volverADetalles();
     }
 
-    // ============================================================
-    // VOLVER A VER DETALLES
-    // ============================================================
+    /**
+     * Regresa a la vista de detalles del viaje,
+     * recargando el viaje actualizado.
+     */
     private void volverADetalles() {
-        VerDetallesViajeController controller =
-                TravelApplication.setRoot("VerDetallesViaje");
-        controller.setViaje(viajeActual);
+        VerDetallesViajeController controller = TravelApplication.setRoot("VerDetallesViaje");
+        if (controller != null) {
+            controller.setViaje(viajeActual);
+        }
     }
 }

@@ -1,30 +1,19 @@
 Proyecto TravelApp
 
-Autor: Ana Belén Montilla López
-
-Curso: 1º DAM
-
-Módulo: Programación
-
-Centro: IES Francisco de los Ríos
-
+Autor@: Ana Belén Montilla López
 
 Descripción del proyecto:
 
-TravelApp es una aplicación de escritorio desarrollada en Java 
-cuyo objetivo es ayudar al usuario a planificar, organizar y gestionar viajes 
-desde una perspectiva emocional y cultural.
+Aplicación de escritorio desarrollada en Java + JavaFX para la gestión completa de viajes: alojamiento, transportes, gastos y presupuesto.
 
-Permite:
-
-- Crear y gestionar viajes
-- Añadir actividades asociadas
-- Registrar documentos importantes
-- Valorar experiencias
-- Guardar notas, precios, fechas y lugares
-- Configurar la conexión a la base de datos mediante XML
-La aplicación sigue el patrón MVC, utiliza JavaFX para la interfaz gráfica,
-MySQL como base de datos y Maven como sistema de construcción.
+Instrucciones de ejecución:
+1. Aplicación de escritorio desarrollada en Java + JavaFX para la gestión completa de viajes: alojamiento, transportes, gastos y presupuesto.
+2. Instrucciones de ejecución:
+3. Clona el repositorio o descarga el proyecto.
+4. Ábrelo en IntelliJ IDEA (o cualquier IDE compatible con Maven).
+5. Asegúrate de que Maven descarga todas las dependencias.
+6. Ejecuta:
+   Lancher
 
 Tecnologías utilizadas:
 
@@ -36,3 +25,4 @@ Tecnologías utilizadas:
 - JAXB 
 - SceneBuilder
 - Patrón MVC
+- FXML + CSS

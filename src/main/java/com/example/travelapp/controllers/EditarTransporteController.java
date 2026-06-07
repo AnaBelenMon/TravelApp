@@ -12,10 +12,23 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+/**
+ * Controlador encargado de gestionar la creación, edición y eliminación
+ * de transportes asociados a un viaje dentro de la aplicación TravelApp.
+ * Permite:
+ * <ul>
+ *     <li>Añadir un nuevo transporte al viaje.</li>
+ *     <li>Editar un transporte existente.</li>
+ *     <li>Eliminar un transporte y su relación con el viaje.</li>
+ *     <li>Validar fechas, precio y datos obligatorios.</li>
+ * </ul>
+ *
+ * Este controlador se comunica con {@link TransporteDAO} para persistir
+ * los datos del transporte y con {@link ViajeTransporteDAO} para gestionar
+ * la relación N:M entre viaje y transporte.
+ */
 public class EditarTransporteController {
-
     @FXML private Label lblTitulo;
 
     @FXML private ComboBox<TipoTransporte> cmbTipo;
@@ -26,8 +39,6 @@ public class EditarTransporteController {
     @FXML private TextField txtPrecio;
     @FXML private ComboBox<EstadoTransporte> cmbEstado;
 
-    @FXML private Button btnGuardar;
-    @FXML private Button btnCancelar;
     @FXML private Button botonEliminar;
 
     private final TransporteDAO transporteDAO = new TransporteDAO();
@@ -36,21 +47,33 @@ public class EditarTransporteController {
     private Viaje viajeActual;
     private Transporte transporteActual;
 
+    /**
+     * Inicializa los componentes de la vista.
+     * Carga los tipos de transporte y estados disponibles.
+     * Oculta el botón de eliminar hasta que haya un transporte cargado.
+     */
     @FXML
     public void initialize() {
         cmbTipo.getItems().setAll(TipoTransporte.values());
         cmbEstado.getItems().setAll(EstadoTransporte.values());
-
         botonEliminar.setVisible(false);
     }
 
-    // ============================================================
-    // RECIBIR VIAJE Y TRANSPORTE
-    // ============================================================
+    /**
+     * Establece el viaje al que pertenece el transporte.
+     *
+     * @param viaje viaje actual
+     */
     public void setViaje(Viaje viaje) {
         this.viajeActual = viaje;
     }
 
+    /**
+     * Establece el transporte a editar.
+     * Si es null, el formulario se prepara para crear uno nuevo.
+     *
+     * @param transporte transporte existente o null
+     */
     public void setTransporte(Transporte transporte) {
         this.transporteActual = transporte;
 
@@ -64,10 +87,18 @@ public class EditarTransporteController {
         }
     }
 
+    /**
+     * Establece el DAO encargado de gestionar la relación viaje–transporte.
+     *
+     * @param dao instancia de ViajeTransporteDAO
+     */
     public void setViajeTransporteDAO(ViajeTransporteDAO dao) {
         this.viajeTransporteDAO = dao;
     }
 
+    /**
+     * Carga los datos del transporte en los campos del formulario.
+     */
     private void cargarDatos() {
         cmbTipo.setValue(transporteActual.getTipo());
         txtOrigen.setText(transporteActual.getOrigen());
@@ -78,21 +109,31 @@ public class EditarTransporteController {
         cmbEstado.setValue(transporteActual.getEstado());
     }
 
-    // ============================================================
-    // GUARDAR
-    // ============================================================
+    /**
+     * Válida los campos, guarda o actualiza el transporte,
+     * y persiste los cambios en la base de datos.
+     */
     @FXML
     private void guardar() {
-
         if (cmbTipo.getValue() == null ||
-                txtOrigen.getText().isEmpty() ||
-                txtDestino.getText().isEmpty() ||
+                txtOrigen.getText().isBlank() ||
+                txtDestino.getText().isBlank() ||
                 dpSalida.getValue() == null ||
                 dpLlegada.getValue() == null ||
-                txtPrecio.getText().isEmpty() ||
+                txtPrecio.getText().isBlank() ||
                 cmbEstado.getValue() == null) {
 
             Utils.mostrarWarning("Rellena todos los campos.");
+            return;
+        }
+
+        Double precio = Utils.toDouble(txtPrecio.getText());
+        if (precio == null || precio < 0) {
+            Utils.mostrarWarning("Precio inválido. Introduce un número positivo.");
+            return;
+        }
+        if (dpSalida.getValue().isAfter(dpLlegada.getValue())) {
+            Utils.mostrarWarning("La fecha de salida debe ser anterior a la de llegada.");
             return;
         }
 
@@ -100,26 +141,13 @@ public class EditarTransporteController {
             transporteActual = new Transporte();
         }
 
-        double precio;
-        try {
-            precio = Double.parseDouble(txtPrecio.getText().trim());
-        } catch (NumberFormatException ex) {
-            Utils.mostrarWarning("Precio inválido. Introduce un número.");
-            return;
-        }
-
-        try {
             transporteActual.setTipo(cmbTipo.getValue());
-            transporteActual.setOrigen(txtOrigen.getText());
-            transporteActual.setDestino(txtDestino.getText());
+            transporteActual.setOrigen(txtOrigen.getText().trim());
+            transporteActual.setDestino(txtDestino.getText().trim());
             transporteActual.setFechaSalida(dpSalida.getValue().atStartOfDay());
             transporteActual.setFechaLlegada(dpLlegada.getValue().atStartOfDay());
             transporteActual.setPrecio(precio);
             transporteActual.setEstado(cmbEstado.getValue());
-        } catch (IllegalArgumentException ex) {
-            Utils.mostrarWarning(ex.getMessage());
-            return;
-        }
 
         if (transporteActual.getIdTransporte() == 0) {
             transporteDAO.add(transporteActual);
@@ -129,12 +157,15 @@ public class EditarTransporteController {
         }
 
         VerDetallesViajeController controller = TravelApplication.setRoot("VerDetallesViaje");
-        controller.setViaje(viajeActual);
+        if (controller != null) {
+            controller.setViaje(viajeActual);
+        }
     }
 
-    // ============================================================
-    // ELIMINAR
-    // ============================================================
+    /**
+     * Elimina el transporte actual tras confirmación del usuario.
+     * También elimina la relación viaje–transporte.
+     */
     @FXML
     private void eliminar() {
 
@@ -148,7 +179,8 @@ public class EditarTransporteController {
         confirm.setContentText("Esta acción no se puede deshacer.");
         confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
-        if (confirm.showAndWait().get() == ButtonType.YES) {
+        var resultado = confirm.showAndWait();
+        if (resultado.isPresent() && resultado.get() == ButtonType.YES) {
 
             viajeTransporteDAO.delete(viajeActual, transporteActual);
             transporteDAO.delete(transporteActual);
@@ -157,19 +189,22 @@ public class EditarTransporteController {
         }
     }
 
-    // ============================================================
-    // CANCELAR
-    // ============================================================
+    /**
+     * Cancela la operación y vuelve a la pantalla de detalles del viaje.
+     */
     @FXML
     private void cancelar() {
         volverADetalles();
     }
 
-    // ============================================================
-    // VOLVER A VER DETALLES
-    // ============================================================
+    /**
+     * Regresa a la vista de detalles del viaje,
+     * recargando el viaje actualizado.
+     */
     private void volverADetalles() {
         VerDetallesViajeController controller = TravelApplication.setRoot("VerDetallesViaje");
-        controller.setViaje(viajeActual);
+        if (controller != null) {
+            controller.setViaje(viajeActual);
+        }
     }
 }
