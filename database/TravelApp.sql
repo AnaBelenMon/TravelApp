@@ -29,7 +29,9 @@ CREATE TABLE `alojamiento` (
   `direccion` char(200) NOT NULL,
   `ciudad` char(100) NOT NULL,
   `pais` char(100) NOT NULL,
-  PRIMARY KEY (`idAlojamiento`)
+  `valoracion` int DEFAULT NULL,
+  PRIMARY KEY (`idAlojamiento`),
+  CONSTRAINT `alojamiento_chk_1` CHECK ((`valoracion` between 1 and 5))
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -39,7 +41,7 @@ CREATE TABLE `alojamiento` (
 
 LOCK TABLES `alojamiento` WRITE;
 /*!40000 ALTER TABLE `alojamiento` DISABLE KEYS */;
-INSERT INTO `alojamiento` VALUES (1,'Hotel Lumière','HOTEL','Rue de Lyon','Paris','Francia'),(2,'Roma Suites','APARTAMENTO','Via Nazionale','Roma','Italia'),(6,'Hotel París Center','HOTEL','Rue de Rivoli 123','París','Francia');
+INSERT INTO `alojamiento` VALUES (1,'Hotel Lumière','HOTEL','Rue de Lyon','Paris','Francia',NULL),(2,'Roma Suites','APARTAMENTO','Via Nazionale','Roma','Italia',NULL),(6,'Hotel París Center','HOTEL','Rue de Rivoli 123','París','Francia',NULL);
 /*!40000 ALTER TABLE `alojamiento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -211,4 +213,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-07 19:47:32
+-- Dump completed on 2026-06-07 21:18:39
