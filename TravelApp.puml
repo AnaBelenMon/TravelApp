@@ -19,7 +19,6 @@ class com.example.travelapp.controllers.EditarTransporteController {
 + void setViajeTransporteDAO(ViajeTransporteDAO)
 - void cargarDatos()
 - void guardar()
-- void eliminar()
 - void cancelar()
 - void volverADetalles()
 }
