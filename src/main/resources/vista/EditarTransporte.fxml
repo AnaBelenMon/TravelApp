@@ -85,7 +85,6 @@
             <children>
                 <Button fx:id="btnGuardar" onAction="#guardar" text="Guardar" />
                 <Button fx:id="btnCancelar" onAction="#cancelar" text="Cancelar" />
-                <Button fx:id="botonEliminar" onAction="#eliminar"  text="Eliminar"/>
             </children>
             <padding>
                 <Insets bottom="20" left="20" right="20" top="20" />
