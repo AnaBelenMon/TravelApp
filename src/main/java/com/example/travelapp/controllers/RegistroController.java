@@ -5,14 +5,12 @@ import com.example.travelapp.dao.UsuarioDAO;
 import com.example.travelapp.model.Usuario;
 import com.example.travelapp.utils.Utils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 /**
  * Controlador encargado de gestionar el registro de nuevos usuarios
  * dentro de la aplicación TravelApp.
- *
  * Funcionalidades:
  * <ul>
  *     <li>Validar email y contraseña con reglas estrictas.</li>
