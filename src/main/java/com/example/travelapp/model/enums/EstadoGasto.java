@@ -13,17 +13,9 @@ package com.example.travelapp.model.enums;
  * @since 2026-04-30
  */
 public enum EstadoGasto {
-
-    /** El gasto está registrado pero aún no ha sido pagado. */
     PENDIENTE("Pendiente"),
-
-    /** El gasto ya ha sido pagado. */
     PAGADO("Pagado"),
-
-    /** El gasto fue cancelado y no se realizará. */
     CANCELADO("Cancelado"),
-
-    /** El gasto fue pagado pero posteriormente reembolsado. */
     REEMBOLSADO("Reembolsado");
 
     private final String nombre;

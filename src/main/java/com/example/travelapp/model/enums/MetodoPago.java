@@ -14,19 +14,9 @@ package com.example.travelapp.model.enums;
  * @since 2026-04-30
  */
 public enum MetodoPago {
-
-    /** Pago realizado en efectivo. */
     EFECTIVO("Efectivo"),
-
-    /** Pago realizado con tarjeta bancaria. */
     TARJETA("Tarjeta"),
-
-    /** Pago realizado mediante Bizum. */
     BIZUM("Bizum"),
-
-    /**
-     * Pago realizado mediante transferencia bancaria.
-     */
     TRANSFERENCIA("Transferencia");
 
     private final String nombre;

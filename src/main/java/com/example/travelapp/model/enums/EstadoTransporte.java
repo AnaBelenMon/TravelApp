@@ -14,14 +14,8 @@ package com.example.travelapp.model.enums;
  * @since 2026-04-30
  */
 public enum EstadoTransporte {
-
-    /** El transporte está registrado, pero aún no ha sido confirmado. */
     PENDIENTE("Pendiente"),
-
-    /** El transporte ha sido confirmado correctamente. */
     CONFIRMADO("Confirmado"),
-
-    /** El transporte ha sido cancelado. */
     CANCELADO("Cancelado");
 
     private final String nombre;

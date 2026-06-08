@@ -13,23 +13,11 @@ package com.example.travelapp.model.enums;
  * @since 2026-04-30
  */
 public enum TipoAlojamiento {
-
-    /** Alojamiento en un hotel. */
     HOTEL("Hotel"),
-
-    /** Alojamiento en un hostal. */
     HOSTAL("Hostal"),
-
-    /** Alojamiento en un apartamento turístico. */
     APARTAMENTO("Apartamento"),
-
-    /** Alojamiento en una casa rural. */
     CASA_RURAL("Casa rural"),
-
-    /** Alojamiento en un camping. */
     CAMPING("Camping"),
-
-    /** Otro tipo de alojamiento no especificado. */
     OTRO("Otro");
 
     private final String nombre;

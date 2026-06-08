@@ -17,26 +17,12 @@ package com.example.travelapp.model.enums;
  * @since 2026-04-30
  */
 public enum TipoViaje {
-
-    /** Viaje orientado a actividades intensas, exploración y experiencias dinámicas. */
     AVENTURA("Aventura"),
-
-    /** Viaje centrado en descanso, tranquilidad y desconexión. */
     RELAX("Relax"),
-
-    /** Viaje enfocado en cultura, historia, arte y aprendizaje. */
     CULTURAL("Cultural"),
-
-    /** Viaje relacionado con trabajo, reuniones o eventos profesionales. */
     NEGOCIOS("Negocios"),
-
-    /** Viaje con enfoque romántico o en pareja. */
     ROMANTICO("Romántico"),
-
-    /** Viaje pensado para realizar en familia. */
     FAMILIAR("Familiar"),
-
-    /** Cualquier otro tipo de viaje no contemplado en las categorías anteriores. */
     OTROS("Otros");
 
     private final String nombre;

@@ -19,22 +19,10 @@ package com.example.travelapp.model.enums;
  * @since 2026-04-30
  */
 public enum TipoTransporte {
-
-    /** Transporte aéreo mediante avión. */
     AVION("Avión", "✈️"),
-
-    /** Transporte ferroviario mediante tren. */
     TREN("Tren", "🚆"),
-
-    /** Transporte público por carretera mediante autobús. */
     AUTOBUS("Autobús", "🚌"),
-
-    /** Transporte privado mediante coche. */
     COCHE("Coche", "🚗"),
-
-    /**
-     * Transporte marítimo mediante barco.
-     * */
     BARCO("Barco", "🚢");
 
     private final String nombre;
