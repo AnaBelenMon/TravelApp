@@ -19,8 +19,6 @@ import com.example.travelapp.model.Usuario;
  * pasar objetos manualmente.</p>
  */
 public class SessionUtils {
-
-    /** Usuario actualmente autenticado en la aplicación. */
     private static Usuario usuarioActual = null;
 
     /**
