@@ -163,7 +163,7 @@ public class ListaViajesController {
     }
 
     /**
-     * Establece el usuario actual (opcional, por si se requiere en el futuro).
+     * Establece el usuario actual
      *
      * @param usuario usuario logueado
      */
